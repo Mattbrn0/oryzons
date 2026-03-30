@@ -1,85 +1,42 @@
-import BorderGlow from './BorderGlow'
-
 const services = [
-  {
-    title: 'Audit & vision',
-    description:
-      'Cartographie de vos enjeux, priorités et irritants pour bâtir une feuille de route claire et actionnable.',
-  },
-  {
-    title: 'Produit & design',
-    description:
-      'Interfaces sobres et parcours utilisateur pensés pour réduire la friction et faire émerger l’essentiel.',
-  },
-  {
-    title: 'Tech & mise à l’échelle',
-    description:
-      'Fondations techniques solides, automatisation et suivi pour faire grandir votre offre sans complexité inutile.',
-  },
-] as const
-
-/**
- * Même teinte que le bas du hero : premier arrêt du `linear-gradient(to top, …)` dans Hero (#102430).
- * On prolonge en restant sur cette couleur, puis on assombrit très progressivement — sans repartir plus clair.
- */
-const HERO_GRADIENT_FLOOR = '#102430'
-
-const servicesBackground = `linear-gradient(to bottom,
-  ${HERO_GRADIENT_FLOOR} 0%,
-  ${HERO_GRADIENT_FLOOR} 52%,
-  #0f2129 82%,
-  #0c1c24 100%
-)`
+  { num: '01', title: 'Création de site',            desc: 'Sites vitrines, landing pages, e-commerces. Un design unique, responsive et optimisé pour convertir vos visiteurs en clients.',        tag: 'Design sur-mesure' },
+  { num: '02', title: 'Hébergement & mise en ligne', desc: 'Solutions performantes, sécurisées et adaptées à votre trafic. DNS, SSL et monitoring inclus.',                                        tag: 'Haute disponibilité' },
+  { num: '03', title: 'Évolution & maintenance',     desc: 'Votre site évolue avec votre activité. Ajouts, refontes, performances — on intervient rapidement.',                                    tag: 'Réactivité garantie' },
+  { num: '04', title: 'Sécurité & sauvegardes',      desc: 'Mises à jour régulières, sauvegardes automatiques et surveillance proactive de votre infrastructure.',                                 tag: "Tranquillité d'esprit" },
+  { num: '05', title: 'SEO & visibilité',            desc: 'Optimisation technique et éditoriale pour améliorer votre positionnement sur Google durablement.',                                     tag: 'Référencement naturel' },
+  { num: '06', title: 'SAV & accompagnement',        desc: 'Un interlocuteur dédié, disponible pour vous former et vous accompagner sur le long terme.',                                           tag: 'Suivi personnalisé' },
+]
 
 export default function Services() {
   return (
-    <section
-      id="services"
-      className="relative isolate flex min-h-dvh flex-col overflow-y-auto bg-[#102430] scroll-mt-[5.5rem] text-white"
-      aria-labelledby="services-heading"
-    >
-      <div
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{ backgroundImage: servicesBackground }}
-        aria-hidden
-      />
-
-      <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl flex-col justify-center px-5 py-16 sm:px-8 sm:py-20">
-        <div className="mb-12 max-w-2xl sm:mb-14">
-          <p className="mb-3 text-[13px] font-medium uppercase tracking-[0.2em] text-white/50">Mes services</p>
-          <h2 id="services-heading" className="font-serif text-3xl font-semibold tracking-tight sm:text-4xl md:text-[2.75rem] md:leading-tight">
-            Des blocs simples pour avancer vite, sans le flou
-          </h2>
-          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-white/70 sm:text-base">
-            Chaque offre est pensée comme un widget : digeste, transparent sur le contenu, et prêt à s’aligner sur vos
-            objectifs business.
+    <section id="services" className="scroll-mt-20 px-8 py-28 md:px-16">
+      <div className="mx-auto max-w-[1100px]">
+        <div className="reveal mb-16 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="mb-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Ce que nous faisons</p>
+            <h2 className="font-syne max-w-[480px] text-[clamp(1.8rem,3.5vw,2.8rem)] font-extrabold leading-[1.08] tracking-[-0.025em] text-ink">
+              Des solutions web<br />complètes & pérennes
+            </h2>
+          </div>
+          <p className="max-w-[320px] text-[0.95rem] font-light leading-[1.75] text-muted">
+            Du premier pixel jusqu'au déploiement, on maîtrise toute la chaîne.
           </p>
         </div>
 
-        <ul className="grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
-          {services.map((item) => (
-            <li key={item.title}>
-              <BorderGlow
-                className="h-full"
-                edgeSensitivity={30}
-                glowColor="40 80 80"
-                backgroundColor="#102430"
-                borderRadius={16}
-                glowRadius={40}
-                glowIntensity={1}
-                coneSpread={25}
-                animated={false}
-                colors={['#c084fc', '#f472b6', '#38bdf8']}
-                fillOpacity={0}
-              >
-                <article className="flex h-full flex-col rounded-[15px] bg-[rgba(212,217,219,0.10)] p-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl sm:p-9">
-                  <h3 className="text-lg font-semibold tracking-tight text-white sm:text-xl">{item.title}</h3>
-                  <p className="mt-3 text-[14px] leading-relaxed text-white/65 sm:text-[15px]">{item.description}</p>
-                </article>
-              </BorderGlow>
-            </li>
+        <div className="grid grid-cols-1 divide-y divide-border border-y border-border md:grid-cols-3 md:divide-x md:divide-y-0">
+          {services.map((s, i) => (
+            <div
+              key={s.num}
+              className="reveal group px-8 py-10 transition-colors duration-300 hover:bg-surface"
+              style={{ transitionDelay: `${(i % 3) * 80}ms` }}
+            >
+              <span className="font-syne mb-6 block text-[0.75rem] font-semibold tracking-[0.1em] text-subtle">{s.num}</span>
+              <h3 className="font-syne mb-3 text-[1.05rem] font-bold text-ink">{s.title}</h3>
+              <p className="mb-6 text-[0.875rem] font-light leading-[1.7] text-muted">{s.desc}</p>
+              <span className="rounded-full border border-border px-3 py-1 text-[0.7rem] font-medium tracking-[0.06em] text-subtle">{s.tag}</span>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   )

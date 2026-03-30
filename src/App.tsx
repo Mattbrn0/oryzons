@@ -1,25 +1,42 @@
-import Hero from './components/Hero'
-import Services from './components/Services'
-import SiteHeader from './components/SiteHeader'
+import { useEffect } from 'react'
+import Navbar    from './components/Navbar'
+import Hero      from './components/Hero'
+import LogoStrip from './components/LogoStrip'
+import Services  from './components/Services'
+import Process   from './components/Process'
+import Pricing   from './components/Pricing'
+import Contact   from './components/Contact'
+import Footer    from './components/Footer'
+
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll('.reveal')
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target) }
+      }),
+      { threshold: 0.1 }
+    )
+    els.forEach(el => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+}
 
 export default function App() {
+  useReveal()
+
   return (
-    <div className="relative min-h-dvh">
-      <SiteHeader />
-      <Hero />
-      <Services />
-      <section
-        id="contact"
-        className="scroll-mt-[5.5rem] border-t border-white/10 bg-[#0c1c24] px-5 py-16 text-center sm:px-8 sm:py-20"
-        aria-labelledby="contact-heading"
-      >
-        <h2 id="contact-heading" className="font-serif text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-          Contact
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-white/65">
-          Une question ou un projet ? Écrivez-nous, on vous répond rapidement.
-        </p>
-      </section>
+    <div className="min-h-svh bg-white">
+      <Navbar />
+      <main>
+        <Hero />
+        <LogoStrip />
+        <Services />
+        <Process />
+        <Pricing />
+        <Contact />
+      </main>
+      <Footer />
     </div>
   )
 }
