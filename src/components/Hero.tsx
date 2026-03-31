@@ -17,7 +17,7 @@ export default function Hero() {
       <div className="relative z-10 flex flex-col items-center">
 
         {/* Headline */}
-        <h1 className="anim-title font-syne w-full max-w-[900px] text-[clamp(2.8rem,6.5vw,5.8rem)] font-black leading-[1.05] tracking-[-0.04em]">
+        <h1 className="anim-title w-full max-w-[900px] uppercase text-[clamp(2.2rem,5.2vw,4.6rem)] leading-[1.08] font-black" style={{ fontFamily: "'Instrument Serif', serif", fontWeight: 900 }}>
           <GradientText
             colors={["#06141B", "#9BA8AB", "#040C11"]}
             animationSpeed={8}

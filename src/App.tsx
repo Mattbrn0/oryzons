@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar    from './components/Navbar'
 import Hero      from './components/Hero'
 import LogoStrip from './components/LogoStrip'
@@ -7,6 +8,7 @@ import Process   from './components/Process'
 import Pricing   from './components/Pricing'
 import Contact   from './components/Contact'
 import Footer    from './components/Footer'
+import AboutPage from './pages/AboutPage'
 
 function useReveal() {
   useEffect(() => {
@@ -22,9 +24,8 @@ function useReveal() {
   }, [])
 }
 
-export default function App() {
+function HomePage() {
   useReveal()
-
   return (
     <div className="min-h-svh bg-white">
       <Navbar />
@@ -38,5 +39,16 @@ export default function App() {
       </main>
       <Footer />
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/"         element={<HomePage />} />
+        <Route path="/a-propos" element={<AboutPage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }

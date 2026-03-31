@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const links = [
-  { label: 'Accueil',     href: '#'         },
-  { label: 'Prestations', href: '#services' },
-  { label: 'Méthode',     href: '#process'  },
-  { label: 'Tarifs',      href: '#pricing'  },
-  { label: 'Contact',     href: '#contact'  },
+  { label: 'Accueil',     href: '/#'         , external: false },
+  { label: 'Prestations', href: '/#services' , external: false },
+  { label: 'À propos',    href: '/#a-propos'  , external: false  },
+  { label: 'Tarifs',      href: '/#pricing'  , external: false },
+  { label: 'Contact',     href: '/#contact'  , external: false },
 ]
 
 const glassStyle = (scrolled: boolean): React.CSSProperties => ({
@@ -79,7 +80,16 @@ export default function Navbar() {
           }}
         />
 
-        {links.map(l => (
+        {links.map(l => l.external ? (
+          <Link
+            key={l.label}
+            to={l.href}
+            className="relative z-10 block rounded-full px-4 py-1.5 text-[0.82rem] font-medium text-muted no-underline transition-colors duration-200 hover:text-ink"
+            onMouseEnter={movePill}
+          >
+            {l.label}
+          </Link>
+        ) : (
           <a
             key={l.label}
             href={l.href}

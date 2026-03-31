@@ -1,42 +1,97 @@
+import HalftoneImage from './HalftoneImage'
+import BorderGlow from './BorderGlow'
+
+const GLASS_BG   = '#ffffff'
+const GLOW_COLOR = '220 25 55'
+const COLORS     = ['#94a3b8', '#64748b', '#cbd5e1']
+
 const services = [
-  { num: '01', title: 'Création de site',            desc: 'Sites vitrines, landing pages, e-commerces. Un design unique, responsive et optimisé pour convertir vos visiteurs en clients.',        tag: 'Design sur-mesure' },
-  { num: '02', title: 'Hébergement & mise en ligne', desc: 'Solutions performantes, sécurisées et adaptées à votre trafic. DNS, SSL et monitoring inclus.',                                        tag: 'Haute disponibilité' },
-  { num: '03', title: 'Évolution & maintenance',     desc: 'Votre site évolue avec votre activité. Ajouts, refontes, performances — on intervient rapidement.',                                    tag: 'Réactivité garantie' },
-  { num: '04', title: 'Sécurité & sauvegardes',      desc: 'Mises à jour régulières, sauvegardes automatiques et surveillance proactive de votre infrastructure.',                                 tag: "Tranquillité d'esprit" },
-  { num: '05', title: 'SEO & visibilité',            desc: 'Optimisation technique et éditoriale pour améliorer votre positionnement sur Google durablement.',                                     tag: 'Référencement naturel' },
-  { num: '06', title: 'SAV & accompagnement',        desc: 'Un interlocuteur dédié, disponible pour vous former et vous accompagner sur le long terme.',                                           tag: 'Suivi personnalisé' },
+  { num: '01', title: 'Création de site',            desc: 'Sites vitrines, landing pages, e-commerces. Un design unique, responsive et optimisé pour convertir vos visiteurs en clients.', span: 'md:col-span-3' },
+  { num: '02', title: 'Hébergement & mise en ligne',  desc: 'Solutions performantes, sécurisées et adaptées à votre trafic. DNS, SSL et monitoring inclus dès le départ.',                span: 'md:col-span-3' },
+  { num: '03', title: 'Évolution & maintenance',      desc: "Votre site évolue avec votre activité. Ajouts, refontes et optimisations — on intervient rapidement.",                         span: 'md:col-span-2' },
+  { num: '04', title: 'SEO & visibilité',             desc: "Optimisation technique et éditoriale pour améliorer votre positionnement sur Google durablement.",                             span: 'md:col-span-2' },
+  { num: '05', title: 'SAV & accompagnement',         desc: "Un interlocuteur dédié, disponible pour vous former et vous accompagner dans la durée.",                                      span: 'md:col-span-2' },
 ]
 
 export default function Services() {
   return (
-    <section id="services" className="scroll-mt-20 px-8 py-28 md:px-16">
+    <section id="services" className="scroll-mt-20 px-8 py-24 md:px-16">
       <div className="mx-auto max-w-[1100px]">
-        <div className="reveal mb-16 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+
+        {/* Header */}
+        <div className="reveal mb-12 flex items-end justify-between gap-6">
           <div>
-            <p className="mb-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Ce que nous faisons</p>
-            <h2 className="font-syne max-w-[480px] text-[clamp(1.8rem,3.5vw,2.8rem)] font-extrabold leading-[1.08] tracking-[-0.025em] text-ink">
-              Des solutions web<br />complètes & pérennes
+            <span className="inline-flex items-center rounded-full border border-border bg-white px-3 py-1 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-subtle">
+              Services
+            </span>
+            <h2 style={{ fontFamily: "'Instrument Serif', serif", color: '#2d2d2d' }} className="text-[clamp(2.2rem,6vw,5rem)] leading-none">
+              Nos Services
             </h2>
+            <p className="mt-3 max-w-[420px] text-[0.88rem] font-light leading-[1.75] text-muted">
+              Tout ce qu'il faut pour lancer, faire grandir et pérenniser votre présence en ligne.
+            </p>
           </div>
-          <p className="max-w-[320px] text-[0.95rem] font-light leading-[1.75] text-muted">
-            Du premier pixel jusqu'au déploiement, on maîtrise toute la chaîne.
-          </p>
+          <a href="#contact" className="btn-glass-dark mb-1 hidden shrink-0 items-center gap-2 rounded-full px-5 py-2.5 text-[0.82rem] font-medium md:flex">
+            Contact
+            <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" />
+            </svg>
+          </a>
         </div>
 
-        <div className="grid grid-cols-1 divide-y divide-border border-y border-border md:grid-cols-3 md:divide-x md:divide-y-0">
-          {services.map((s, i) => (
-            <div
-              key={s.num}
-              className="reveal group px-8 py-10 transition-colors duration-300 hover:bg-surface"
-              style={{ transitionDelay: `${(i % 3) * 80}ms` }}
-            >
-              <span className="font-syne mb-6 block text-[0.75rem] font-semibold tracking-[0.1em] text-subtle">{s.num}</span>
-              <h3 className="font-syne mb-3 text-[1.05rem] font-bold text-ink">{s.title}</h3>
-              <p className="mb-6 text-[0.875rem] font-light leading-[1.7] text-muted">{s.desc}</p>
-              <span className="rounded-full border border-border px-3 py-1 text-[0.7rem] font-medium tracking-[0.06em] text-subtle">{s.tag}</span>
-            </div>
-          ))}
+        {/* Grid */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
+          {services.map((s, i) => {
+            const isImage = i === 4
+
+            if (isImage) {
+              return (
+                <BorderGlow
+                  key={s.num}
+                  className={`reveal ${s.span} cursor-pointer hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)]`}
+                  backgroundColor={GLASS_BG}
+                  glowColor={GLOW_COLOR}
+                  colors={COLORS}
+                  glowIntensity={2.2}
+                  glowRadius={50}
+                  borderRadius={16}
+                  edgeSensitivity={5}
+                  style={{ minHeight: '220px', transition: 'transform 0.55s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.45s ease' } as React.CSSProperties}
+                >
+                  <HalftoneImage src="/david.png" grid={5} className="block h-full w-full" />
+                </BorderGlow>
+              )
+            }
+
+            return (
+              <BorderGlow
+                key={s.num}
+                className={`reveal ${s.span} cursor-pointer hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)]`}
+                backgroundColor={GLASS_BG}
+                glowColor={GLOW_COLOR}
+                colors={COLORS}
+                glowIntensity={2.2}
+                glowRadius={50}
+                borderRadius={16}
+                edgeSensitivity={5}
+                style={{ transition: 'transform 0.55s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.45s ease' } as React.CSSProperties}
+              >
+                <div className="flex flex-col justify-between p-8" style={{ minHeight: '200px' }}>
+                  <div className="mb-8">
+                    <span className="inline-flex size-8 items-center justify-center rounded-full bg-black/[0.05] text-[0.72rem] font-semibold text-subtle backdrop-blur-sm">
+                      {s.num}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="font-syne mb-3 text-[1.1rem] font-bold leading-snug text-ink">{s.title}</h3>
+                    <p className="text-[0.875rem] font-light leading-[1.75] text-muted">{s.desc}</p>
+                  </div>
+                </div>
+              </BorderGlow>
+            )
+          })}
         </div>
+
       </div>
     </section>
   )
