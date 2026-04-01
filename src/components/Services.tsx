@@ -16,17 +16,17 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="scroll-mt-20 min-h-svh px-8 py-24 md:px-16">
+    <section id="services" className="scroll-mt-20 min-h-svh px-6 py-24 sm:px-8 md:px-16">
       <div className="mx-auto flex min-h-[calc(100svh-192px)] max-w-[1100px] items-center">
 
         {/* Header */}
         <div className="w-full">
-        <div className="reveal mb-12 flex items-end justify-between gap-6">
+        <div className="reveal mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <span className="inline-flex items-center rounded-full border border-border bg-white px-3 py-1 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-subtle">
               Services
             </span>
-            <h2 style={{ fontFamily: "'Instrument Serif', serif", color: '#2d2d2d' }} className="text-[clamp(2.2rem,6vw,5rem)] leading-none">
+            <h2 style={{ fontFamily: "'Instrument Serif', serif", color: '#2d2d2d' }} className="mt-5 text-[clamp(2.1rem,6vw,5rem)] leading-none">
               Nos Services
             </h2>
             <p className="mt-3 max-w-[420px] text-[0.88rem] font-light leading-[1.75] text-muted">
@@ -78,7 +78,7 @@ export default function Services() {
                 edgeSensitivity={5}
                 style={{ transition: 'transform 0.55s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.45s ease' } as React.CSSProperties}
               >
-                <div className="flex flex-col justify-between p-8" style={{ minHeight: '200px' }}>
+                <div className="flex flex-col justify-between p-6 sm:p-8" style={{ minHeight: '200px' }}>
                   <div className="mb-8">
                     <span className="inline-flex size-8 items-center justify-center rounded-full bg-black/[0.05] text-[0.72rem] font-semibold text-subtle backdrop-blur-sm">
                       {s.num}

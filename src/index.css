@@ -176,6 +176,12 @@ body {
   from { opacity: 0; transform: scale(0.82) translateY(-10px); }
   to   { opacity: 1; transform: scale(1) translateY(0); }
 }
+@keyframes dropPop {
+  0%   { opacity: 0; transform: translateY(-10px) scale(0.92, 0.82); }
+  55%  { opacity: 1; transform: translateY(0) scale(1.03, 0.98); }
+  78%  { transform: translateY(0) scale(0.99, 1.02); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
 @keyframes pulseDot {
   0%, 100% { opacity: 1; transform: scale(1); }
   50%       { opacity: 0.35; transform: scale(1.5); }
@@ -205,6 +211,7 @@ body {
 .anim-pop-0 { animation: popIn 0.65s 0.05s cubic-bezier(0.34,1.56,0.64,1) both; }
 .anim-pop-1 { animation: popIn 0.65s 0.18s cubic-bezier(0.34,1.56,0.64,1) both; }
 .anim-pop-2 { animation: popIn 0.65s 0.30s cubic-bezier(0.34,1.56,0.64,1) both; }
+.anim-drop-pop { animation: dropPop 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; transform-origin: top center; }
 .anim-pulse-dot   { animation: pulseDot 2s ease-in-out infinite; }
 .anim-scroll-line { animation: scrollLine 2s ease-in-out infinite; }
 .anim-marquee     { animation: marquee 70s linear infinite; }

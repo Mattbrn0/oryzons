@@ -8,10 +8,10 @@ export default function Contact() {
   const [sent, setSent] = useState(false)
 
   return (
-    <section id="contact" className="relative isolate scroll-mt-20 min-h-svh overflow-hidden border-t border-border bg-surface px-8 py-28 md:px-16">
+    <section id="contact" className="relative isolate scroll-mt-20 min-h-svh overflow-hidden border-t border-border bg-surface px-6 py-24 sm:px-8 sm:py-28 md:px-16">
       {/* Logo Oryzons en fond — centré derrière le formulaire */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-1/2 h-[92svh] w-[92svh] -translate-x-1/2 -translate-y-1/2 opacity-[0.10]">
+        <div className="absolute left-1/2 top-1/2 hidden h-[92svh] w-[92svh] -translate-x-1/2 -translate-y-1/2 opacity-[0.10] sm:block">
           <HalftoneImage
             src="/oryzons.svg"
             grid={7}
@@ -29,11 +29,14 @@ export default function Contact() {
           }}
         />
       </div>
-      <div className="mx-auto flex min-h-[calc(100svh-224px)] max-w-[720px] items-center">
+      <div className="mx-auto flex min-h-[calc(100svh-200px)] max-w-[720px] items-center">
         <div className="relative z-10 w-full">
         <div className="reveal mb-14 text-center">
           <p className="mb-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Travaillons ensemble</p>
-          <h2 className="font-syne text-[clamp(1.8rem,3.5vw,2.8rem)] font-extrabold leading-[1.08] tracking-[-0.025em] text-ink">
+          <h2
+            style={{ fontFamily: "'Instrument Serif', serif" }}
+            className="text-[clamp(2rem,4.2vw,3.6rem)] leading-[1.08] text-ink"
+          >
             Prêt à démarrer<br />votre projet ?
           </h2>
           <p className="mx-auto mt-4 max-w-[400px] text-[0.95rem] font-light leading-[1.75] text-muted">
@@ -41,8 +44,8 @@ export default function Contact() {
           </p>
         </div>
 
-        <div className="reveal rounded-2xl border border-border bg-white p-10">
-          <div className="grid grid-cols-2 gap-5">
+        <div className="reveal rounded-2xl border border-border bg-white p-6 sm:p-10">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
               <label className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">Prénom & nom</label>
               <input type="text" placeholder="Jean Dupont" className={baseInput} />
@@ -80,7 +83,7 @@ export default function Contact() {
                 <option>À définir ensemble</option>
               </select>
             </div>
-            <div className="col-span-2">
+            <div className="sm:col-span-2">
               <label className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">Votre projet</label>
               <textarea
                 placeholder="Décrivez votre entreprise, vos objectifs, ce que vous imaginez..."

@@ -166,10 +166,10 @@ export default function Pricing() {
   )
 
   return (
-    <section id="pricing" className="relative isolate scroll-mt-20 min-h-svh overflow-hidden bg-white px-8 py-28 md:px-16">
+    <section id="pricing" className="relative isolate scroll-mt-20 min-h-svh overflow-hidden bg-white px-6 py-24 sm:px-8 sm:py-28 md:px-16">
 
       {/* Lady Justice — même pattern que Process.tsx, côté droit */}
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-[44vw] max-w-[560px]">
+      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[44vw] max-w-[560px] md:block">
         <div className="absolute inset-0">
           <HalftoneImage src="/lady-justice.png" grid={6} reveal="rightToLeft" fit="containY" className="block h-full w-full" />
         </div>
@@ -184,7 +184,10 @@ export default function Pricing() {
 
       <div className="relative z-10 mx-auto max-w-[1100px]">
         <div className="reveal mb-8 text-center">
-          <h2 className="mx-auto max-w-[22ch] text-balance font-syne text-[clamp(1.8rem,3.5vw,2.6rem)] font-extrabold leading-[1.06] tracking-[-0.03em] text-ink">
+          <h2
+            style={{ fontFamily: "'Instrument Serif', serif" }}
+            className="mx-auto max-w-[22ch] text-balance text-[clamp(2rem,4.2vw,3.6rem)] leading-[1.08] text-ink"
+          >
             Tarifs & <span className="text-ink">abonnements</span>
           </h2>
           <p className="mx-auto mt-3 max-w-[72ch] text-[0.92rem] font-light leading-[1.8] text-muted">

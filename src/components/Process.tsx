@@ -7,10 +7,10 @@ const pillarLabels = ['Vision', 'Sens', 'Maîtrise']
 
 export default function Process() {
   return (
-    <section id="a-propos" className="relative isolate min-h-svh overflow-hidden scroll-mt-20 border-t border-border bg-white px-8 py-22 md:px-16">
+    <section id="a-propos" className="relative isolate min-h-svh overflow-hidden scroll-mt-20 border-t border-border bg-white px-6 py-24 sm:px-8 md:px-16">
       {/* Background (left side only) */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-[44vw] max-w-[560px] md:block">
-        <div className="absolute inset-0" style={{ transform: 'translateX(-18%)' }}>
+      <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-[40vw] max-w-[520px] md:block lg:w-[44vw] lg:max-w-[560px]">
+        <div className="absolute inset-0 -translate-x-[24%] lg:-translate-x-[18%]">
           <HalftoneImage src="/pillars.png" grid={6} reveal="leftToRight" className="block h-full w-full" />
         </div>
         {/* Fade out towards content so it never sits behind text */}
@@ -18,7 +18,7 @@ export default function Process() {
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.20) 48%, rgba(255,255,255,0.92) 66%, rgba(255,255,255,1) 92%)',
+              'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.42) 36%, rgba(255,255,255,0.94) 58%, rgba(255,255,255,1) 82%)',
           }}
         />
       </div>
@@ -28,7 +28,7 @@ export default function Process() {
         {/* Top layout (like reference) */}
         <div className="reveal grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-12">
           {/* Left */}
-          <div className="md:col-span-5">
+          <div className="md:col-span-5 md:pl-10 lg:pl-6 xl:pl-0">
             <span className="inline-flex items-center rounded-full border border-border bg-white px-3 py-1 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-subtle">
               À propos
             </span>
@@ -66,13 +66,13 @@ export default function Process() {
             </p>
 
             <div className="mt-10 border-t border-border pt-10">
-              <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Nos piliers</p>
+              <p className="text-center text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Nos piliers</p>
 
-              <div className="mt-7 grid grid-cols-3 divide-x divide-border">
+              <div className="mt-7 grid grid-cols-1 divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
                 {pillarLabels.map((label, idx) => (
                   <div
                     key={label}
-                    className="reveal group flex items-center justify-center px-4 py-6"
+                    className="reveal group flex items-center justify-center px-4 py-5 sm:py-6"
                     style={{ transitionDelay: `${idx * 90}ms` }}
                   >
                     <span
