@@ -69,7 +69,7 @@ jobs:
 
           # Sanity check: fail fast if key is invalid
           ssh-keygen -lf ~/.ssh/id_ed25519 >/dev/null
-          ssh -p "${VPS_PORT}" -i ~/.ssh/id_ed25519 -o BatchMode=yes -o StrictHostKeyChecking=yes "${VPS_USER}@${VPS_HOST}" "echo ssh_ok"
+          ssh -vvv -p "${VPS_PORT}" -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes "${VPS_USER}@${VPS_HOST}" "echo ssh_ok"
 
       - name: Deploy dist/ to VPS (rsync)
         run: |
@@ -81,7 +81,7 @@ jobs:
           if [ -z "${VPS_PORT}" ]; then VPS_PORT="22"; fi
 
           rsync -az --delete \
-            -e "ssh -p ${VPS_PORT} -i ~/.ssh/id_ed25519" \
+            -e "ssh -p ${VPS_PORT} -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes" \
             dist/ "${VPS_USER}@${VPS_HOST}:${VPS_PATH}/"
 
       - name: Reload nginx
@@ -92,5 +92,5 @@ jobs:
           VPS_PORT="${{ secrets.VPS_PORT }}"
           if [ -z "${VPS_PORT}" ]; then VPS_PORT="22"; fi
 
-          ssh -p "${VPS_PORT}" -i ~/.ssh/id_ed25519 "${VPS_USER}@${VPS_HOST}" "sudo nginx -t && sudo systemctl reload nginx"
+          ssh -p "${VPS_PORT}" -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes "${VPS_USER}@${VPS_HOST}" "sudo nginx -t && sudo systemctl reload nginx"
 
