@@ -74,8 +74,13 @@ export default function HalftoneImage({ src, grid = 6, className = '', reveal = 
         const cr = W / H
         let dw = W, dh = H
         if      (fit === 'containY') { dh = H; dw = dh * ir }
-        else if (fit === 'cover')    { ir > cr ? (dh = H, dw = dh * ir) : (dw = W, dh = dw / ir) }
-        else                         { ir > cr ? (dw = W, dh = dw / ir) : (dh = H, dw = dh * ir) }
+        else if (fit === 'cover') {
+          if (ir > cr) { dh = H; dw = dh * ir }
+          else { dw = W; dh = dw / ir }
+        } else {
+          if (ir > cr) { dw = W; dh = dw / ir }
+          else { dh = H; dw = dh * ir }
+        }
         const dx = (W - dw) / 2
         const dy = fit === 'containY' ? 0 : (H - dh) / 2
         oc.drawImage(img, dx, dy, dw, dh)

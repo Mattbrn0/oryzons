@@ -124,8 +124,11 @@ function AnimatedCount({
 
     if (raf.current) cancelAnimationFrame(raf.current)
     if (from === to) {
-      setDisplay(to)
-      return
+      // évite setState synchro dans un effect (lint) + garde la valeur cohérente
+      raf.current = requestAnimationFrame(() => setDisplay(to))
+      return () => {
+        if (raf.current) cancelAnimationFrame(raf.current)
+      }
     }
 
     const start = performance.now()
