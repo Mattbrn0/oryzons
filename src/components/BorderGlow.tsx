@@ -195,12 +195,10 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
       onPointerLeave={() => setIsHovered(false)}
       className={`relative grid isolate border border-black/[0.06] transform-gpu ${className}`}
       style={{
-        willChange: 'transform',
-        ...style,
-      }}
-      style={{
         background: backgroundColor,
         borderRadius: `${borderRadius}px`,
+        willChange: 'transform',
+        ...style,
       }}
     >
       {/* mesh gradient border */}
