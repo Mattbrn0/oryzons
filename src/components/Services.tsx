@@ -1,5 +1,6 @@
 import HalftoneImage from './HalftoneImage'
 import BorderGlow from './BorderGlow'
+import { Link } from 'react-router-dom'
 
 const GLASS_BG   = '#ffffff'
 const GLOW_COLOR = '220 25 55'
@@ -15,10 +16,11 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="scroll-mt-20 px-8 py-24 md:px-16">
-      <div className="mx-auto max-w-[1100px]">
+    <section id="services" className="scroll-mt-20 min-h-svh px-8 py-24 md:px-16">
+      <div className="mx-auto flex min-h-[calc(100svh-192px)] max-w-[1100px] items-center">
 
         {/* Header */}
+        <div className="w-full">
         <div className="reveal mb-12 flex items-end justify-between gap-6">
           <div>
             <span className="inline-flex items-center rounded-full border border-border bg-white px-3 py-1 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-subtle">
@@ -31,12 +33,12 @@ export default function Services() {
               Tout ce qu'il faut pour lancer, faire grandir et pérenniser votre présence en ligne.
             </p>
           </div>
-          <a href="#contact" className="btn-glass-dark mb-1 hidden shrink-0 items-center gap-2 rounded-full px-5 py-2.5 text-[0.82rem] font-medium md:flex">
-            Contact
+          <Link to="/services" className="btn-glass-dark mb-1 hidden shrink-0 items-center gap-2 rounded-full px-5 py-2.5 text-[0.82rem] font-medium md:flex">
+            En savoir plus
             <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" />
             </svg>
-          </a>
+          </Link>
         </div>
 
         {/* Grid */}
@@ -92,6 +94,7 @@ export default function Services() {
           })}
         </div>
 
+        </div>
       </div>
     </section>
   )

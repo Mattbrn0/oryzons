@@ -12,6 +12,38 @@
 
 html { scroll-behavior: smooth; }
 
+/* Optimisations perf canvas / animations */
+canvas {
+  contain: strict;
+}
+.reveal {
+  will-change: opacity, transform;
+}
+.reveal.visible {
+  will-change: auto;
+}
+
+/* Marquee sur GPU */
+.anim-marquee {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  canvas { display: none; }
+}
+
 body {
   font-family: var(--font-sans);
   background: #ffffff;
@@ -19,6 +51,20 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Focus visible accessible (clavier) */
+:focus-visible {
+  outline: 2px solid rgba(10, 10, 10, 0.35);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Sélection de texte */
+::selection {
+  background: #e0e7ff;
+  color: #1e1b4b;
 }
 
 #root { min-height: 100svh; }

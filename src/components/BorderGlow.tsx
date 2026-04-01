@@ -92,6 +92,8 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
   const [cursorAngle, setCursorAngle] = useState(45);
   const [edgeProximity, setEdgeProximity] = useState(0);
   const [sweepActive, setSweepActive] = useState(false);
+  const rafRef = useRef<number | null>(null);
+  const pendingRef = useRef<{ edge: number; angle: number } | null>(null);
 
   const getCenterOfElement = useCallback((el: HTMLElement) => {
     const { width, height } = el.getBoundingClientRect();
@@ -126,9 +128,26 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    setEdgeProximity(getEdgeProximity(card, x, y));
-    setCursorAngle(getCursorAngle(card, x, y));
+    pendingRef.current = {
+      edge: getEdgeProximity(card, x, y),
+      angle: getCursorAngle(card, x, y),
+    };
+
+    if (rafRef.current != null) return;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      const p = pendingRef.current;
+      if (!p) return;
+      setEdgeProximity(p.edge);
+      setCursorAngle(p.angle);
+    });
   }, [getEdgeProximity, getCursorAngle]);
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (!animated) return;
@@ -172,9 +191,12 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
       onPointerLeave={() => setIsHovered(false)}
       className={`relative grid isolate border border-black/[0.06] transform-gpu ${className}`}
       style={{
+        willChange: 'transform',
+        ...style,
+      }}
+      style={{
         background: backgroundColor,
         borderRadius: `${borderRadius}px`,
-        ...style,
       }}
     >
       {/* mesh gradient border */}

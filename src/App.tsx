@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useEffect, lazy, Suspense } from 'react'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'motion/react'
 import Navbar    from './components/Navbar'
 import Hero      from './components/Hero'
 import LogoStrip from './components/LogoStrip'
@@ -8,7 +9,10 @@ import Process   from './components/Process'
 import Pricing   from './components/Pricing'
 import Contact   from './components/Contact'
 import Footer    from './components/Footer'
-import AboutPage from './pages/AboutPage'
+
+// Chargement différé de la page À propos (elle n'est pas visible au premier rendu)
+const AboutPage = lazy(() => import('./pages/AboutPage'))
+const ServicesPage = lazy(() => import('./pages/ServicesPage'))
 
 function useReveal() {
   useEffect(() => {
@@ -24,11 +28,19 @@ function useReveal() {
   }, [])
 }
 
+function ScrollToTopOnRouteChange() {
+  const location = useLocation()
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    window.scrollTo({ top: 0, left: 0, behavior: reduced ? 'instant' : 'smooth' })
+  }, [location.pathname])
+  return null
+}
+
 function HomePage() {
   useReveal()
   return (
     <div className="min-h-svh bg-white">
-      <Navbar />
       <main>
         <Hero />
         <LogoStrip />
@@ -37,6 +49,42 @@ function HomePage() {
         <Pricing />
         <Contact />
       </main>
+    </div>
+  )
+}
+
+function AnimatedRoutes() {
+  const location = useLocation()
+  const isAbout = location.pathname === '/a-propos'
+
+  return (
+    <div className="min-h-svh bg-white">
+      <Navbar mode={isAbout ? 'about' : 'home'} />
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 10, filter: 'blur(6px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, y: -10, filter: 'blur(6px)' }}
+          transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <Routes location={location}>
+            <Route path="/"         element={<HomePage />} />
+            <Route path="/a-propos" element={
+              <Suspense fallback={<div className="min-h-svh" />}>
+                <AboutPage />
+              </Suspense>
+            } />
+            <Route path="/services" element={
+              <Suspense fallback={<div className="min-h-svh" />}>
+                <ServicesPage />
+              </Suspense>
+            } />
+          </Routes>
+        </motion.div>
+      </AnimatePresence>
+
       <Footer />
     </div>
   )
@@ -45,10 +93,8 @@ function HomePage() {
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/"         element={<HomePage />} />
-        <Route path="/a-propos" element={<AboutPage />} />
-      </Routes>
+      <ScrollToTopOnRouteChange />
+      <AnimatedRoutes />
     </BrowserRouter>
   )
 }

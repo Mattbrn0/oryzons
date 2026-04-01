@@ -5,31 +5,52 @@ interface Dot {
   cy: number
   r: number
   alpha: number
-  threshold: number  // 0-1 : quand ce point doit apparaître
+  threshold: number
 }
 
 export default function DotScatter() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false
     const canvas = canvasRef.current
     if (!canvas) return
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })
     if (!ctx) return
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2)
-    const W = canvas.offsetWidth
-    const H = canvas.offsetHeight
-    canvas.width  = W * dpr
-    canvas.height = H * dpr
-    ctx.scale(dpr, dpr)
+    let rafId: number | null = null
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null
+    let cancelled = false
+    let started = false
+    let isVisible = false
 
     const img = new Image()
+    img.decoding = 'async'
     img.src = '/hands.png'
 
-    let rafId: number
+    const stop = () => {
+      if (rafId != null) { cancelAnimationFrame(rafId); rafId = null }
+    }
 
-    img.onload = () => {
+    const run = async () => {
+      stop()
+      started = false
+      if (cancelled) return
+
+      try { await img.decode() } catch { /* noop */ }
+      if (cancelled) return
+
+      // Cap DPR à 1.5
+      const dpr = Math.min(window.devicePixelRatio || 1, reduceMotion ? 1 : 1.5)
+      const W = Math.round(canvas.clientWidth)
+      const H = Math.round(canvas.clientHeight)
+      if (!W || !H) return
+
+      canvas.width  = Math.max(1, Math.floor(W * dpr))
+      canvas.height = Math.max(1, Math.floor(H * dpr))
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.clearRect(0, 0, W, H)
+
       const imgAspect = img.width / img.height
       const drawW = W
       const drawH = drawW / imgAspect
@@ -38,18 +59,17 @@ export default function DotScatter() {
       const drawX = W * 0.5 - GAP_X * drawW
       const drawY = H * 0.5 - GAP_Y * drawH
 
-      // ── Sample image ──────────────────────────────────────────────────
       const off = document.createElement('canvas')
       off.width  = W
       off.height = H
-      const oc = off.getContext('2d')!
+      const oc = off.getContext('2d', { willReadFrequently: true })
+      if (!oc) return
       oc.fillStyle = '#fff'
       oc.fillRect(0, 0, W, H)
       oc.drawImage(img, drawX, drawY, drawW, drawH)
       const data = oc.getImageData(0, 0, W, H).data
 
-      // ── Build dot list ────────────────────────────────────────────────
-      const GRID  = 7
+      const GRID = 7
       const MAX_R = GRID * 0.60
       const dots: Dot[] = []
 
@@ -61,40 +81,41 @@ export default function DotScatter() {
           const py = Math.min(Math.floor(cy), H - 1)
           const i  = (py * W + px) * 4
           const lum = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114) / 255
-          const r   = MAX_R * (1 - lum)
+          const r = MAX_R * (1 - lum)
           if (r < 0.35) continue
-
-          // Distance du bord le plus proche → 0 au bord, 1 au centre
           const edgeDist = Math.min(cx, W - cx) / (W * 0.5)
-          // Légère noise verticale pour un aspect organique
           const noise = (Math.random() - 0.5) * 0.18
           const threshold = Math.max(0, Math.min(1, edgeDist + noise))
-
-          dots.push({
-            cx, cy, r,
-            alpha: 0.80 + (1 - lum) * 0.20,
-            threshold,
-          })
+          dots.push({ cx, cy, r, alpha: 0.80 + (1 - lum) * 0.20, threshold })
         }
       }
 
-      // Trier par threshold pour un dessin incrémental O(1) par frame
       dots.sort((a, b) => a.threshold - b.threshold)
-
-      // ── Animation ─────────────────────────────────────────────────────
-      const DURATION = 2200  // ms
-      let startTime: number | null = null
-      let ptr = 0
       ctx.fillStyle = '#0A0A0A'
 
+      if (reduceMotion) {
+        for (const d of dots) {
+          ctx.globalAlpha = d.alpha
+          ctx.beginPath()
+          ctx.arc(d.cx, d.cy, d.r, 0, Math.PI * 2)
+          ctx.fill()
+        }
+        ctx.globalAlpha = 1
+        started = true
+        return
+      }
+
+      const DURATION = 2200
+      let startTime: number | null = null
+      let ptr = 0
       const easeOut = (t: number) => 1 - Math.pow(1 - t, 2.8)
 
       const frame = (ts: number) => {
+        if (cancelled) return
         if (!startTime) startTime = ts
-        const t      = Math.min((ts - startTime) / DURATION, 1)
+        const t = Math.min((ts - startTime) / DURATION, 1)
         const tEased = easeOut(t)
 
-        // Dessine uniquement les points nouvellement visibles
         while (ptr < dots.length && dots[ptr].threshold <= tEased) {
           const d = dots[ptr]
           ctx.globalAlpha = d.alpha
@@ -104,23 +125,55 @@ export default function DotScatter() {
           ptr++
         }
 
-        if (t < 1) {
-          rafId = requestAnimationFrame(frame)
-        } else {
-          ctx.globalAlpha = 1
-        }
+        if (t < 1) rafId = requestAnimationFrame(frame)
+        else ctx.globalAlpha = 1
       }
 
       rafId = requestAnimationFrame(frame)
+      started = true
     }
 
-    return () => cancelAnimationFrame(rafId)
+    const observer = new IntersectionObserver(
+      entries => {
+        const entry = entries[0]
+        if (!entry) return
+        if (entry.isIntersecting) {
+          isVisible = true
+          observer.disconnect()
+          void run()
+        } else {
+          stop()
+        }
+      },
+      { threshold: 0.05 }
+    )
+    observer.observe(canvas)
+
+    // Debounce resize 200 ms
+    const ro = new ResizeObserver(() => {
+      if (resizeTimer != null) clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => {
+        resizeTimer = null
+        if (cancelled || !isVisible) return
+        if (started) void run()
+      }, 200)
+    })
+    ro.observe(canvas)
+
+    return () => {
+      cancelled = true
+      stop()
+      if (resizeTimer != null) clearTimeout(resizeTimer)
+      ro.disconnect()
+      observer.disconnect()
+    }
   }, [])
 
   return (
     <canvas
       ref={canvasRef}
       className="pointer-events-none absolute inset-0 h-full w-full"
+      style={{ contain: 'strict' }}
       aria-hidden
     />
   )

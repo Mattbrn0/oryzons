@@ -1,74 +1,323 @@
-const plans = [
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
+import HalftoneImage from './HalftoneImage'
+
+type Billing = 'monthly' | 'annually'
+
+type Plan = {
+  id: 'starter' | 'professional' | 'genius'
+  name: string
+  desc: string
+  setupFee: number
+  monthly: number
+  annually: number
+  features: string[]
+  cta: string
+  featured?: boolean
+}
+
+const basePlans: Plan[] = [
   {
-    name: 'Essentiel', price: '800 €', from: true,
-    desc: 'Pour lancer votre présence en ligne',
-    features: ["Site vitrine jusqu'à 5 pages", 'Design responsive', 'Formulaire de contact', 'SEO de base', '1 mois de support'],
-    cta: 'Demander un devis', featured: false,
+    id: 'starter',
+    name: 'Site vitrine',
+    desc: 'Un site clair et efficace pour présenter votre activité et capter des demandes.',
+    setupFee: 700,
+    monthly: 20,
+    annually: 17,
+    features: [
+      "Page d’accueil",
+      'Pages (jusqu’à 5)',
+      'Formulaire de contact',
+      'Responsive mobile / tablette',
+      'SEO technique de base (balises, meta, sitemap)',
+      'Support basique : assistance par mail pour bugs ou problèmes techniques',
+      'Hébergement standard : serveur mutualisé sécurisé, sauvegardes automatiques',
+    ],
+    cta: 'Demander un devis',
+    featured: true,
   },
   {
-    name: 'Pro', price: '2 000 €', from: true,
-    desc: 'Pour une image professionnelle & complète',
-    features: ["Site jusqu'à 15 pages", 'Design premium sur-mesure', 'Blog / actualités', 'SEO avancé + analytics', 'Hébergement 1 an', '3 mois de support'],
-    cta: 'Démarrer ce projet', featured: true,
+    id: 'professional',
+    name: 'Refonte',
+    desc: 'Modernisation d’un site existant : design actualisé, contenus clés et optimisation des performances.',
+    setupFee: 800,
+    monthly: 25,
+    annually: 22,
+    features: [
+      'Audit rapide + recommandations',
+      'Refonte UI des sections principales',
+      'Optimisation de la performance et temps de chargement',
+      'SEO technique de base + indexation Google',
+      'Support étendu : assistance par mail + suivi des tickets, mises à jour du site incluses',
+      'Hébergement premium : VPS ou cloud léger, sauvegardes quotidiennes, monitoring de performance',
+    ],
+    cta: 'Demander un devis',
   },
   {
-    name: 'Sur-mesure', price: 'Devis', from: false,
-    desc: 'Pour les projets complexes & e-commerce',
-    features: ['E-commerce / boutique', 'Fonctionnalités sur mesure', 'Intégrations API', 'Tableau de bord admin', 'Hébergement dédié', 'Support prioritaire 12 mois'],
-    cta: 'Nous contacter', featured: false,
+    id: 'genius',
+    name: 'Sur‑mesure / Premium',
+    desc: 'Pour une marque ambitieuse : design premium, intégrations et évolutions régulières.',
+    setupFee: 1200,
+    monthly: 30,
+    annually: 27,
+    features: [
+      'Design sur‑mesure (direction artistique complète)',
+      'Pages supplémentaires + sections avancées (blog, portfolio, landing pages)',
+      'Intégrations : CRM, newsletter, analytics avancé',
+      'SEO complet + suivi analytics + reporting mensuel',
+      'Support prioritaire : assistance mail + téléphone, modifications rapides, mises à jour régulières, gestion des urgences',
+      'Hébergement haute performance : serveur dédié ou cloud performant, sauvegardes multiples, monitoring pro et sécurité renforcée',
+    ],
+    cta: 'Demander un devis',
   },
 ]
 
-export default function Pricing() {
+function PlanIcon({ id, className = '' }: { id: Plan['id']; className?: string }) {
+  if (id === 'starter') {
+    return (
+      <svg className={className} viewBox="0 0 16 16" fill="none" aria-hidden>
+        <rect x="3" y="3" width="10" height="10" rx="2.2" stroke="currentColor" strokeWidth="1.4" />
+        <path d="M6 6h4M6 8h4M6 10h2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      </svg>
+    )
+  }
+  if (id === 'professional') {
+    return (
+      <svg className={className} viewBox="0 0 16 16" fill="none" aria-hidden>
+        <path d="M8 2.6l1.2 2.6 2.9.3-2.2 1.9.7 2.8L8 8.8l-2.6 1.4.7-2.8-2.2-1.9 2.9-.3L8 2.6Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+      </svg>
+    )
+  }
   return (
-    <section id="pricing" className="scroll-mt-20 px-8 py-28 md:px-16">
-      <div className="mx-auto max-w-[1100px]">
-        <div className="reveal mb-16 text-center">
-          <p className="mb-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Tarifs</p>
-          <h2 className="font-syne text-[clamp(1.8rem,3.5vw,2.8rem)] font-extrabold leading-[1.08] tracking-[-0.025em] text-ink">
-            Investissement transparent
-          </h2>
-          <p className="mx-auto mt-4 max-w-[400px] text-[0.95rem] font-light leading-[1.75] text-muted">
-            Des formules claires. Pas de surprise, pas de frais cachés.
-          </p>
-        </div>
+    <svg className={className} viewBox="0 0 16 16" fill="none" aria-hidden>
+      <circle cx="8" cy="8" r="5" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M8 5.1v5.8M5.1 8h5.8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  )
+}
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {plans.map(p => (
-            <div
-              key={p.name}
-              className={`reveal flex flex-col rounded-2xl border p-9 transition-shadow duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.07)] ${
-                p.featured ? 'border-ink bg-ink text-white' : 'border-border bg-white'
+function Bullet({ className = '' }: { className?: string }) {
+  return (
+    <span className={`mt-[0.32rem] inline-flex size-2.5 shrink-0 items-center justify-center rounded-full border border-black/15 ${className}`}>
+      <span className="size-1 rounded-full bg-black/15" />
+    </span>
+  )
+}
+
+function AnimatedCount({
+  value,
+  durationMs = 520,
+  className = '',
+}: {
+  value: number
+  durationMs?: number
+  className?: string
+}) {
+  const [display, setDisplay] = useState(value)
+  const prev = useRef(value)
+  const raf = useRef<number | null>(null)
+
+  useEffect(() => {
+    const from = prev.current
+    const to = value
+    prev.current = value
+
+    if (raf.current) cancelAnimationFrame(raf.current)
+    if (from === to) {
+      setDisplay(to)
+      return
+    }
+
+    const start = performance.now()
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3)
+
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / durationMs)
+      const eased = easeOutCubic(t)
+      const next = Math.round(from + (to - from) * eased)
+      setDisplay(next)
+      if (t < 1) raf.current = requestAnimationFrame(tick)
+    }
+
+    raf.current = requestAnimationFrame(tick)
+    return () => {
+      if (raf.current) cancelAnimationFrame(raf.current)
+    }
+  }, [value, durationMs])
+
+  return <span className={className}>{display}</span>
+}
+
+export default function Pricing() {
+  const [billing, setBilling] = useState<Billing>('monthly')
+
+  const plans = useMemo(
+    () =>
+      basePlans.map(p => ({
+        ...p,
+        price: billing === 'monthly' ? p.monthly : p.annually,
+        period: billing === 'monthly' ? '/mois' : '/mois',
+        badge: billing === 'monthly' ? 'Abonnement' : 'Abonnement (annuel)',
+      })),
+    [billing],
+  )
+
+  return (
+    <section id="pricing" className="relative isolate scroll-mt-20 min-h-svh overflow-hidden bg-white px-8 py-28 md:px-16">
+
+      {/* Lady Justice — même pattern que Process.tsx, côté droit */}
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-[44vw] max-w-[560px]">
+        <div className="absolute inset-0">
+          <HalftoneImage src="/lady-justice.png" grid={6} reveal="rightToLeft" fit="containY" className="block h-full w-full" />
+        </div>
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(270deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.20) 48%, rgba(255,255,255,0.92) 66%, rgba(255,255,255,1) 92%)',
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-[1100px]">
+        <div className="reveal mb-8 text-center">
+          <h2 className="mx-auto max-w-[22ch] text-balance font-syne text-[clamp(1.8rem,3.5vw,2.6rem)] font-extrabold leading-[1.06] tracking-[-0.03em] text-ink">
+            Tarifs & <span className="text-ink">abonnements</span>
+          </h2>
+          <p className="mx-auto mt-3 max-w-[72ch] text-[0.92rem] font-light leading-[1.8] text-muted">
+            Des prix simples : un <span className="font-normal text-ink">forfait de création</span> + un{" "}
+            <span className="font-normal text-ink">abonnement mensuel</span> qui inclut support, hébergement et maintenance.
+          </p>
+
+          <div className="mt-6 inline-flex items-center gap-1 rounded-xl bg-white px-1.5 py-1 shadow-[0_8px_22px_rgba(0,0,0,0.08)] ring-1 ring-black/5">
+            <button
+              type="button"
+              onClick={() => setBilling('monthly')}
+              className={`rounded-lg px-3 py-2 text-[0.72rem] font-medium transition-colors ${
+                billing === 'monthly' ? 'bg-[#f0f2f7] text-ink' : 'text-muted hover:text-ink'
               }`}
             >
-              <div className={`font-syne mb-1 text-[0.8rem] font-semibold uppercase tracking-[0.1em] ${p.featured ? 'text-white/50' : 'text-subtle'}`}>
-                {p.name}
-              </div>
-              {p.from && <div className={`mt-3 text-[0.75rem] font-light ${p.featured ? 'text-white/50' : 'text-subtle'}`}>À partir de</div>}
-              <div className={`font-syne mt-1 text-[2.4rem] font-extrabold leading-none tracking-[-0.04em] ${p.featured ? 'text-white' : 'text-ink'}`}>
-                {p.price}
-              </div>
-              <p className={`mb-8 mt-2 text-[0.82rem] font-light ${p.featured ? 'text-white/60' : 'text-muted'}`}>{p.desc}</p>
+              Mensuel
+            </button>
+            <label className="mx-0.5 inline-flex cursor-pointer items-center">
+              <span className="sr-only">Toggle billing period</span>
+              <input
+                type="checkbox"
+                checked={billing === 'annually'}
+                onChange={e => setBilling(e.target.checked ? 'annually' : 'monthly')}
+                className="sr-only"
+              />
+              <span className="h-5 w-9 rounded-full bg-black/10 p-[2px] ring-1 ring-black/10 transition-colors">
+                <span
+                  className={`block size-4 rounded-full bg-white shadow transition-transform duration-200 ${
+                    billing === 'annually' ? 'translate-x-4' : 'translate-x-0'
+                  }`}
+                />
+              </span>
+            </label>
+            <button
+              type="button"
+              onClick={() => setBilling('annually')}
+              className={`rounded-lg px-3 py-2 text-[0.72rem] font-medium transition-colors ${
+                billing === 'annually' ? 'bg-[#f0f2f7] text-ink' : 'text-muted hover:text-ink'
+              }`}
+            >
+              Annuel
+            </button>
+          </div>
+        </div>
 
-              <ul className="mb-8 flex flex-1 flex-col gap-3">
-                {p.features.map(f => (
-                  <li key={f} className="flex items-center gap-2.5 text-[0.85rem] font-light">
-                    <span className={`inline-block size-1.5 shrink-0 rounded-full ${p.featured ? 'bg-white/40' : 'bg-ink/20'}`} />
-                    <span className={p.featured ? 'text-white/80' : 'text-muted'}>{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <a
-                href="#contact"
-                className={`mt-auto inline-flex h-11 items-center justify-center rounded-full text-[0.875rem] font-medium ${
-                  p.featured ? 'btn-glass' : 'btn-glass-dark'
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+            {plans.map(p => (
+              <div
+                key={p.id}
+                className={`reveal flex flex-col rounded-[26px] p-6 transition-[transform,box-shadow] duration-500 [transition-timing-function:cubic-bezier(0.34,1.2,0.64,1)] hover:-translate-y-1.5 hover:shadow-[0_18px_44px_rgba(0,0,0,0.12)] ${
+                  p.featured
+                    ? 'bg-surface shadow-[0_18px_40px_rgba(0,0,0,0.10)] ring-1 ring-black/5 hover:ring-black/10'
+                    : 'bg-white shadow-[0_12px_26px_rgba(0,0,0,0.08)] ring-1 ring-black/5 hover:ring-black/10'
                 }`}
               >
-                {p.cta}
-              </a>
-            </div>
-          ))}
+                <div className="flex items-center gap-2 text-ink">
+                  <PlanIcon id={p.id} className="size-4 text-ink/70" />
+                  <span className="text-[0.9rem] font-medium">{p.name}</span>
+                </div>
+
+                {/* Forfait + abonnement */}
+                <div className="mt-5 rounded-2xl bg-white/60 p-4 ring-1 ring-black/5">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">
+                      Forfait création
+                    </span>
+                    <span className="font-syne text-[1.55rem] font-extrabold leading-none tracking-[-0.04em] text-ink">
+                      {p.setupFee.toLocaleString('fr-FR')} €
+                    </span>
+                  </div>
+
+                  <div className="mt-3 flex items-end justify-between gap-3 border-t border-black/5 pt-3">
+                    <div className="min-w-0">
+                      <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">
+                        Abonnement
+                      </p>
+                      <p className="mt-1 text-[0.78rem] font-light text-muted">
+                        Support • hébergement • maintenance
+                      </p>
+                    </div>
+                    <div className="flex items-end gap-2">
+                      <span className="font-syne text-[1.7rem] font-extrabold leading-none tracking-[-0.04em] text-ink">
+                        {billing === 'monthly' ? '' : ''}
+                        <AnimatedCount value={p.price} />€
+                      </span>
+                      <AnimatePresence mode="popLayout" initial={false}>
+                        <motion.span
+                          key={`${p.id}-${billing}-period`}
+                          className="pb-1 text-[0.78rem] font-light text-muted"
+                          initial={{ y: 4, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          exit={{ y: -4, opacity: 0 }}
+                          transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                        >
+                          {p.period}
+                        </motion.span>
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="mt-4 text-[0.8rem] font-light leading-[1.65] text-muted">
+                  {p.desc}
+                </p>
+
+                <ul className="mt-5 space-y-2.5">
+                  {p.features.map(f => (
+                    <li key={f} className="flex gap-3 text-[0.8rem] font-light text-muted">
+                      <Bullet />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-auto pt-6">
+                  {p.featured ? (
+                    <a
+                      href="#contact"
+                      className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#111827] px-5 text-[0.8rem] font-medium text-white shadow-[0_10px_24px_rgba(17,24,39,0.28)]"
+                    >
+                      {p.cta}
+                    </a>
+                  ) : (
+                    <a
+                      href="#contact"
+                      className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-white px-5 text-[0.8rem] font-medium text-ink shadow-[0_10px_24px_rgba(0,0,0,0.10)] ring-1 ring-black/10 transition-colors hover:bg-[#f6f7fb]"
+                    >
+                      Demander un devis
+                      <svg className="size-3.5 text-ink/60" viewBox="0 0 16 16" fill="none" aria-hidden>
+                        <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
         </div>
       </div>
     </section>

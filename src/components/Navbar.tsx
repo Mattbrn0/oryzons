@@ -1,12 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-const links = [
-  { label: 'Accueil',     href: '/#'         , external: false },
-  { label: 'Prestations', href: '/#services' , external: false },
-  { label: 'À propos',    href: '/#a-propos'  , external: false  },
-  { label: 'Tarifs',      href: '/#pricing'  , external: false },
-  { label: 'Contact',     href: '/#contact'  , external: false },
+type NavbarMode = 'home' | 'about'
+
+const homeLinks = [
+  { label: 'Accueil',     href: '/#',          section: ''          },
+  { label: 'Prestations', href: '/#services',  section: 'services'  },
+  { label: 'À propos',    href: '/#a-propos',  section: 'a-propos'  },
+  { label: 'Tarifs',      href: '/#pricing',   section: 'pricing'   },
+  { label: 'Contact',     href: '/#contact',   section: 'contact'   },
+]
+
+const aboutLinks = [
+  { label: 'Origine',     href: '#origine',    section: 'origine'   },
+  { label: 'Oryzons',     href: '#nom',        section: 'nom'       },
+  { label: 'Étoile',      href: '#etoile',     section: 'etoile'    },
+  { label: 'David',       href: '#david',      section: 'david'     },
+  { label: 'Adam',        href: '#adam',        section: 'adam'      },
 ]
 
 const glassStyle = (scrolled: boolean): React.CSSProperties => ({
@@ -17,16 +27,47 @@ const glassStyle = (scrolled: boolean): React.CSSProperties => ({
   transition: 'background 0.35s ease, box-shadow 0.35s ease',
 })
 
-export default function Navbar() {
+export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
   const [scrolled, setScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState('')
   const [pill, setPill] = useState({ x: 0, w: 0, visible: false })
   const navRef = useRef<HTMLElement>(null)
+  const links = mode === 'about' ? aboutLinks : homeLinks
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // Surligner le lien actif selon la section visible
+  useEffect(() => {
+    const sectionIds = links.map(l => l.section).filter(Boolean)
+    if (!sectionIds.length) return
+    const observers: IntersectionObserver[] = []
+    const visibleMap: Record<string, number> = {}
+
+    const pick = () => {
+      const best = Object.entries(visibleMap).sort((a, b) => b[1] - a[1])[0]
+      setActiveSection(best ? best[0] : '')
+    }
+
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id)
+      if (!el) return
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) visibleMap[id] = entry.intersectionRatio
+          else delete visibleMap[id]
+          pick()
+        },
+        { threshold: [0, 0.25, 0.5, 0.75, 1] }
+      )
+      io.observe(el)
+      observers.push(io)
+    })
+    return () => observers.forEach(o => o.disconnect())
+  }, [links])
 
   const movePill = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const nav = navRef.current
@@ -42,8 +83,8 @@ export default function Navbar() {
     <header className="fixed left-0 right-0 top-4 z-[100] flex items-center justify-between px-5">
 
       {/* ── Logo bubble ─────────────────────────────── */}
-      <a
-        href="#"
+      <Link
+        to="/"
         className="anim-pop-0 flex items-center gap-2 rounded-full px-4 py-2.5 no-underline"
         style={{
           ...glassStyle(scrolled),
@@ -55,7 +96,7 @@ export default function Navbar() {
       >
         <img src="/oryzons.svg" alt="Oryzons" className="size-4" />
           <span className="text-[0.82rem] font-medium text-muted">Oryzons</span>
-      </a>
+      </Link>
 
       {/* ── Links bubble ────────────────────────────── */}
       <nav
@@ -80,20 +121,13 @@ export default function Navbar() {
           }}
         />
 
-        {links.map(l => l.external ? (
-          <Link
-            key={l.label}
-            to={l.href}
-            className="relative z-10 block rounded-full px-4 py-1.5 text-[0.82rem] font-medium text-muted no-underline transition-colors duration-200 hover:text-ink"
-            onMouseEnter={movePill}
-          >
-            {l.label}
-          </Link>
-        ) : (
+        {links.map(l => (
           <a
             key={l.label}
             href={l.href}
-            className="relative z-10 block rounded-full px-4 py-1.5 text-[0.82rem] font-medium text-muted no-underline transition-colors duration-200 hover:text-ink"
+            className={`relative z-10 block rounded-full px-4 py-1.5 text-[0.82rem] font-medium no-underline transition-colors duration-200 hover:text-ink ${
+              activeSection === l.section ? 'text-ink' : 'text-muted'
+            }`}
             onMouseEnter={movePill}
           >
             {l.label}
@@ -102,15 +136,27 @@ export default function Navbar() {
       </nav>
 
       {/* ── CTA bubble ──────────────────────────────── */}
-      <a
-        href="#contact"
-        className="btn-glass-dark anim-pop-2 hidden items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-medium text-muted md:flex"
-      >
-        Démarrer votre projet
-        <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" />
-        </svg>
-      </a>
+      {mode === 'about' ? (
+        <Link
+          to="/"
+          className="btn-glass-dark anim-pop-2 hidden items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-medium text-muted md:flex"
+        >
+          Retour à l'accueil
+          <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M11.5 7H2.5M2.5 7L6 3.5M2.5 7L6 10.5" />
+          </svg>
+        </Link>
+      ) : (
+        <a
+          href="#contact"
+          className="btn-glass-dark anim-pop-2 hidden items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-medium text-muted md:flex"
+        >
+          Démarrer votre projet
+          <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" />
+          </svg>
+        </a>
+      )}
     </header>
   )
 }

@@ -7,7 +7,7 @@ const pillarLabels = ['Vision', 'Sens', 'Maîtrise']
 
 export default function Process() {
   return (
-    <section id="a-propos" className="relative isolate overflow-hidden scroll-mt-20 border-t border-border bg-white px-8 py-22 md:px-16">
+    <section id="a-propos" className="relative isolate min-h-svh overflow-hidden scroll-mt-20 border-t border-border bg-white px-8 py-22 md:px-16">
       {/* Background (left side only) */}
       <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-[44vw] max-w-[560px] md:block">
         <div className="absolute inset-0" style={{ transform: 'translateX(-18%)' }}>
@@ -23,7 +23,7 @@ export default function Process() {
         />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-[1100px]">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-176px)] max-w-[1100px] items-center">
 
         {/* Top layout (like reference) */}
         <div className="reveal grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-12">
@@ -35,7 +35,7 @@ export default function Process() {
             <h2 style={serif} className="mt-6 text-[clamp(2rem,4.2vw,3.6rem)] leading-[1.08] text-ink">
               Un site internet<br />
               n'est pas seulement<br />
-              un outil, c'est une œuvre.
+              un outil, c'est une vision.
             </h2>
 
             <Link
@@ -60,8 +60,12 @@ export default function Process() {
               Mon rôle n'est pas simplement de coder. C'est de <span className="font-normal text-ink">donner du sens</span> à votre présence digitale,
               de transformer une idée en expérience, et de faire de votre site une signature.
             </p>
+            <p className="mt-6 text-[0.95rem] font-light leading-[1.9] text-muted">
+              Concrètement, cela signifie écouter, clarifier, puis construire avec exigence : une structure lisible, un design qui raconte, et une technique fiable.
+              <span className="font-normal text-ink"> Vous obtenez un site qui inspire confiance</span>, guide vos visiteurs et soutient votre croissance, sans compromis sur l’élégance.
+            </p>
 
-            <div className="border-t border-border pt-10">
+            <div className="mt-10 border-t border-border pt-10">
               <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Nos piliers</p>
 
               <div className="mt-7 grid grid-cols-3 divide-x divide-border">

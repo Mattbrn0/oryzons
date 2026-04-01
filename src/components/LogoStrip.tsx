@@ -44,10 +44,10 @@ export default function LogoStrip() {
       <p className="mb-6 text-center text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">
         Propulsé par les meilleures technologies
       </p>
-      <div className="relative overflow-hidden">
+      <div className="group relative overflow-hidden">
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-32 bg-gradient-to-r from-white to-transparent" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-32 bg-gradient-to-l from-white to-transparent" />
-        <div className="anim-marquee flex w-max items-center">
+        <div className="anim-marquee flex w-max items-center group-hover:[animation-play-state:paused]">
           {track.map((tech, i) => (
             <a
               key={`${tech.name}-${i}`}
