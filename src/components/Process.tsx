@@ -40,7 +40,7 @@ export default function Process() {
 
             <Link
               to="/a-propos"
-              className="btn-glass-dark mt-7 inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-[0.82rem] font-medium"
+              className="btn-hover mt-7 inline-flex w-fit items-center gap-2 rounded-full bg-white/80 px-5 py-2.5 text-[0.82rem] font-medium text-ink shadow-[0_10px_24px_rgba(0,0,0,0.10)] ring-1 ring-black/10 backdrop-blur transition-colors hover:bg-white"
             >
               Nous découvrir
               <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

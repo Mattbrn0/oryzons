@@ -81,7 +81,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
   const hidePill = () => setPill(p => ({ ...p, visible: false }))
 
   return (
-    <header className="fixed left-0 right-0 top-4 z-[100] flex items-center justify-between px-5">
+    <header className="fixed left-0 right-0 top-4 z-[100] flex items-center justify-between px-6">
 
       {/* ── Logo bubble ─────────────────────────────── */}
       <Link
@@ -177,7 +177,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
       {mobileOpen && (
         <div
           id="mobile-nav"
-          className="anim-drop-pop absolute left-5 right-5 top-[3.6rem] overflow-hidden rounded-2xl md:hidden"
+          className="anim-drop-pop absolute left-6 right-6 top-[3.6rem] overflow-hidden rounded-2xl md:hidden"
           style={glassStyle(true)}
         >
           <div className="rounded-2xl p-2 ring-1 ring-white/10">

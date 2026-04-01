@@ -95,6 +95,12 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
   const rafRef = useRef<number | null>(null);
   const pendingRef = useRef<{ edge: number; angle: number } | null>(null);
 
+  // Sur mobile (et appareils sans hover), on désactive le glow pour perf/UX
+  const glowEnabled =
+    typeof window === 'undefined'
+      ? true
+      : !window.matchMedia('(max-width: 767px), (hover: none), (pointer: coarse)').matches;
+
   const getCenterOfElement = useCallback((el: HTMLElement) => {
     const { width, height } = el.getBoundingClientRect();
     return [width / 2, height / 2];
@@ -123,6 +129,7 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
   }, [getCenterOfElement]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!glowEnabled) return;
     const card = cardRef.current;
     if (!card) return;
     const rect = card.getBoundingClientRect();
@@ -150,7 +157,7 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!animated) return;
+    if (!animated || !glowEnabled) return;
     const angleStart = 110;
     const angleEnd = 465;
     // évite setState synchro dans un effect (lint)
@@ -171,7 +178,7 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
       onEnd: () => setSweepActive(false),
     });
     return () => cancelAnimationFrame(raf);
-  }, [animated]);
+  }, [animated, glowEnabled]);
 
   const colorSensitivity = edgeSensitivity + 20;
   const isVisible = isHovered || sweepActive;
@@ -186,6 +193,22 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
   const borderBg = meshGradients.map(g => `${g} border-box`);
   const fillBg = meshGradients.map(g => `${g} padding-box`);
   const angleDeg = `${cursorAngle.toFixed(3)}deg`;
+
+  if (!glowEnabled) {
+    return (
+      <div
+        className={`relative grid isolate border border-black/[0.06] transform-gpu ${className}`}
+        style={{
+          background: backgroundColor,
+          borderRadius: `${borderRadius}px`,
+          willChange: 'transform',
+          ...style,
+        }}
+      >
+        {children}
+      </div>
+    );
+  }
 
   return (
     <div

@@ -96,7 +96,7 @@ export default function Contact() {
           <button
             disabled={sent}
             onClick={() => setSent(true)}
-            className="btn-glass-dark mt-6 w-full rounded-full py-3.5 text-[0.9rem] font-medium disabled:opacity-50"
+            className="btn-glass-dark btn-hover mt-6 w-full rounded-full py-3.5 text-[0.9rem] font-medium disabled:opacity-50"
             style={{ fontFamily: 'inherit' }}
           >
             {sent ? '✓ Message envoyé — Merci !' : 'Envoyer ma demande →'}

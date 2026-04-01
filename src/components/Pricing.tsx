@@ -306,14 +306,14 @@ export default function Pricing() {
                   {p.featured ? (
                     <a
                       href="#contact"
-                      className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#111827] px-5 text-[0.8rem] font-medium text-white shadow-[0_10px_24px_rgba(17,24,39,0.28)]"
+                      className="btn-hover inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#111827] px-5 text-[0.8rem] font-medium text-white shadow-[0_10px_24px_rgba(17,24,39,0.28)]"
                     >
                       {p.cta}
                     </a>
                   ) : (
                     <a
                       href="#contact"
-                      className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-white px-5 text-[0.8rem] font-medium text-ink shadow-[0_10px_24px_rgba(0,0,0,0.10)] ring-1 ring-black/10 transition-colors hover:bg-[#f6f7fb]"
+                      className="btn-hover inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-white px-5 text-[0.8rem] font-medium text-ink shadow-[0_10px_24px_rgba(0,0,0,0.10)] ring-1 ring-black/10 transition-colors hover:bg-[#f6f7fb]"
                     >
                       Demander un devis
                       <svg className="size-3.5 text-ink/60" viewBox="0 0 16 16" fill="none" aria-hidden>
