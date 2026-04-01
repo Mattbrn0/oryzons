@@ -62,7 +62,7 @@ export default function Contact() {
             <div>
               <label className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">Type de projet</label>
               <select className={baseInput} defaultValue="" style={{ fontFamily: 'inherit' }}>
-                <option value="" disabled>Sélectionner...</option>
+                <option value="" disabled>Sélectionner..</option>
                 <option>Création de site vitrine</option>
                 <option>Refonte de site existant</option>
                 <option>Hébergement & maintenance</option>
