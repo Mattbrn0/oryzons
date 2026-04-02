@@ -1,8 +1,23 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import HalftoneImage from '../components/HalftoneImage'
 
 const serif = { fontFamily: "'Instrument Serif', serif" } as const
+
+/** lg breakpoint — aligné sur Tailwind `lg` (1024px) pour fit canvas cover / contain. */
+function useIsLgUp() {
+  const [lg, setLg] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const apply = () => setLg(mq.matches)
+    apply()
+    mq.addEventListener('change', apply)
+    return () => mq.removeEventListener('change', apply)
+  }, [])
+  return lg
+}
 
 function useRevealOnce() {
   useEffect(() => {
@@ -24,6 +39,7 @@ function useRevealOnce() {
 
 export default function AboutPage() {
   useRevealOnce()
+  const isLgUp = useIsLgUp()
 
   return (
     <div className="relative overflow-x-hidden bg-white text-ink">
@@ -89,7 +105,7 @@ export default function AboutPage() {
       {/* ── 2. Origine — grille editorial + carte verre (pas de canvas) */}
       <section
         id="origine"
-        className="relative isolate flex min-h-svh scroll-mt-24 items-center border-t border-border bg-surface px-6 py-20 sm:px-8 md:scroll-mt-28 md:px-12 lg:px-16"
+        className="relative isolate flex scroll-mt-24 items-center border-t border-border bg-surface px-6 py-14 sm:px-8 sm:py-16 md:scroll-mt-28 md:px-12 lg:px-16"
       >
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.35]"
@@ -99,7 +115,7 @@ export default function AboutPage() {
             backgroundSize: '72px 72px',
           }}
         />
-        <div className="relative z-10 mx-auto flex min-h-[min(100svh,900px)] w-full max-w-[1100px] flex-col justify-center gap-14 lg:flex-row lg:items-center lg:gap-16">
+        <div className="relative z-10 mx-auto flex w-full max-w-[1100px] flex-col justify-center gap-10 py-4 lg:flex-row lg:items-center lg:gap-12 lg:py-6">
           <div className="reveal flex-1 lg:max-w-[460px]">
             <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Origine</p>
             <h2 style={serif} className="mt-5 text-[clamp(2rem,4vw,3.4rem)] leading-[1.06] text-ink">
@@ -146,8 +162,8 @@ export default function AboutPage() {
 
       {/* ── 3. Adam — grille 50/50 écran : ligne exactement au milieu | canvas à droite */}
       <section id="adam" className="scroll-mt-24 border-t border-border bg-[#eceef1] md:scroll-mt-28">
-        <div className="grid min-h-svh grid-cols-1 divide-y divide-border lg:grid-cols-2 lg:divide-x lg:divide-y-0">
-          <div className="flex min-w-0 flex-col justify-center px-6 py-16 sm:px-10 lg:py-24 lg:pl-12 lg:pr-10 xl:pl-16 xl:pr-12">
+        <div className="grid grid-cols-1 divide-y divide-border lg:grid-cols-2 lg:min-h-[min(88svh,920px)] lg:divide-x lg:divide-y-0">
+          <div className="order-1 flex min-w-0 flex-col justify-center px-6 py-12 sm:px-10 lg:order-none lg:py-16 lg:pl-12 lg:pr-10 xl:pl-16 xl:pr-12">
             <div className="max-w-[540px]">
               <p className="reveal text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">La Création d’Adam — l’étincelle</p>
               <h2
@@ -165,7 +181,7 @@ export default function AboutPage() {
               </p>
               <a
                 href="#david"
-                className="reveal btn-hover mt-10 inline-flex w-fit items-center gap-2 rounded-full bg-[#111827] px-6 py-2.5 text-[0.82rem] font-medium text-white shadow-[0_12px_28px_rgba(17,24,39,0.22)]"
+                className="reveal btn-hover mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-[#111827] px-6 py-2.5 text-[0.82rem] font-medium text-white shadow-[0_12px_28px_rgba(17,24,39,0.22)]"
                 style={{ transitionDelay: '140ms' }}
               >
                 Le David — la maîtrise
@@ -176,7 +192,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="relative flex min-h-[42svh] min-w-0 items-stretch justify-end overflow-hidden bg-[#eceef1] pb-16 pt-4 sm:pb-16 lg:min-h-svh lg:pb-0 lg:pt-0">
+          <div className="order-2 relative flex min-h-[48svh] min-w-0 items-stretch justify-end overflow-hidden bg-[#eceef1] pb-10 pt-0 sm:pb-12 lg:order-none lg:min-h-[min(88svh,920px)] lg:pb-0 lg:pt-0">
             <div
               className="pointer-events-none absolute inset-0 hidden lg:block"
               style={{
@@ -184,15 +200,18 @@ export default function AboutPage() {
                   'radial-gradient(520px 480px at 100% 44%, rgba(255,255,255,0.4), rgba(236,238,241,0) 65%)',
               }}
             />
-            <div className="reveal relative z-[1] mx-auto w-full max-w-[520px] px-6 sm:max-w-[560px] sm:px-10 lg:mx-0 lg:h-full lg:max-w-none lg:min-h-0 lg:px-0" style={{ transitionDelay: '80ms' }}>
-              <div className="relative aspect-[3/4] w-full min-h-[280px] overflow-hidden sm:min-h-[360px] lg:aspect-auto lg:h-full lg:min-h-svh lg:w-full">
+            <div
+              className="reveal relative z-[1] w-full max-lg:max-w-none max-lg:px-0 lg:mx-0 lg:h-full lg:min-h-0 lg:px-0"
+              style={{ transitionDelay: '80ms' }}
+            >
+              <div className="relative aspect-[4/5] w-full min-h-[min(58svh,420px)] overflow-hidden max-lg:aspect-auto max-lg:min-h-[min(62svh,520px)] lg:aspect-auto lg:h-full lg:min-h-full lg:w-full">
                 <HalftoneImage
                   src="/hands.png"
                   grid={9}
                   reveal="bottomToTop"
-                  fit="containY"
-                  hAlign="right"
-                  className="block h-full min-h-[280px] w-full sm:min-h-[360px] lg:min-h-svh"
+                  fit={isLgUp ? 'containY' : 'cover'}
+                  hAlign={isLgUp ? 'right' : 'center'}
+                  className="block h-full min-h-[min(58svh,420px)] w-full max-lg:min-h-[min(62svh,520px)] lg:min-h-full"
                 />
                 <div
                   className="pointer-events-none absolute inset-0"
@@ -210,16 +229,17 @@ export default function AboutPage() {
       {/* ── 4. David — halftone à gauche, texte à droite (desktop) */}
       <section
         id="david"
-        className="relative flex min-h-svh scroll-mt-24 flex-col border-t border-border bg-white lg:flex-row lg:scroll-mt-28"
+        className="relative flex scroll-mt-24 flex-col border-t border-border bg-white lg:min-h-[min(88svh,920px)] lg:flex-row lg:scroll-mt-28"
       >
-        <div className="relative flex min-h-[42svh] flex-1 items-stretch bg-surface lg:min-h-svh">
-          <div className="relative h-full min-h-[320px] w-full lg:min-h-0">
+        <div className="relative order-2 flex min-h-[min(48svh,420px)] flex-1 items-stretch bg-surface lg:order-1 lg:min-h-full">
+          <div className="relative h-full min-h-[min(48svh,420px)] w-full lg:min-h-0">
             <HalftoneImage
               src="/david.png"
               grid={5}
               reveal="edges"
               fit="contain"
-              className="block h-full min-h-[320px] w-full lg:min-h-svh"
+              hAlign="left"
+              className="block h-full min-h-[min(48svh,420px)] w-full lg:min-h-full"
             />
             <div
               className="pointer-events-none absolute inset-0"
@@ -231,13 +251,13 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="flex flex-1 items-center px-6 py-16 sm:px-10 lg:py-0 lg:pl-12 lg:pr-16">
+        <div className="order-1 flex flex-1 items-center px-6 py-12 sm:px-10 lg:order-2 lg:py-10 lg:pl-12 lg:pr-16">
           <div className="reveal mx-auto w-full max-w-[520px]">
             <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Le David — la maîtrise</p>
             <h2 style={serif} className="mt-5 text-[clamp(1.85rem,3.4vw,2.85rem)] leading-[1.08] text-ink">
               Précision, discipline et maîtrise.
             </h2>
-            <div className="mt-8 rounded-2xl border border-border bg-surface/80 p-6 ring-1 ring-black/[0.04] md:p-8">
+            <div className="mt-6 rounded-2xl border border-border bg-surface/80 p-6 ring-1 ring-black/[0.04] md:p-7">
               <p className="text-[0.95rem] font-light leading-[1.9] text-muted">
                 Le David représente la <span className="font-normal text-ink">précision, la discipline et la maîtrise d’un art</span>. Michel-Ange n’a pas simplement sculpté une statue. Il a révélé ce qui
                 existait déjà dans la matière.
@@ -249,7 +269,7 @@ export default function AboutPage() {
             </div>
             <a
               href="#justice"
-              className="btn-glass-dark mt-8 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[0.82rem] font-medium"
+              className="btn-glass-dark mt-6 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[0.82rem] font-medium"
             >
               Lady Justice — l’équité
               <svg className="size-3.5 shrink-0" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -261,16 +281,16 @@ export default function AboutPage() {
       </section>
 
       {/* ── 5. Lady Justice — texte à gauche, visuel collé à droite */}
-      <section id="justice" className="relative flex min-h-svh scroll-mt-24 flex-col border-t border-border bg-[#f4f5f7] lg:flex-row lg:scroll-mt-28">
-        <div className="flex flex-1 items-center px-6 py-16 sm:px-10 lg:order-1 lg:py-20 lg:pl-12 lg:pr-10 xl:py-24 xl:pl-16 xl:pr-12">
-          <div className="mx-auto w-full max-w-[560px] pt-3 pb-4 sm:pt-4 sm:pb-5 lg:mx-0 lg:pt-6 lg:pb-8">
+      <section id="justice" className="relative flex scroll-mt-24 flex-col border-t border-border bg-[#f4f5f7] lg:min-h-[min(88svh,920px)] lg:flex-row lg:scroll-mt-28">
+        <div className="order-1 flex flex-1 items-center px-6 py-12 sm:px-10 lg:order-1 lg:py-14 lg:pl-12 lg:pr-10 xl:py-16 xl:pl-16 xl:pr-12">
+          <div className="mx-auto w-full max-w-[560px] pb-3 pt-2 sm:pb-4 sm:pt-3 lg:mx-0 lg:pb-5 lg:pt-4">
             <p className="reveal text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Lady Justice — l’équité</p>
             <h2 style={serif} className="reveal mt-5 text-[clamp(1.9rem,3.5vw,3rem)] leading-[1.06] tracking-[-0.02em] text-ink">
               L’équilibre, la transparence et la justesse.
             </h2>
 
             <div
-              className="reveal mt-10 rounded-[22px] border border-black/[0.07] bg-white/75 p-7 shadow-[0_18px_48px_rgba(0,0,0,0.07)] ring-1 ring-white/90 backdrop-blur-md md:p-9"
+              className="reveal mt-7 rounded-[22px] border border-black/[0.07] bg-white/75 p-6 shadow-[0_18px_48px_rgba(0,0,0,0.07)] ring-1 ring-white/90 backdrop-blur-md md:p-8"
               style={{ transitionDelay: '50ms' }}
             >
               <p className="text-[0.98rem] font-light leading-[1.9] text-ink md:text-[1.02rem]">
@@ -281,7 +301,7 @@ export default function AboutPage() {
                 className="my-8 h-px w-full bg-gradient-to-r from-black/[0.12] via-black/[0.06] to-transparent"
                 aria-hidden
               />
-              <ul className="list-none space-y-6 text-[0.93rem] font-light leading-[1.9] text-muted md:text-[0.95rem]">
+              <ul className="list-none space-y-5 text-[0.93rem] font-light leading-[1.9] text-muted md:text-[0.95rem]">
                 <li className="reveal flex gap-4" style={{ transitionDelay: '90ms' }}>
                   <span className="mt-[0.65rem] h-px w-10 shrink-0 bg-ink/20" aria-hidden />
                   <span>
@@ -301,11 +321,9 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            
-
             <a
               href="#philosophie"
-              className="reveal btn-hover mt-10 inline-flex items-center gap-2 rounded-full bg-[#111827] px-6 py-2.5 text-[0.82rem] font-medium text-white shadow-[0_12px_28px_rgba(17,24,39,0.22)]"
+              className="reveal btn-hover mt-7 inline-flex items-center gap-2 rounded-full bg-[#111827] px-6 py-2.5 text-[0.82rem] font-medium text-white shadow-[0_12px_28px_rgba(17,24,39,0.22)]"
               style={{ transitionDelay: '300ms' }}
             >
               Philosophie
@@ -316,15 +334,15 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="relative flex min-h-[42svh] flex-1 items-stretch justify-end bg-[#f4f5f7] lg:order-2 lg:min-h-svh lg:max-w-[min(52%,720px)] lg:shrink-0">
-          <div className="relative h-full min-h-[320px] w-full max-w-full lg:ml-auto lg:min-h-0 lg:w-full">
+        <div className="relative order-2 flex min-h-[min(72svh,580px)] flex-1 items-stretch justify-end bg-[#f4f5f7] lg:order-2 lg:min-h-[min(88svh,920px)] lg:max-w-[min(52%,720px)] lg:shrink-0">
+          <div className="relative h-full min-h-[min(72svh,580px)] w-full max-w-full lg:ml-auto lg:min-h-0 lg:w-full">
             <HalftoneImage
               src="/lady-justice.png"
               grid={6}
               reveal="rightToLeft"
-              fit="containY"
+              fit={isLgUp ? 'containY' : 'contain'}
               hAlign="right"
-              className="block h-full min-h-[320px] w-full lg:min-h-svh"
+              className="block h-full min-h-[min(72svh,580px)] w-full lg:min-h-svh"
             />
             <div
               className="pointer-events-none absolute inset-0"
@@ -340,9 +358,37 @@ export default function AboutPage() {
       {/* ── 6. Philosophie — texte centré, halftone en filigrane à gauche (comme avant à droite) */}
       <section
         id="philosophie"
-        className="relative isolate flex min-h-svh scroll-mt-24 flex-col items-center justify-center overflow-hidden border-t border-border bg-white px-6 py-24 text-center md:scroll-mt-28"
+        className="relative isolate flex min-h-[min(72svh,640px)] scroll-mt-24 flex-col items-center justify-center overflow-hidden border-t border-border bg-white px-6 py-16 text-center md:scroll-mt-28 md:py-20 lg:min-h-0"
       >
-        <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-[min(52vw,640px)] lg:block">
+        {/* Mobile — halftone en fond + fondu blanc (comme le hero) */}
+        <div className="pointer-events-none absolute inset-0 z-0 lg:hidden">
+          <div className="absolute inset-0 bg-white" />
+          <div className="absolute left-1/2 top-[44%] h-[min(80svh,760px)] w-[min(92vw,720px)] -translate-x-1/2 -translate-y-1/2">
+            <HalftoneImage
+              src="/about-hero-statue.png"
+              grid={7}
+              reveal="bottomToTop"
+              fit="contain"
+              className="block h-full w-full opacity-[0.48]"
+            />
+          </div>
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 56% 52% at 50% 44%, rgba(255,255,255,0) 0%, rgba(255,255,255,0.42) 50%, rgba(255,255,255,0.94) 78%, #ffffff 100%)',
+            }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 48% 46% at 50% 40%, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.5) 38%, rgba(255,255,255,0.12) 64%, rgba(255,255,255,0) 82%)',
+            }}
+          />
+        </div>
+
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-[min(52vw,640px)] lg:block">
           <div className="absolute inset-0 opacity-[0.16]">
             <HalftoneImage
               src="/about-hero-statue.png"
@@ -362,32 +408,33 @@ export default function AboutPage() {
           />
         </div>
         <div
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 z-0 max-lg:hidden"
           style={{
             background:
               'radial-gradient(900px 480px at 50% 35%, rgba(10,12,14,0.045), transparent 68%), radial-gradient(520px 280px at 50% 100%, rgba(10,12,14,0.04), transparent 55%)',
           }}
         />
-        <div className="reveal relative z-[1] max-w-[640px]">
+        <div className="reveal relative z-[1] mx-auto max-w-[640px] text-center">
           <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Philosophie</p>
           <h2 style={serif} className="mt-5 text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.08] text-ink">
             Chaque détail porte une intention.
           </h2>
-          <p className="mt-6 text-[0.95rem] font-light leading-[1.9] text-muted">
+          <p className="mt-5 text-[0.95rem] font-light leading-[1.9] text-muted">
             Derrière chaque section, chaque interaction, il y a une décision — pas du remplissage. C’est cette exigence qui définit Oryzons.
           </p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a
-              href="/#contact"
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              to={{ pathname: '/', hash: 'contact' }}
+              state={{ contactKind: 'devis' }}
               className="btn-hover inline-flex h-12 items-center gap-2 rounded-full bg-[#111827] px-8 text-[0.88rem] font-medium text-white shadow-[0_14px_34px_rgba(17,24,39,0.28)]"
             >
               Démarrer un projet
               <svg className="size-3.5 text-white/80" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" />
               </svg>
-            </a>
+            </Link>
             <Link
-              to="/#pricing"
+              to={{ pathname: '/', hash: 'pricing' }}
               className="btn-hover inline-flex h-12 items-center gap-2 rounded-full border border-border bg-white px-8 text-[0.88rem] font-medium text-ink shadow-[0_8px_22px_rgba(0,0,0,0.06)] ring-1 ring-black/5 transition-colors hover:bg-[#f6f7fb]"
             >
               Voir les tarifs

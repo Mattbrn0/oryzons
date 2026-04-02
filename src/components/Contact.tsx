@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { flushSync } from 'react-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import HalftoneImage from './HalftoneImage'
 import {
@@ -41,6 +42,8 @@ const formMotion = {
 }
 
 export default function Contact() {
+  const location = useLocation()
+  const navigate = useNavigate()
   const [step, setStep] = useState<'choose' | RequestKind>('choose')
   const [form, setForm] = useState<ContactPayload>(() => emptyPayload('devis'))
   const [formInstanceKey, setFormInstanceKey] = useState(0)
@@ -49,6 +52,25 @@ export default function Contact() {
   const [errors, setErrors] = useState<FieldErrors>({})
   const [thanksFlash, setThanksFlash] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+
+  /** Liens depuis À propos (ou ailleurs) : ouvrir directement devis ou infos. */
+  useEffect(() => {
+    const raw = location.state as { contactKind?: RequestKind } | null
+    const kind = raw?.contactKind
+    if (kind !== 'devis' && kind !== 'informations') return
+
+    const t = window.setTimeout(() => {
+      setThanksFlash(false)
+      setErrors({})
+      setForm(emptyPayload(kind))
+      setStep(kind)
+      navigate(
+        { pathname: location.pathname, hash: location.hash, search: location.search },
+        { replace: true, state: {} },
+      )
+    }, 0)
+    return () => window.clearTimeout(t)
+  }, [location.state, location.pathname, location.hash, location.search, navigate])
 
   useEffect(() => {
     if (!thanksFlash) return

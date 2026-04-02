@@ -32,8 +32,19 @@ function ScrollToTopOnRouteChange() {
   const location = useLocation()
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (location.hash) {
+      const id = decodeURIComponent(location.hash.slice(1))
+      const scrollToTarget = () => {
+        const el = document.getElementById(id)
+        if (el) el.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth' })
+      }
+      requestAnimationFrame(() => requestAnimationFrame(scrollToTarget))
+      return
+    }
+
     window.scrollTo({ top: 0, left: 0, behavior: reduced ? 'instant' : 'smooth' })
-  }, [location.pathname])
+  }, [location.pathname, location.hash])
   return null
 }
 
