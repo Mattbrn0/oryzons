@@ -181,8 +181,22 @@ export default function Pricing() {
   return (
     <section id="pricing" className="relative isolate scroll-mt-20 min-h-svh overflow-hidden bg-white px-6 py-24 sm:px-8 sm:py-28 md:px-16">
 
-      {/* Lady Justice — même pattern que Process.tsx, côté droit */}
-      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[44vw] max-w-[560px] md:block">
+      {/* Lady Justice — entre md et 2xl : gauche + miroir (regard vers la droite, piliers Process à droite) */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-[44vw] max-w-[560px] md:block 2xl:hidden">
+        <div className="absolute inset-0 -scale-x-100">
+          <HalftoneImage src="/lady-justice.png" grid={6} reveal="leftToRight" fit="containY" className="block h-full w-full" />
+        </div>
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.20) 48%, rgba(255,255,255,0.92) 66%, rgba(255,255,255,1) 92%)',
+          }}
+        />
+      </div>
+
+      {/* Lady Justice — ≥2xl : droite (Process place les piliers à gauche → composition équilibrée, sans miroir) */}
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[44vw] max-w-[560px] 2xl:block">
         <div className="absolute inset-0">
           <HalftoneImage src="/lady-justice.png" grid={6} reveal="rightToLeft" fit="containY" className="block h-full w-full" />
         </div>
