@@ -1,127 +1,92 @@
 # Oryzons
 
-React + TypeScript + Vite — landing (Hero, Services, header glass).
+Créer plus qu’un site. Donner un sens à votre identité digitale.
 
-## Déploiement automatique (GitHub → VPS)
+## À propos
 
-À chaque `push` sur `main`, un pipeline se lance :
+Oryzons est une initiative indépendante fondée par un développeur web passionné, animé par une conviction simple :  
+un site internet n’est pas seulement un outil technique, c’est une œuvre.
 
-- **CI** : lint + build + `npm audit --omit=dev`
-- **Deploy** : si la CI est OK, build puis envoi de `dist/` sur le VPS via **SSH + rsync**, puis reload Nginx
+Dans un monde numérique où tout se ressemble, Oryzons propose une approche différente.  
+Chaque projet est conçu avec intention, précision et vision, afin de créer une présence digitale cohérente, durable et impactante.
 
-### Secrets GitHub à ajouter
+Mon objectif n’est pas simplement de développer des sites web,  
+mais de révéler le potentiel d’une marque et de transformer une idée en expérience digitale.
 
-Dans GitHub → **Settings** → **Secrets and variables** → **Actions** → **New repository secret** :
+---
 
-- `VPS_HOST` : IP ou domaine du VPS (ex: `203.0.113.10`)
-- `VPS_PORT` : port SSH (ex: `22`)
-- `VPS_USER` : user SSH (ex: `deploy`)
-- `VPS_SSH_KEY` : clé privée **ED25519** (contenu du fichier, avec les lignes `-----BEGIN...`)
-- `VPS_PATH` : dossier de déploiement (ex: `/var/www/oryzons`)
+## Philosophie
 
-### Pré-requis VPS (Nginx)
+Chez Oryzons, chaque création repose sur trois piliers :
 
-1) Crée le dossier cible et donne les droits au user `deploy` :
+- **La création** — donner vie à une idée  
+- **La maîtrise** — construire avec rigueur et expertise  
+- **L’équité** — proposer des solutions justes et transparentes  
 
-```bash
-sudo mkdir -p /var/www/oryzons
-sudo chown -R deploy:deploy /var/www/oryzons
-```
+Cette philosophie s’inspire de grandes œuvres intemporelles :
 
-2) Exemple de vhost Nginx (SPA React Router) :
+- :contentReference[oaicite:0]{index=0} — l’étincelle de la création  
+- :contentReference[oaicite:1]{index=1} — la maîtrise et la précision  
+- :contentReference[oaicite:2]{index=2} — l’équité et la transparence  
 
-```nginx
-server {
-  server_name ton-domaine.fr;
-  root /var/www/oryzons;
-  index index.html;
+Ces symboles traduisent une vision :  
+le développement web est un art, et chaque projet mérite attention et sens.
 
-  location / {
-    try_files $uri $uri/ /index.html;
-  }
+---
 
-  location ~* \.(js|css|png|jpg|jpeg|gif|svg|webp|ico|woff2?)$ {
-    expires 30d;
-    add_header Cache-Control "public, max-age=2592000, immutable";
-    try_files $uri =404;
-  }
-}
-```
+## Services
 
-3) Test & reload :
+Oryzons propose des solutions digitales adaptées aux besoins des entreprises et des entrepreneurs :
 
-```bash
-sudo nginx -t && sudo systemctl reload nginx
-```
+- Création de sites web professionnels  
+- Refonte et modernisation de sites existants  
+- Développement web sur mesure  
+- Optimisation des performances et du référencement  
+- Maintenance et accompagnement technique  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## Vision
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Le nom **Oryzons** est inspiré du mot *Horizons*.  
 
-## React Compiler
+Il symbolise :
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- une direction  
+- une vision  
+- un futur  
+- un nouveau champ des possibles  
 
-## Expanding the ESLint configuration
+Oryzons représente la volonté d’aider chaque entreprise à franchir une étape,  
+à se projeter plus loin, et à construire une présence digitale solide.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Technologies utilisées
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Selon les projets :
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- React  
+- Tailwind CSS  
+- Node.js
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Objectif
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Construire des solutions digitales fiables, performantes et durables,  
+tout en plaçant l’humain, la clarté et la qualité au cœur de chaque projet.
+
+---
+
+## Contact
+
+Pour toute collaboration ou projet :
+
+- Site web : https://oryzons.com  
+- Email : contact@oryzons.com  
+- GitHub : https://github.com/Mattbrn0
+
+---
+
+© 2026 Oryzons — Création digitale indépendante
