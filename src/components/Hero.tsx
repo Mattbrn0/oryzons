@@ -24,7 +24,7 @@ export default function Hero() {
             showBorder={false}
             className="w-full text-center"
           >
-            Repoussez les limites<br />du digital.
+            Repoussez les limites<br />du digital
           </GradientText>
         </h1>
 

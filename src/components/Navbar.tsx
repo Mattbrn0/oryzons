@@ -103,7 +103,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
       <button
         type="button"
         onClick={() => setMobileOpen(v => !v)}
-        className="btn-glass-dark anim-pop-1 inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-medium text-muted md:hidden"
+        className="btn-glass-dark anim-pop-1 inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-medium text-muted lg:hidden"
         aria-expanded={mobileOpen}
         aria-controls="mobile-nav"
       >
@@ -116,7 +116,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
       {/* ── Links bubble ────────────────────────────── */}
       <nav
         ref={navRef}
-        className="anim-pop-1 relative hidden items-center gap-0.5 rounded-full px-2 py-2 md:flex"
+        className="anim-pop-1 relative hidden items-center gap-0.5 rounded-full px-2 py-2 lg:flex"
         style={glassStyle(scrolled)}
         onMouseLeave={hidePill}
       >
@@ -154,7 +154,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
       {mode === 'about' ? (
         <Link
           to="/"
-          className="btn-glass-dark anim-pop-2 hidden items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-medium text-muted md:flex"
+          className="btn-glass-dark anim-pop-2 hidden items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-medium text-muted lg:flex"
         >
           Retour à l'accueil
           <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -164,7 +164,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
       ) : (
         <a
           href="#contact"
-          className="btn-glass-dark anim-pop-2 hidden items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-medium text-muted md:flex"
+          className="btn-glass-dark anim-pop-2 hidden items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-medium text-muted lg:flex"
         >
           Démarrer votre projet
           <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -177,7 +177,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
       {mobileOpen && (
         <div
           id="mobile-nav"
-          className="anim-drop-pop absolute left-6 right-6 top-[3.6rem] overflow-hidden rounded-2xl md:hidden"
+          className="anim-drop-pop absolute left-6 right-6 top-[3.6rem] max-h-[calc(100vh-4.6rem)] overflow-auto rounded-2xl lg:hidden"
           style={glassStyle(true)}
         >
           <div className="rounded-2xl p-2 ring-1 ring-white/10">

@@ -104,6 +104,19 @@ function Bullet({ className = '' }: { className?: string }) {
   )
 }
 
+function PlanFeatureList({ features }: { features: string[] }) {
+  return (
+    <ul className="space-y-2.5">
+      {features.map(f => (
+        <li key={f} className="flex gap-3 text-[0.8rem] font-light text-muted">
+          <Bullet />
+          <span>{f}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 function AnimatedCount({
   value,
   durationMs = 520,
@@ -233,7 +246,7 @@ export default function Pricing() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-5">
             {plans.map(p => (
               <div
                 key={p.id}
@@ -249,34 +262,34 @@ export default function Pricing() {
                 </div>
 
                 {/* Forfait + abonnement */}
-                <div className="mt-5 rounded-2xl bg-white/60 p-4 ring-1 ring-black/5">
+                <div className="mt-5 rounded-2xl bg-white/60 p-4 ring-1 ring-black/5 lg:p-3.5">
                   <div className="flex items-baseline justify-between gap-3">
-                    <span className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">
+                    <span className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle lg:text-[0.65rem] lg:tracking-[0.14em]">
                       Forfait création
                     </span>
-                    <span className="font-syne text-[1.55rem] font-extrabold leading-none tracking-[-0.04em] text-ink">
+                    <span className="font-syne text-[1.55rem] font-extrabold leading-none tracking-[-0.04em] text-ink lg:text-[1.32rem]">
                       {p.setupFee.toLocaleString('fr-FR')} €
                     </span>
                   </div>
 
-                  <div className="mt-3 flex items-end justify-between gap-3 border-t border-black/5 pt-3">
-                    <div className="min-w-0">
-                      <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">
+                  <div className="mt-3 flex flex-col gap-2 border-t border-black/5 pt-3 max-lg:flex-row max-lg:items-end max-lg:justify-between max-lg:gap-3 lg:mt-2.5 lg:gap-1.5 lg:pt-2.5">
+                    <div className="min-w-0 max-lg:flex-1">
+                      <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle lg:text-[0.65rem] lg:tracking-[0.14em]">
                         Abonnement
                       </p>
-                      <p className="mt-1 text-[0.78rem] font-light text-muted">
+                      <p className="mt-1 text-[0.78rem] font-light leading-snug text-muted lg:mt-0.5 lg:text-[0.7rem]">
                         Support • hébergement • maintenance
                       </p>
                     </div>
-                    <div className="flex items-end gap-2">
-                      <span className="font-syne text-[1.7rem] font-extrabold leading-none tracking-[-0.04em] text-ink">
+                    <div className="flex shrink-0 items-end gap-1.5 lg:self-end lg:gap-1">
+                      <span className="font-syne text-[1.7rem] font-extrabold leading-none tracking-[-0.04em] text-ink lg:text-[1.4rem]">
                         {billing === 'monthly' ? '' : ''}
                         <AnimatedCount value={p.price} />€
                       </span>
                       <AnimatePresence mode="popLayout" initial={false}>
                         <motion.span
                           key={`${p.id}-${billing}-period`}
-                          className="pb-1 text-[0.78rem] font-light text-muted"
+                          className="pb-1 text-[0.78rem] font-light text-muted lg:pb-0.5 lg:text-[0.7rem]"
                           initial={{ y: 4, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
                           exit={{ y: -4, opacity: 0 }}
@@ -293,22 +306,37 @@ export default function Pricing() {
                   {p.desc}
                 </p>
 
-                <ul className="mt-5 space-y-2.5">
-                  {p.features.map(f => (
-                    <li key={f} className="flex gap-3 text-[0.8rem] font-light text-muted">
-                      <Bullet />
-                      <span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
+                <details className="group mt-5 rounded-2xl ring-1 ring-black/10 lg:hidden">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-3 text-[0.8rem] font-medium text-ink transition-colors hover:bg-black/[0.04] [&::-webkit-details-marker]:hidden">
+                    <span>Voir ce qui est inclus</span>
+                    <svg
+                      className="size-4 shrink-0 text-ink/45 transition-transform duration-200 group-open:rotate-180"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      aria-hidden
+                    >
+                      <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </summary>
+                  <div className="border-t border-black/10 px-4 pb-4 pt-3">
+                    <PlanFeatureList features={p.features} />
+                  </div>
+                </details>
+
+                <div className="mt-5 hidden lg:block">
+                  <PlanFeatureList features={p.features} />
+                </div>
 
                 <div className="mt-auto pt-6">
                   {p.featured ? (
                     <a
                       href="#contact"
-                      className="btn-hover inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#111827] px-5 text-[0.8rem] font-medium text-white shadow-[0_10px_24px_rgba(17,24,39,0.28)]"
+                      className="btn-hover inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#111827] px-5 text-[0.8rem] font-medium text-white shadow-[0_10px_24px_rgba(17,24,39,0.28)]"
                     >
                       {p.cta}
+                      <svg className="size-3.5 text-white/70" viewBox="0 0 16 16" fill="none" aria-hidden>
+                        <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
                     </a>
                   ) : (
                     <a
