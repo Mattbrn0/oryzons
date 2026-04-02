@@ -52,8 +52,17 @@ const LIMITS = {
 const EMAIL_RE =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/
 
+/** Retire les caractères de contrôle dangereux (sans regex littérale : compatible ESLint no-control-regex). */
 function stripNullAndControl(s: string): string {
-  return s.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
+  let out = ''
+  for (let i = 0; i < s.length; i++) {
+    const code = s.charCodeAt(i)
+    if (code <= 0x08 || code === 0x0b || code === 0x0c || (code >= 0x0e && code <= 0x1f) || code === 0x7f) {
+      continue
+    }
+    out += s[i]!
+  }
+  return out
 }
 
 /** Champs courts : pas de retours à la ligne ni tabulations (évite les abus mailto / en-têtes). */

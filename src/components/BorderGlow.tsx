@@ -148,7 +148,7 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
       setEdgeProximity(p.edge);
       setCursorAngle(p.angle);
     });
-  }, [getEdgeProximity, getCursorAngle]);
+  }, [getEdgeProximity, getCursorAngle, glowEnabled]);
 
   useEffect(() => {
     return () => {
