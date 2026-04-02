@@ -36,6 +36,8 @@ jobs:
         run: npm run lint
 
       - name: Typecheck + build
+        env:
+          VITE_WEB3FORMS_ACCESS_KEY: ${{ secrets.VITE_WEB3FORMS_ACCESS_KEY }}
         run: npm run build
 
       - name: npm audit (prod)

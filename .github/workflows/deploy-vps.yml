@@ -36,7 +36,10 @@ jobs:
       - name: Install
         run: npm ci
 
+      # Vite injecte les variables VITE_* au moment du build (pas au runtime sur le VPS).
       - name: Build
+        env:
+          VITE_WEB3FORMS_ACCESS_KEY: ${{ secrets.VITE_WEB3FORMS_ACCESS_KEY }}
         run: npm run build
 
       - name: Setup SSH
