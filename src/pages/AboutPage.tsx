@@ -358,7 +358,7 @@ export default function AboutPage() {
       {/* ── 6. Philosophie — texte centré, halftone en filigrane à gauche (comme avant à droite) */}
       <section
         id="philosophie"
-        className="relative isolate flex min-h-[min(72svh,640px)] scroll-mt-24 flex-col items-center justify-center overflow-hidden border-t border-border bg-white px-6 py-16 text-center md:scroll-mt-28 md:py-20 lg:min-h-0"
+        className="relative isolate flex max-lg:min-h-[min(92svh,900px)] scroll-mt-24 flex-col items-center justify-center overflow-hidden border-t border-border bg-white px-6 py-40 text-center sm:py-44 md:scroll-mt-28 md:py-48 lg:min-h-0 lg:py-40 xl:py-44"
       >
         {/* Mobile — halftone en fond + fondu blanc (comme le hero) */}
         <div className="pointer-events-none absolute inset-0 z-0 lg:hidden">
@@ -388,7 +388,7 @@ export default function AboutPage() {
           />
         </div>
 
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-[min(52vw,640px)] lg:block">
+        <div className="pointer-events-none absolute inset-y-0 z-0 hidden w-[min(52vw,640px)] lg:left-8 lg:block xl:left-12">
           <div className="absolute inset-0 opacity-[0.16]">
             <HalftoneImage
               src="/about-hero-statue.png"
