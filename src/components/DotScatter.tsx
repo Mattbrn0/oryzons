@@ -52,12 +52,36 @@ export default function DotScatter() {
       ctx.clearRect(0, 0, W, H)
 
       const imgAspect = img.width / img.height
-      const drawW = W
-      const drawH = drawW / imgAspect
-      const GAP_X = 0.50
-      const GAP_Y = 0.52
-      const drawX = W * 0.5 - GAP_X * drawW
-      const drawY = H * 0.5 - GAP_Y * drawH
+      const isNarrowViewport = W <= 768
+
+      let drawW: number
+      let drawH: number
+      let drawX: number
+      let drawY: number
+
+      if (isNarrowViewport) {
+        // Mobile / portrait : remplir tout le hero (équivalent object-fit: cover)
+        const canvasR = W / H
+        if (imgAspect > canvasR) {
+          drawH = H
+          drawW = H * imgAspect
+          drawX = (W - drawW) / 2
+          drawY = 0
+        } else {
+          drawW = W
+          drawH = W / imgAspect
+          drawX = 0
+          drawY = (H - drawH) / 2
+        }
+      } else {
+        // Desktop : cadrage d’origine (mains centrées)
+        drawW = W
+        drawH = drawW / imgAspect
+        const GAP_X = 0.50
+        const GAP_Y = 0.52
+        drawX = W * 0.5 - GAP_X * drawW
+        drawY = H * 0.5 - GAP_Y * drawH
+      }
 
       const off = document.createElement('canvas')
       off.width  = W

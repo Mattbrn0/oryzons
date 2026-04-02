@@ -263,17 +263,18 @@ export default function Pricing() {
 
                 {/* Forfait + abonnement */}
                 <div className="mt-5 rounded-2xl bg-white/60 p-4 ring-1 ring-black/5 lg:p-3.5">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <span className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle lg:text-[0.65rem] lg:tracking-[0.14em]">
+                  <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                    <span className="min-w-0 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle lg:text-[0.65rem] lg:tracking-[0.14em]">
                       Forfait création
                     </span>
-                    <span className="font-syne text-[1.55rem] font-extrabold leading-none tracking-[-0.04em] text-ink lg:text-[1.32rem]">
-                      {p.setupFee.toLocaleString('fr-FR')} €
+                    <span className="shrink-0 whitespace-nowrap font-syne text-[1.55rem] font-extrabold leading-none tracking-[-0.04em] text-ink lg:text-[1.32rem]">
+                      {p.setupFee.toLocaleString('fr-FR')}
+                      {'\u202F'}€
                     </span>
                   </div>
 
-                  <div className="mt-3 flex flex-col gap-2 border-t border-black/5 pt-3 max-lg:flex-row max-lg:items-end max-lg:justify-between max-lg:gap-3 lg:mt-2.5 lg:gap-1.5 lg:pt-2.5">
-                    <div className="min-w-0 max-lg:flex-1">
+                  <div className="mt-3 flex min-w-0 flex-wrap items-end justify-between gap-x-3 gap-y-1 border-t border-black/5 pt-3 lg:mt-2.5 lg:items-baseline lg:gap-1.5 lg:pt-2.5">
+                    <div className="min-w-0 lg:flex-1">
                       <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle lg:text-[0.65rem] lg:tracking-[0.14em]">
                         Abonnement
                       </p>
@@ -281,15 +282,15 @@ export default function Pricing() {
                         Support • hébergement • maintenance
                       </p>
                     </div>
-                    <div className="flex shrink-0 items-end gap-1.5 lg:self-end lg:gap-1">
-                      <span className="font-syne text-[1.7rem] font-extrabold leading-none tracking-[-0.04em] text-ink lg:text-[1.4rem]">
-                        {billing === 'monthly' ? '' : ''}
-                        <AnimatedCount value={p.price} />€
+                    <div className="flex shrink-0 items-baseline gap-x-1.5 whitespace-nowrap lg:gap-1">
+                      <span className="inline-flex shrink-0 items-baseline whitespace-nowrap font-syne text-[1.7rem] font-extrabold leading-none tracking-[-0.04em] text-ink lg:text-[1.4rem]">
+                        <AnimatedCount value={p.price} />
+                        {'\u202F'}€
                       </span>
                       <AnimatePresence mode="popLayout" initial={false}>
                         <motion.span
                           key={`${p.id}-${billing}-period`}
-                          className="pb-1 text-[0.78rem] font-light text-muted lg:pb-0.5 lg:text-[0.7rem]"
+                          className="inline-flex shrink-0 pb-1 text-[0.78rem] font-light text-muted lg:pb-0.5 lg:text-[0.7rem]"
                           initial={{ y: 4, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
                           exit={{ y: -4, opacity: 0 }}

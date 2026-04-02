@@ -12,20 +12,25 @@ const homeLinks = [
 ]
 
 const aboutLinks = [
-  { label: 'Origine',     href: '#origine',    section: 'origine'   },
-  { label: 'Oryzons',     href: '#nom',        section: 'nom'       },
-  { label: 'Étoile',      href: '#etoile',     section: 'etoile'    },
-  { label: 'David',       href: '#david',      section: 'david'     },
-  { label: 'Adam',        href: '#adam',        section: 'adam'      },
+  { label: 'Origine', href: '#origine', section: 'origine' },
+  { label: 'Adam', href: '#adam', section: 'adam' },
+  { label: 'David', href: '#david', section: 'david' },
+  { label: 'Justice', href: '#justice', section: 'justice' },
+  { label: 'Philosophie', href: '#philosophie', section: 'philosophie' },
 ]
 
-const glassStyle = (scrolled: boolean): React.CSSProperties => ({
-  background: scrolled ? 'rgba(10,10,10,0.11)' : 'rgba(10,10,10,0.07)',
-  backdropFilter: 'blur(24px) saturate(180%)',
-  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-  boxShadow: '0 2px 16px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.6)',
-  transition: 'background 0.35s ease, box-shadow 0.35s ease',
+/** Pastilles opaques (pas de verre / blur) : lisibles au-dessus des canvas halftone sombres */
+const navBubbleStyle = (elevated: boolean): React.CSSProperties => ({
+  background: '#ffffff',
+  border: '1px solid rgba(0,0,0,0.06)',
+  boxShadow: elevated
+    ? '0 4px 24px rgba(0,0,0,0.1), 0 1px 0 rgba(255,255,255,1) inset'
+    : '0 2px 14px rgba(0,0,0,0.07)',
+  transition: 'box-shadow 0.35s ease',
 })
+
+const navBubbleClass =
+  'rounded-full bg-white shadow-[0_2px_14px_rgba(0,0,0,0.07)] ring-1 ring-black/[0.06] transition-[box-shadow,transform] duration-200 hover:shadow-[0_4px_20px_rgba(0,0,0,0.1)]'
 
 export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
   const [scrolled, setScrolled] = useState(false)
@@ -88,9 +93,9 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
         to="/"
         className="anim-pop-0 flex items-center gap-2 rounded-full px-4 py-2.5 no-underline"
         style={{
-          ...glassStyle(scrolled),
+          ...navBubbleStyle(scrolled),
           transform: 'scale(1)',
-          transition: 'background 0.35s ease, box-shadow 0.35s ease, transform 0.25s cubic-bezier(0.34,1.56,0.64,1)',
+          transition: 'box-shadow 0.35s ease, transform 0.25s cubic-bezier(0.34,1.56,0.64,1)',
         }}
         onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.04) translateY(-1px)')}
         onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1) translateY(0)')}
@@ -103,7 +108,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
       <button
         type="button"
         onClick={() => setMobileOpen(v => !v)}
-        className="btn-glass-dark anim-pop-1 inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-medium text-muted lg:hidden"
+        className={`anim-pop-1 inline-flex items-center gap-2 px-4 py-2.5 text-[0.82rem] font-medium text-muted lg:hidden ${navBubbleClass}`}
         aria-expanded={mobileOpen}
         aria-controls="mobile-nav"
       >
@@ -117,7 +122,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
       <nav
         ref={navRef}
         className="anim-pop-1 relative hidden items-center gap-0.5 rounded-full px-2 py-2 lg:flex"
-        style={glassStyle(scrolled)}
+        style={navBubbleStyle(scrolled)}
         onMouseLeave={hidePill}
       >
         {/* Sliding pill indicator */}
@@ -154,7 +159,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
       {mode === 'about' ? (
         <Link
           to="/"
-          className="btn-glass-dark anim-pop-2 hidden items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-medium text-muted lg:flex"
+          className={`anim-pop-2 hidden items-center gap-2 px-4 py-2.5 text-[0.82rem] font-medium !text-muted transition-colors duration-200 hover:!text-ink lg:flex ${navBubbleClass}`}
         >
           Retour à l'accueil
           <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -164,7 +169,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
       ) : (
         <a
           href="#contact"
-          className="btn-glass-dark anim-pop-2 hidden items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-medium text-muted lg:flex"
+          className={`anim-pop-2 hidden items-center gap-2 px-4 py-2.5 text-[0.82rem] font-medium !text-muted transition-colors duration-200 hover:!text-ink lg:flex ${navBubbleClass}`}
         >
           Démarrer votre projet
           <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -177,10 +182,9 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
       {mobileOpen && (
         <div
           id="mobile-nav"
-          className="anim-drop-pop absolute left-6 right-6 top-[3.6rem] max-h-[calc(100vh-4.6rem)] overflow-auto rounded-2xl lg:hidden"
-          style={glassStyle(true)}
+          className="anim-drop-pop absolute left-6 right-6 top-[3.6rem] max-h-[calc(100vh-4.6rem)] overflow-auto rounded-2xl border border-black/[0.06] bg-white shadow-[0_8px_32px_rgba(0,0,0,0.12)] lg:hidden"
         >
-          <div className="rounded-2xl p-2 ring-1 ring-white/10">
+          <div className="rounded-2xl p-2">
             <nav className="flex flex-col gap-1">
               {links.map(l => (
                 <a

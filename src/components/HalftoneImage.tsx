@@ -6,9 +6,11 @@ interface HalftoneImageProps {
   className?: string
   reveal?: 'edges' | 'leftToRight' | 'rightToLeft' | 'bottomToTop'
   fit?: 'stretch' | 'cover' | 'contain' | 'containY'
+  /** Position horizontale du calque image avant halftone (contain / containY). */
+  hAlign?: 'left' | 'center' | 'right'
 }
 
-export default function HalftoneImage({ src, grid = 6, className = '', reveal = 'edges', fit = 'stretch' }: HalftoneImageProps) {
+export default function HalftoneImage({ src, grid = 6, className = '', reveal = 'edges', fit = 'stretch', hAlign = 'center' }: HalftoneImageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -81,7 +83,8 @@ export default function HalftoneImage({ src, grid = 6, className = '', reveal = 
           if (ir > cr) { dw = W; dh = dw / ir }
           else { dh = H; dw = dh * ir }
         }
-        const dx = (W - dw) / 2
+        const dx =
+          hAlign === 'left' ? 0 : hAlign === 'right' ? Math.max(0, W - dw) : (W - dw) / 2
         const dy = fit === 'containY' ? 0 : (H - dh) / 2
         oc.drawImage(img, dx, dy, dw, dh)
       }
@@ -209,7 +212,7 @@ export default function HalftoneImage({ src, grid = 6, className = '', reveal = 
       ro.disconnect()
       visibilityObserver.disconnect()
     }
-  }, [src, grid, reveal, fit])
+  }, [src, grid, reveal, fit, hAlign])
 
   return (
     <canvas

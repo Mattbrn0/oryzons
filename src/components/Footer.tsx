@@ -14,30 +14,35 @@ export default function Footer() {
             pour les entreprises qui veulent se démarquer.
             </p>
 
-            {/* Réseaux */}
+            {/* Réseaux & contact */}
             <div className="mt-5 flex items-center gap-4 text-muted">
-              <a href="/#" aria-label="Instagram" className="transition-colors hover:text-ink">
+              <a href="/" aria-label="Instagram" className="transition-colors hover:text-ink">
                 <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                   <rect x="3" y="3" width="18" height="18" rx="5" />
                   <path d="M16 11.5a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" />
                   <path d="M17.5 6.5h.01" />
                 </svg>
               </a>
-              <a href="/#" aria-label="LinkedIn" className="transition-colors hover:text-ink">
+              <a href="/" aria-label="LinkedIn" className="transition-colors hover:text-ink">
                 <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4V9h4v2" />
                   <path d="M2 9h4v12H2z" />
                   <path d="M4 4a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z" />
                 </svg>
               </a>
-              <a href="/#" aria-label="Facebook" className="transition-colors hover:text-ink">
+              <a
+                href="mailto:contact@oryzons.com"
+                aria-label="Envoyer un e-mail"
+                className="transition-colors hover:text-ink"
+              >
                 <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3V2Z" />
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <path d="m3 7 9 6 9-6" />
                 </svg>
               </a>
-              <a href="/#" aria-label="X" className="transition-colors hover:text-ink">
+              <a href="tel:+33643121415" aria-label="Appeler par téléphone" className="transition-colors hover:text-ink">
                 <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                  <path d="M4 4l7.5 9.5L4 20h4l5.5-6.5L18 20h2l-7.8-9.7L20 4h-4l-4.8 5.7L8 4H4Z" />
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.91.31 1.8.57 2.65a2 2 0 0 1-.45 2.11L8.09 10.91a16 16 0 0 0 6 6l1.29-1.29a2 2 0 0 1 2.13-.45c.87.26 1.76.45 2.67.56A2 2 0 0 1 22 16.92z" />
                 </svg>
               </a>
             </div>
@@ -48,7 +53,7 @@ export default function Footer() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70 opacity-60" />
                 <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
               </span>
-              <span>Sites sécurisés </span>
+              <span>Site sécurisé</span>
             </div>
           </div>
 
@@ -58,28 +63,28 @@ export default function Footer() {
               <div>
                 <p className="text-[0.78rem] font-medium text-ink">Oryzons</p>
                 <ul className="mt-4 space-y-2">
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#">À propos</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#">Projets</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#">Tarifs</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#">Contact</a></li>
+                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#a-propos">À propos</a></li>
+                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#Prestations">Prestations</a></li>
+                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#pricing">Tarifs</a></li>
+                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#contact">Contact</a></li>
 
                 </ul>
               </div>
               <div>
                 <p className="text-[0.78rem] font-medium text-ink">Services</p>
                 <ul className="mt-4 space-y-2">
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/a-propos">Création de site web</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#contact">Refonte de site</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#">Maintenance</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#">Optimisation SEO</a></li>
+                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/services">Création de site web</a></li>
+                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/services">Refonte de site</a></li>
+                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/services">Maintenance</a></li>
+                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/services">Optimisation SEO</a></li>
                 </ul>
               </div>
               <div>
                 <p className="text-[0.78rem] font-medium text-ink">Ressources</p>
                 <ul className="mt-4 space-y-2">
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#">FAQ</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#">Conseils digitaux</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#">Support</a></li>
+                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/FAQ">FAQ</a></li>
+                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/FAQ">Conseils digitaux</a></li>
+                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/support">Support</a></li>
                 </ul>
               </div>
             </div>

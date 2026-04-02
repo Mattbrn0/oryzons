@@ -1,48 +1,21 @@
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import HalftoneImage from '../components/HalftoneImage'
 
-const serif = { fontFamily: "'Instrument Serif', serif" }
-
-const features = [
-  {
-    title: 'Identités digitales',
-    desc: 'Une direction, une intention, une signature. Chaque détail sert votre vision.',
-    icon: (
-      <svg className="size-4 text-ink" viewBox="0 0 20 20" fill="none" aria-hidden>
-        <path d="M10 2.5l1.6 4.7h4.9l-4 2.9 1.5 4.7-4-2.9-4 2.9 1.5-4.7-4-2.9h4.9L10 2.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Expériences',
-    desc: 'Transformer une idée en expérience : claire, fluide, mémorable.',
-    icon: (
-      <svg className="size-4 text-ink" viewBox="0 0 20 20" fill="none" aria-hidden>
-        <path d="M6.5 3.5h7A2 2 0 0 1 15.5 5.5v9A2 2 0 0 1 13.5 16.5h-7A2 2 0 0 1 4.5 14.5v-9A2 2 0 0 1 6.5 3.5Z" stroke="currentColor" strokeWidth="1.4" />
-        <path d="M7 7.2h6M7 10h6M7 12.8h4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Fondations solides',
-    desc: 'Une base technique précise, durable, pensée pour grandir avec vous.',
-    icon: (
-      <svg className="size-4 text-ink" viewBox="0 0 20 20" fill="none" aria-hidden>
-        <path d="M5 4.5h10v12H5v-12Z" stroke="currentColor" strokeWidth="1.4" />
-        <path d="M7.2 7h5.6M7.2 9.8h5.6M7.2 12.6h3.6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-] as const
+const serif = { fontFamily: "'Instrument Serif', serif" } as const
 
 function useRevealOnce() {
   useEffect(() => {
     const els = document.querySelectorAll('.reveal')
     const io = new IntersectionObserver(
-      entries => entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target) }
-      }),
-      { threshold: 0.1 },
+      entries =>
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible')
+            io.unobserve(e.target)
+          }
+        }),
+      { threshold: 0.12 },
     )
     els.forEach(el => io.observe(el))
     return () => io.disconnect()
@@ -53,47 +26,33 @@ export default function AboutPage() {
   useRevealOnce()
 
   return (
-    <div className="relative min-h-svh bg-white">
-      {/* Fond doux (comme la référence) */}
-      <div className="pointer-events-none absolute inset-0">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(1200px 520px at 50% 20%, rgba(10,10,10,0.06), rgba(10,10,10,0) 62%), radial-gradient(900px 420px at 74% 70%, rgba(10,10,10,0.035), rgba(10,10,10,0) 64%)',
-          }}
-        />
-        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'linear-gradient(to right, rgba(10,10,10,0.25) 1px, transparent 1px)', backgroundSize: '180px 100%' }} />
-      </div>
-
-      {/* HERO (plein écran, comme la home) */}
+    <div className="relative overflow-x-hidden bg-white text-ink">
+      {/* Hero — buste fragmenté (fond blanc, image centrée) */}
       <section className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 pt-16 text-center">
-        {/* Image de fond (statue) en points (canvas) */}
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute left-1/2 top-1/2 h-[92svh] w-[92svh] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-[0.22] md:opacity-[0.26]">
+        <div className="pointer-events-none absolute inset-0 bg-white">
+          <div className="absolute left-1/2 top-1/2 h-[min(96svh,980px)] w-[min(92vw,780px)] -translate-x-1/2 -translate-y-1/2">
             <HalftoneImage
-              src="/about-hero-statue.png"
+              src="/about-hero-david-bust.png"
               grid={6}
-              reveal="edges"
+              reveal="bottomToTop"
               fit="contain"
-              className="block h-full w-full"
+              className="block h-full w-full opacity-[0.94] md:opacity-[0.98]"
             />
           </div>
-          {/* Fade pour éviter que l’image soit trop présente derrière le texte */}
           <div
             className="absolute inset-0"
             style={{
               background:
-                'radial-gradient(ellipse 55% 50% at 50% 44%, rgba(255,255,255,0) 0%, rgba(255,255,255,0.42) 55%, rgba(255,255,255,0.92) 78%, rgba(255,255,255,1) 100%)',
+                'radial-gradient(ellipse 56% 50% at 50% 44%, rgba(255,255,255,0) 0%, rgba(255,255,255,0.45) 52%, rgba(255,255,255,0.94) 78%, #ffffff 100%)',
             }}
           />
         </div>
 
-        {/* Voile radial — lisibilité au centre */}
         <div
           className="pointer-events-none absolute inset-0 z-[1]"
           style={{
-            background: 'radial-gradient(ellipse 52% 42% at 50% 50%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.82) 38%, rgba(255,255,255,0.30) 65%, rgba(255,255,255,0) 82%)',
+            background:
+              'radial-gradient(ellipse 48% 42% at 50% 48%, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.52) 38%, rgba(255,255,255,0.14) 62%, rgba(255,255,255,0) 80%)',
           }}
         />
 
@@ -121,142 +80,321 @@ export default function AboutPage() {
           </a>
         </div>
 
-        {/* Indice de scroll */}
         <div className="anim-fade-5 absolute bottom-9 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-subtle">
           <span>Scroll</span>
           <div className="anim-scroll-line h-12 w-px bg-subtle/50" />
         </div>
       </section>
 
-      {/* Contenu sous le hero */}
-      <main className="relative z-10 mx-auto max-w-[1060px] px-3 pb-16 md:px-4 md:pb-24">
-        {/* Sections (ancres navbar) */}
-        <section id="origine" className="scroll-mt-28 pb-8 pt-14 md:scroll-mt-36 md:pb-10">
-          <div className="mx-auto max-w-[880px]">
+      {/* ── 2. Origine — grille editorial + carte verre (pas de canvas) */}
+      <section
+        id="origine"
+        className="relative isolate flex min-h-svh scroll-mt-24 items-center border-t border-border bg-surface px-6 py-20 sm:px-8 md:scroll-mt-28 md:px-12 lg:px-16"
+      >
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.35]"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, rgba(10,10,10,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(10,10,10,0.05) 1px, transparent 1px)',
+            backgroundSize: '72px 72px',
+          }}
+        />
+        <div className="relative z-10 mx-auto flex min-h-[min(100svh,900px)] w-full max-w-[1100px] flex-col justify-center gap-14 lg:flex-row lg:items-center lg:gap-16">
+          <div className="reveal flex-1 lg:max-w-[460px]">
             <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Origine</p>
-            <h2 style={serif} className="mt-5 text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.06] text-ink">
-              Un site internet n’est pas seulement un outil, c’est une œuvre.
+            <h2 style={serif} className="mt-5 text-[clamp(2rem,4vw,3.4rem)] leading-[1.06] text-ink">
+              Quand le web devient une matière à sculpter.
             </h2>
-            <div className="mt-6 space-y-5 text-[0.95rem] font-light leading-[1.95] text-muted">
-              <p>
-                Dans un monde où tout va vite, où les sites se ressemblent, où la technologie devient parfois froide et impersonnelle, j’ai voulu créer une approche différente.
-                Une approche où chaque projet est pensé comme une création unique, avec une intention, une identité et une direction.
-              </p>
-              <p>
-                Je suis développeur web indépendant, passionné par la création digitale. Mais mon objectif n’a jamais été simplement de coder des pages ou d’assembler des fonctionnalités.
-              </p>
-              <p>
-                Mon rôle est de <span className="font-normal text-ink">donner un sens</span> à votre présence digitale. De transformer une idée en expérience. De faire de votre site une signature.
+            <p className="mt-6 text-[0.95rem] font-light leading-[1.9] text-muted">
+              Face à l’uniformisation et à la vitesse des lancements, j’ai voulu une autre manière de construire&nbsp;:{' '}
+              <span className="font-normal text-ink">écouter, clarifier, puis façonner</span> une présence digitale avec une intention nette.
+            </p>
+            <a
+              href="#adam"
+              className="btn-hover mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-2.5 text-[0.82rem] font-medium text-ink shadow-[0_10px_24px_rgba(0,0,0,0.10)] ring-1 ring-black/10"
+            >
+              La Création d’Adam — l’étincelle
+              <svg className="size-3.5 shrink-0 text-ink/55" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M3.5 5.35 7 8.85 10.5 5.35" />
+              </svg>
+            </a>
+          </div>
+
+          <div className="reveal flex flex-1 flex-col gap-4 lg:max-w-[480px]" style={{ transitionDelay: '90ms' }}>
+            <div className="rounded-[22px] border border-black/10 bg-white/85 p-6 shadow-[0_16px_40px_rgba(0,0,0,0.08)] ring-1 ring-white/80 backdrop-blur-md md:p-8">
+              <p className="text-[0.8rem] font-medium text-ink">Une genèse simple</p>
+              <p className="mt-4 text-[0.92rem] font-light leading-[1.85] text-muted">
+                Oryzons naît du constat que trop de sites se contentent d’exister. Le vrai travail, c’est de révéler ce que votre activité porte déjà en elle — structure,
+                crédibilité, envie — et de le traduire dans une expérience lisible.
               </p>
             </div>
-          </div>
-        </section>
-
-        <section className="reveal mt-10 border-t border-border pt-10 md:mt-14">
-          <div className="mx-auto max-w-[980px]">
-            <div className="grid grid-cols-1 divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
-              {features.map((f, idx) => (
-                <div key={f.title} className="group px-2 py-10 md:px-8 md:py-0" style={{ transitionDelay: `${idx * 90}ms` }}>
-                  <div className="flex items-center justify-center gap-3 md:justify-start">
-                    <span className="inline-flex size-9 items-center justify-center rounded-full border border-border bg-white">
-                      {f.icon}
-                    </span>
-                    <p className="text-[0.8rem] font-medium text-ink">{f.title}</p>
-                  </div>
-                  <p className="mt-4 text-center text-[0.86rem] font-light leading-[1.8] text-muted md:text-left">
-                    {f.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="david" className="scroll-mt-28 border-t border-border pb-8 pt-14 md:scroll-mt-36 md:pb-10">
-          <div className="mx-auto max-w-[880px]">
-            <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Le David — la maîtrise</p>
-            <h2 style={serif} className="mt-5 text-[clamp(1.7rem,3.1vw,2.5rem)] leading-[1.08] text-ink">
-              Révéler le potentiel d’une marque.
-            </h2>
-            <div className="mt-6 space-y-5 text-[0.95rem] font-light leading-[1.95] text-muted">
-              <p>
-                Le David représente la précision, la discipline et la maîtrise d’un art. Michel-Ange n’a pas simplement sculpté une statue. Il a révélé ce qui existait déjà dans la matière.
-              </p>
-              <p>
-                C’est exactement ma vision du développement web&nbsp;: je ne crée pas seulement un site, je révèle le potentiel d’une marque.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section id="adam" className="scroll-mt-28 border-t border-border pb-8 pt-14 md:scroll-mt-36 md:pb-10">
-          <div className="mx-auto max-w-[880px]">
-            <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">La Création d’Adam — l’étincelle</p>
-            <h2 style={serif} className="mt-5 text-[clamp(1.7rem,3.1vw,2.5rem)] leading-[1.08] text-ink">
-              Le moment où tout commence.
-            </h2>
-            <div className="mt-6 space-y-5 text-[0.95rem] font-light leading-[1.95] text-muted">
-              <p>
-                Cette œuvre symbolise le passage de l’idée à la vie&nbsp;: la connexion entre une vision et sa réalisation. Dans le digital, ce moment correspond à la naissance d’un projet.
-              </p>
-              <p>
-                Une idée devient une présence. Une entreprise devient visible. Chaque site est une création.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section id="nom" className="scroll-mt-28 border-t border-border pb-8 pt-14 md:scroll-mt-36 md:pb-10">
-          <div className="mx-auto max-w-[880px]">
-            <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Pourquoi le nom “Oryzons”&nbsp;?</p>
-            <h2 style={serif} className="mt-5 text-[clamp(1.7rem,3.1vw,2.5rem)] leading-[1.08] text-ink">
-              Un horizon… transformé volontairement.
-            </h2>
-            <div className="mt-6 space-y-5 text-[0.95rem] font-light leading-[1.95] text-muted">
-              <p>
-                Le nom Oryzons vient du mot <span className="font-normal text-ink">Horizons</span>. Un horizon représente une direction, une vision, une possibilité, un futur.
-                Mais Oryzons n’est pas seulement un horizon&nbsp;: le mot a été transformé volontairement.
-              </p>
-              <p>
-                Le <span className="font-normal text-ink">“O”</span> symbolise un cycle, un point de départ, une globalité, une vision complète.
-                Le <span className="font-normal text-ink">“ryz”</span> est une signature unique, moderne et technologique — un nom qui ne ressemble à aucun autre.
-              </p>
-              <p>
-                Oryzons signifie&nbsp;: une nouvelle vision, un nouveau départ, un nouveau champ des possibles.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section id="etoile" className="scroll-mt-28 border-t border-border pb-20 pt-14 md:scroll-mt-36 md:pb-28">
-          <div className="mx-auto max-w-[880px]">
-            <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Pourquoi une étoile comme logo&nbsp;?</p>
-            <h2 style={serif} className="mt-5 text-[clamp(1.7rem,3.1vw,2.5rem)] leading-[1.08] text-ink">
-              Vous guider dans votre transformation digitale.
-            </h2>
-            <div className="mt-6 space-y-5 text-[0.95rem] font-light leading-[1.95] text-muted">
-              <p>
-                L’étoile est un symbole universel. Elle représente la direction, la guidance, l’excellence, l’ambition, la lumière dans l’obscurité.
-                Depuis toujours, les étoiles servent à s’orienter — elles montrent le chemin.
-              </p>
-              <p>
-                Dans Oryzons, l’étoile signifie vous guider dans votre transformation digitale. Elle symbolise aussi la créativité, l’innovation, la précision et la constance.
-              </p>
-              <p>
-                Une étoile n’est jamais immobile. Elle rayonne. Comme une marque forte.
-              </p>
-              <div className="mt-8 rounded-2xl border border-border bg-white/60 px-6 py-6 backdrop-blur">
-                <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">La philosophie d’Oryzons</p>
-                <p className="mt-4 text-[0.95rem] font-light leading-[1.95] text-muted">
-                  Je ne crée pas simplement des sites internet. Je crée des identités digitales, des expériences, des fondations solides, des outils qui ont du sens.
-                  Chaque projet est traité comme une œuvre. Chaque détail est pensé. Chaque ligne de code a une intention.
-                  Parce que derrière chaque création, il y a un créateur. Et derrière chaque entreprise, il y a une vision.
-                </p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+              <div className="flex flex-1 flex-col justify-center rounded-2xl border border-black/8 bg-white/70 px-5 py-4 text-[0.82rem] font-light text-muted backdrop-blur">
+                <span className="font-syne text-[1.65rem] font-extrabold tabular-nums text-ink">01</span>
+                <span className="mt-1 text-[0.78rem] uppercase tracking-[0.12em] text-subtle">Position</span>
+                <span className="mt-2 leading-snug">Indépendant, projet par projet, relation directe.</span>
+              </div>
+              <div className="flex flex-1 flex-col justify-center rounded-2xl border border-black/8 bg-white/70 px-5 py-4 text-[0.82rem] font-light text-muted backdrop-blur">
+                <span className="font-syne text-[1.65rem] font-extrabold tabular-nums text-ink">∞</span>
+                <span className="mt-1 text-[0.78rem] uppercase tracking-[0.12em] text-subtle">Ambition</span>
+                <span className="mt-2 text-[0.9rem] leading-snug text-muted">Des fondations techniques propres pour durer.</span>
               </div>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      {/* ── 3. Adam — grille 50/50 écran : ligne exactement au milieu | canvas à droite */}
+      <section id="adam" className="scroll-mt-24 border-t border-border bg-[#eceef1] md:scroll-mt-28">
+        <div className="grid min-h-svh grid-cols-1 divide-y divide-border lg:grid-cols-2 lg:divide-x lg:divide-y-0">
+          <div className="flex min-w-0 flex-col justify-center px-6 py-16 sm:px-10 lg:py-24 lg:pl-12 lg:pr-10 xl:pl-16 xl:pr-12">
+            <div className="max-w-[540px]">
+              <p className="reveal text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">La Création d’Adam — l’étincelle</p>
+              <h2
+                style={serif}
+                className="reveal mt-5 text-[clamp(1.85rem,3.5vw,2.85rem)] leading-[1.1] tracking-[-0.02em] text-ink"
+              >
+                Le passage de l’idée à la vie.
+              </h2>
+              <p className="reveal mt-6 text-[0.95rem] font-light leading-[1.9] text-muted" style={{ transitionDelay: '60ms' }}>
+                Cette œuvre symbolise le moment où tout commence. <span className="font-normal text-ink">Le passage de l’idée à la vie.</span> La connexion entre une vision et sa réalisation.
+              </p>
+              <p className="reveal mt-5 text-[0.95rem] font-light leading-[1.9] text-muted" style={{ transitionDelay: '100ms' }}>
+                Dans le digital, ce moment correspond à la naissance d’un projet. Une idée devient une présence. Une entreprise devient visible.{' '}
+                <span className="font-normal text-ink">Chaque site est une création.</span>
+              </p>
+              <a
+                href="#david"
+                className="reveal btn-hover mt-10 inline-flex w-fit items-center gap-2 rounded-full bg-[#111827] px-6 py-2.5 text-[0.82rem] font-medium text-white shadow-[0_12px_28px_rgba(17,24,39,0.22)]"
+                style={{ transitionDelay: '140ms' }}
+              >
+                Le David — la maîtrise
+                <svg className="size-3.5 shrink-0 text-white/80" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M3.5 5.35 7 8.85 10.5 5.35" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div className="relative flex min-h-[42svh] min-w-0 items-stretch justify-end overflow-hidden bg-[#eceef1] pb-16 pt-4 sm:pb-16 lg:min-h-svh lg:pb-0 lg:pt-0">
+            <div
+              className="pointer-events-none absolute inset-0 hidden lg:block"
+              style={{
+                background:
+                  'radial-gradient(520px 480px at 100% 44%, rgba(255,255,255,0.4), rgba(236,238,241,0) 65%)',
+              }}
+            />
+            <div className="reveal relative z-[1] mx-auto w-full max-w-[520px] px-6 sm:max-w-[560px] sm:px-10 lg:mx-0 lg:h-full lg:max-w-none lg:min-h-0 lg:px-0" style={{ transitionDelay: '80ms' }}>
+              <div className="relative aspect-[3/4] w-full min-h-[280px] overflow-hidden sm:min-h-[360px] lg:aspect-auto lg:h-full lg:min-h-svh lg:w-full">
+                <HalftoneImage
+                  src="/hands.png"
+                  grid={9}
+                  reveal="bottomToTop"
+                  fit="containY"
+                  hAlign="right"
+                  className="block h-full min-h-[280px] w-full sm:min-h-[360px] lg:min-h-svh"
+                />
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      'linear-gradient(180deg, rgba(236,238,241,0.55) 0%, rgba(236,238,241,0) 18%), linear-gradient(90deg, rgba(236,238,241,0.55) 0%, rgba(236,238,241,0.1) 42%, rgba(236,238,241,0) 68%)',
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. David — halftone à gauche, texte à droite (desktop) */}
+      <section
+        id="david"
+        className="relative flex min-h-svh scroll-mt-24 flex-col border-t border-border bg-white lg:flex-row lg:scroll-mt-28"
+      >
+        <div className="relative flex min-h-[42svh] flex-1 items-stretch bg-surface lg:min-h-svh">
+          <div className="relative h-full min-h-[320px] w-full lg:min-h-0">
+            <HalftoneImage
+              src="/david.png"
+              grid={5}
+              reveal="edges"
+              fit="contain"
+              className="block h-full min-h-[320px] w-full lg:min-h-svh"
+            />
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  'linear-gradient(180deg, rgba(249,250,251,0.65) 0%, rgba(249,250,251,0) 22%), linear-gradient(90deg, rgba(249,250,251,0) 0%, rgba(249,250,251,0.22) 58%, rgba(255,255,255,0.9) 100%)',
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-1 items-center px-6 py-16 sm:px-10 lg:py-0 lg:pl-12 lg:pr-16">
+          <div className="reveal mx-auto w-full max-w-[520px]">
+            <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Le David — la maîtrise</p>
+            <h2 style={serif} className="mt-5 text-[clamp(1.85rem,3.4vw,2.85rem)] leading-[1.08] text-ink">
+              Précision, discipline et maîtrise.
+            </h2>
+            <div className="mt-8 rounded-2xl border border-border bg-surface/80 p-6 ring-1 ring-black/[0.04] md:p-8">
+              <p className="text-[0.95rem] font-light leading-[1.9] text-muted">
+                Le David représente la <span className="font-normal text-ink">précision, la discipline et la maîtrise d’un art</span>. Michel-Ange n’a pas simplement sculpté une statue. Il a révélé ce qui
+                existait déjà dans la matière.
+              </p>
+              <p className="mt-5 text-[0.95rem] font-light leading-[1.9] text-muted">
+                C’est exactement ma vision du développement web&nbsp;:{' '}
+                <span className="font-normal text-ink">je ne crée pas seulement un site, je révèle le potentiel d’une marque.</span>
+              </p>
+            </div>
+            <a
+              href="#justice"
+              className="btn-glass-dark mt-8 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[0.82rem] font-medium"
+            >
+              Lady Justice — l’équité
+              <svg className="size-3.5 shrink-0" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M3.5 5.35 7 8.85 10.5 5.35" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. Lady Justice — texte à gauche, visuel collé à droite */}
+      <section id="justice" className="relative flex min-h-svh scroll-mt-24 flex-col border-t border-border bg-[#f4f5f7] lg:flex-row lg:scroll-mt-28">
+        <div className="flex flex-1 items-center px-6 py-16 sm:px-10 lg:order-1 lg:py-20 lg:pl-12 lg:pr-10 xl:py-24 xl:pl-16 xl:pr-12">
+          <div className="mx-auto w-full max-w-[560px] pt-3 pb-4 sm:pt-4 sm:pb-5 lg:mx-0 lg:pt-6 lg:pb-8">
+            <p className="reveal text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Lady Justice — l’équité</p>
+            <h2 style={serif} className="reveal mt-5 text-[clamp(1.9rem,3.5vw,3rem)] leading-[1.06] tracking-[-0.02em] text-ink">
+              L’équilibre, la transparence et la justesse.
+            </h2>
+
+            <div
+              className="reveal mt-10 rounded-[22px] border border-black/[0.07] bg-white/75 p-7 shadow-[0_18px_48px_rgba(0,0,0,0.07)] ring-1 ring-white/90 backdrop-blur-md md:p-9"
+              style={{ transitionDelay: '50ms' }}
+            >
+              <p className="text-[0.98rem] font-light leading-[1.9] text-ink md:text-[1.02rem]">
+                Lady Justice représente{' '}
+                <span className="font-medium text-ink">l’équilibre, la transparence et la justesse</span>. Elle incarne l’idée que chaque décision doit être prise avec rigueur et impartialité.
+              </p>
+              <div
+                className="my-8 h-px w-full bg-gradient-to-r from-black/[0.12] via-black/[0.06] to-transparent"
+                aria-hidden
+              />
+              <ul className="list-none space-y-6 text-[0.93rem] font-light leading-[1.9] text-muted md:text-[0.95rem]">
+                <li className="reveal flex gap-4" style={{ transitionDelay: '90ms' }}>
+                  <span className="mt-[0.65rem] h-px w-10 shrink-0 bg-ink/20" aria-hidden />
+                  <span>
+                    Dans mon travail, cette symbolique se traduit par une conviction simple&nbsp;: un projet doit être clair, compréhensible et juste pour toutes les parties.
+                  </span>
+                </li>
+                <li className="reveal flex gap-4" style={{ transitionDelay: '145ms' }}>
+                  <span className="mt-[0.65rem] h-px w-10 shrink-0 bg-ink/20" aria-hidden />
+                  <span>Mes tarifs ne sont pas fixés au hasard. Ils sont construits avec logique, transparence et respect du travail fourni.</span>
+                </li>
+                <li className="reveal flex gap-4" style={{ transitionDelay: '200ms' }}>
+                  <span className="mt-[0.65rem] h-px w-10 shrink-0 bg-ink/20" aria-hidden />
+                  <span>
+                    Je crois qu’une relation professionnelle solide repose sur la confiance. Et la confiance commence par l’équité.
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            
+
+            <a
+              href="#philosophie"
+              className="reveal btn-hover mt-10 inline-flex items-center gap-2 rounded-full bg-[#111827] px-6 py-2.5 text-[0.82rem] font-medium text-white shadow-[0_12px_28px_rgba(17,24,39,0.22)]"
+              style={{ transitionDelay: '300ms' }}
+            >
+              Philosophie
+              <svg className="size-3.5 shrink-0 text-white/80" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M3.5 5.35 7 8.85 10.5 5.35" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div className="relative flex min-h-[42svh] flex-1 items-stretch justify-end bg-[#f4f5f7] lg:order-2 lg:min-h-svh lg:max-w-[min(52%,720px)] lg:shrink-0">
+          <div className="relative h-full min-h-[320px] w-full max-w-full lg:ml-auto lg:min-h-0 lg:w-full">
+            <HalftoneImage
+              src="/lady-justice.png"
+              grid={6}
+              reveal="rightToLeft"
+              fit="containY"
+              hAlign="right"
+              className="block h-full min-h-[320px] w-full lg:min-h-svh"
+            />
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  'linear-gradient(180deg, rgba(244,245,247,0.65) 0%, rgba(244,245,247,0) 22%), linear-gradient(90deg, rgba(244,245,247,0.55) 0%, rgba(244,245,247,0.08) 45%, rgba(244,245,247,0) 72%)',
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. Philosophie — texte centré, halftone en filigrane à gauche (comme avant à droite) */}
+      <section
+        id="philosophie"
+        className="relative isolate flex min-h-svh scroll-mt-24 flex-col items-center justify-center overflow-hidden border-t border-border bg-white px-6 py-24 text-center md:scroll-mt-28"
+      >
+        <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-[min(52vw,640px)] lg:block">
+          <div className="absolute inset-0 opacity-[0.16]">
+            <HalftoneImage
+              src="/about-hero-statue.png"
+              grid={7}
+              reveal="leftToRight"
+              fit="containY"
+              hAlign="left"
+              className="h-full w-full"
+            />
+          </div>
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.65) 55%, #ffffff 92%)',
+            }}
+          />
+        </div>
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(900px 480px at 50% 35%, rgba(10,12,14,0.045), transparent 68%), radial-gradient(520px 280px at 50% 100%, rgba(10,12,14,0.04), transparent 55%)',
+          }}
+        />
+        <div className="reveal relative z-[1] max-w-[640px]">
+          <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Philosophie</p>
+          <h2 style={serif} className="mt-5 text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.08] text-ink">
+            Chaque détail porte une intention.
+          </h2>
+          <p className="mt-6 text-[0.95rem] font-light leading-[1.9] text-muted">
+            Derrière chaque section, chaque interaction, il y a une décision — pas du remplissage. C’est cette exigence qui définit Oryzons.
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <a
+              href="/#contact"
+              className="btn-hover inline-flex h-12 items-center gap-2 rounded-full bg-[#111827] px-8 text-[0.88rem] font-medium text-white shadow-[0_14px_34px_rgba(17,24,39,0.28)]"
+            >
+              Démarrer un projet
+              <svg className="size-3.5 text-white/80" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" />
+              </svg>
+            </a>
+            <Link
+              to="/#pricing"
+              className="btn-hover inline-flex h-12 items-center gap-2 rounded-full border border-border bg-white px-8 text-[0.88rem] font-medium text-ink shadow-[0_8px_22px_rgba(0,0,0,0.06)] ring-1 ring-black/5 transition-colors hover:bg-[#f6f7fb]"
+            >
+              Voir les tarifs
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

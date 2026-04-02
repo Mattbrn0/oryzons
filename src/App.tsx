@@ -12,7 +12,7 @@ import Footer    from './components/Footer'
 
 // Chargement différé de la page À propos (elle n'est pas visible au premier rendu)
 const AboutPage = lazy(() => import('./pages/AboutPage'))
-const ServicesPage = lazy(() => import('./pages/ServicesPage'))
+const ComingSoonPage = lazy(() => import('./pages/ComingSoonPage'))
 
 function useReveal() {
   useEffect(() => {
@@ -76,11 +76,46 @@ function AnimatedRoutes() {
                 <AboutPage />
               </Suspense>
             } />
-            <Route path="/services" element={
-              <Suspense fallback={<div className="min-h-svh" />}>
-                <ServicesPage />
-              </Suspense>
-            } />
+            <Route
+              path="/services"
+              element={
+                <Suspense fallback={<div className="min-h-svh" />}>
+                  <ComingSoonPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/FAQ"
+              element={
+                <Suspense fallback={<div className="min-h-svh" />}>
+                  <ComingSoonPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/support"
+              element={
+                <Suspense fallback={<div className="min-h-svh" />}>
+                  <ComingSoonPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/cgu"
+              element={
+                <Suspense fallback={<div className="min-h-svh" />}>
+                  <ComingSoonPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/cgv"
+              element={
+                <Suspense fallback={<div className="min-h-svh" />}>
+                  <ComingSoonPage />
+                </Suspense>
+              }
+            />
           </Routes>
         </motion.div>
       </AnimatePresence>
