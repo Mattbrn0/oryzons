@@ -391,12 +391,81 @@ function FaqAccordionItem({
   )
 }
 
+/** Paginé : remonter avec `key` (query + catégorie) pour réinitialiser le compteur sans effet. */
+function FaqPaginatedList({
+  filtered,
+  reduceMotion,
+}: {
+  filtered: FaqEntry[]
+  reduceMotion: boolean | null
+}) {
+  const [visibleCount, setVisibleCount] = useState(FAQ_PAGE_SIZE)
+  const visibleEntries = useMemo(() => filtered.slice(0, visibleCount), [filtered, visibleCount])
+  const hasMoreFaq = filtered.length > visibleCount
+  const nextBatchSize = Math.min(FAQ_PAGE_SIZE, filtered.length - visibleCount)
+
+  return (
+    <>
+      <motion.ul
+        key="faq-list"
+        role="list"
+        className="space-y-3"
+        initial={reduceMotion ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={reduceMotion ? undefined : { opacity: 0 }}
+        transition={{ duration: reduceMotion ? 0 : 0.22, ease: faqEase }}
+      >
+        <AnimatePresence initial={false}>
+          {visibleEntries.map((item, index) => (
+            <motion.li
+              key={item.id}
+              layout
+              className="list-none"
+              initial={reduceMotion ? false : { opacity: 0, y: 22, filter: 'blur(5px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={reduceMotion ? undefined : { opacity: 0, y: -10, filter: 'blur(4px)' }}
+              transition={{
+                duration: reduceMotion ? 0 : 0.38,
+                delay: reduceMotion ? 0 : Math.min(index, 14) * 0.042,
+                ease: faqEase,
+                layout: { duration: reduceMotion ? 0 : 0.28, ease: faqEase },
+              }}
+            >
+              <FaqAccordionItem item={item} reduceMotion={reduceMotion} />
+            </motion.li>
+          ))}
+        </AnimatePresence>
+      </motion.ul>
+      {hasMoreFaq ? (
+        <div className="mt-8 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setVisibleCount(c => Math.min(c + FAQ_PAGE_SIZE, filtered.length))}
+            className="group flex size-12 items-center justify-center rounded-full border border-border bg-white/90 text-muted shadow-[0_6px_24px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.04] transition-[box-shadow,transform,border-color,color] hover:border-ink/12 hover:text-ink hover:shadow-[0_10px_28px_rgba(0,0,0,0.08)] active:scale-[0.97]"
+            aria-label={`Afficher ${nextBatchSize} question${nextBatchSize > 1 ? 's' : ''} de plus`}
+          >
+            <svg
+              className="size-5 transition-transform duration-200 group-hover:translate-y-0.5"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              aria-hidden
+            >
+              <path d="M4 5.5 8 9.5 12 5.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
+      ) : null}
+    </>
+  )
+}
+
 export default function FAQPage() {
   useFaqHeroReveal()
   const reduceMotion = useReducedMotion()
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryId>('tout')
-  const [visibleCount, setVisibleCount] = useState(FAQ_PAGE_SIZE)
 
   const filtered = useMemo(() => {
     return FAQ_DATA.filter(e => {
@@ -405,13 +474,7 @@ export default function FAQPage() {
     })
   }, [query, category])
 
-  useEffect(() => {
-    setVisibleCount(FAQ_PAGE_SIZE)
-  }, [query, category])
-
-  const visibleEntries = useMemo(() => filtered.slice(0, visibleCount), [filtered, visibleCount])
-  const hasMoreFaq = filtered.length > visibleCount
-  const nextBatchSize = Math.min(FAQ_PAGE_SIZE, filtered.length - visibleCount)
+  const listResetKey = `${category}:${query}`
 
   return (
     <div className="relative overflow-x-hidden bg-white text-ink">
@@ -534,59 +597,7 @@ export default function FAQPage() {
                 </div>
               </motion.div>
             ) : (
-              <>
-                <motion.ul
-                  key="faq-list"
-                  role="list"
-                  className="space-y-3"
-                  initial={reduceMotion ? false : { opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={reduceMotion ? undefined : { opacity: 0 }}
-                  transition={{ duration: reduceMotion ? 0 : 0.22, ease: faqEase }}
-                >
-                  <AnimatePresence initial={false}>
-                    {visibleEntries.map((item, index) => (
-                      <motion.li
-                        key={item.id}
-                        layout
-                        className="list-none"
-                        initial={reduceMotion ? false : { opacity: 0, y: 22, filter: 'blur(5px)' }}
-                        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                        exit={reduceMotion ? undefined : { opacity: 0, y: -10, filter: 'blur(4px)' }}
-                        transition={{
-                          duration: reduceMotion ? 0 : 0.38,
-                          delay: reduceMotion ? 0 : Math.min(index, 14) * 0.042,
-                          ease: faqEase,
-                          layout: { duration: reduceMotion ? 0 : 0.28, ease: faqEase },
-                        }}
-                      >
-                        <FaqAccordionItem item={item} reduceMotion={reduceMotion} />
-                      </motion.li>
-                    ))}
-                  </AnimatePresence>
-                </motion.ul>
-                {hasMoreFaq ? (
-                  <div className="mt-8 flex justify-center">
-                    <button
-                      type="button"
-                      onClick={() => setVisibleCount(c => Math.min(c + FAQ_PAGE_SIZE, filtered.length))}
-                      className="group flex size-12 items-center justify-center rounded-full border border-border bg-white/90 text-muted shadow-[0_6px_24px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.04] transition-[box-shadow,transform,border-color,color] hover:border-ink/12 hover:text-ink hover:shadow-[0_10px_28px_rgba(0,0,0,0.08)] active:scale-[0.97]"
-                      aria-label={`Afficher ${nextBatchSize} question${nextBatchSize > 1 ? 's' : ''} de plus`}
-                    >
-                      <svg
-                        className="size-5 transition-transform duration-200 group-hover:translate-y-0.5"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.6"
-                        aria-hidden
-                      >
-                        <path d="M4 5.5 8 9.5 12 5.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </button>
-                  </div>
-                ) : null}
-              </>
+              <FaqPaginatedList key={listResetKey} filtered={filtered} reduceMotion={reduceMotion} />
             )}
           </AnimatePresence>
 
