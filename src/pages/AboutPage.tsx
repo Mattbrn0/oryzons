@@ -105,7 +105,7 @@ export default function AboutPage() {
       {/* ── 2. Origine — grille editorial + carte verre (pas de canvas) */}
       <section
         id="origine"
-        className="relative isolate flex scroll-mt-24 items-center border-t border-border bg-surface px-6 py-14 sm:px-8 sm:py-16 md:scroll-mt-28 md:px-12 lg:px-16"
+        className="relative isolate flex min-h-svh scroll-mt-24 items-center border-t border-border bg-surface px-6 py-20 sm:px-8 sm:py-24 md:scroll-mt-28 md:px-12 md:py-28 lg:px-16 lg:py-32"
       >
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.35]"
@@ -161,8 +161,8 @@ export default function AboutPage() {
       </section>
 
       {/* ── 3. Adam — grille 50/50 écran : ligne exactement au milieu | canvas à droite */}
-      <section id="adam" className="scroll-mt-24 border-t border-border bg-[#eceef1] md:scroll-mt-28">
-        <div className="grid grid-cols-1 divide-y divide-border lg:grid-cols-2 lg:min-h-[min(88svh,920px)] lg:divide-x lg:divide-y-0">
+      <section id="adam" className="flex min-h-svh scroll-mt-24 flex-col border-t border-border bg-[#eceef1] md:scroll-mt-28">
+        <div className="grid min-h-svh flex-1 grid-cols-1 divide-y divide-border lg:grid-cols-2 lg:divide-x lg:divide-y-0">
           <div className="order-1 flex min-w-0 flex-col justify-center px-6 py-12 sm:px-10 lg:order-none lg:py-16 lg:pl-12 lg:pr-10 xl:pl-16 xl:pr-12">
             <div className="max-w-[540px]">
               <p className="reveal text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">La Création d’Adam — l’étincelle</p>
@@ -192,7 +192,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="order-2 relative flex min-h-[48svh] min-w-0 items-stretch justify-end overflow-hidden bg-[#eceef1] pb-10 pt-0 sm:pb-12 lg:order-none lg:min-h-[min(88svh,920px)] lg:pb-0 lg:pt-0">
+          <div className="order-2 relative flex min-h-[48svh] min-w-0 flex-1 items-stretch justify-end overflow-hidden bg-[#eceef1] pb-10 pt-0 sm:pb-12 lg:order-none lg:min-h-0 lg:pb-0 lg:pt-0">
             <div
               className="pointer-events-none absolute inset-0 hidden lg:block"
               style={{
@@ -229,9 +229,9 @@ export default function AboutPage() {
       {/* ── 4. David — halftone à gauche, texte à droite (desktop) */}
       <section
         id="david"
-        className="relative flex scroll-mt-24 flex-col border-t border-border bg-white lg:min-h-[min(88svh,920px)] lg:flex-row lg:scroll-mt-28"
+        className="relative flex min-h-svh scroll-mt-24 flex-col border-t border-border bg-white lg:scroll-mt-28 lg:min-h-svh lg:flex-row"
       >
-        <div className="relative order-2 flex min-h-[min(48svh,420px)] flex-1 items-stretch bg-surface lg:order-1 lg:min-h-full">
+        <div className="relative order-2 flex min-h-[min(48svh,420px)] flex-1 items-stretch bg-surface lg:order-1 lg:min-h-0">
           <div className="relative h-full min-h-[min(48svh,420px)] w-full lg:min-h-0">
             <HalftoneImage
               src="/david.png"
@@ -281,7 +281,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 5. Lady Justice — texte à gauche, visuel collé à droite */}
-      <section id="justice" className="relative flex scroll-mt-24 flex-col border-t border-border bg-[#f4f5f7] lg:min-h-[min(88svh,920px)] lg:flex-row lg:scroll-mt-28">
+      <section id="justice" className="relative flex min-h-svh scroll-mt-24 flex-col border-t border-border bg-[#f4f5f7] lg:scroll-mt-28 lg:flex-row lg:min-h-svh">
         <div className="order-1 flex flex-1 items-center px-6 py-12 sm:px-10 lg:order-1 lg:py-14 lg:pl-12 lg:pr-10 xl:py-16 xl:pl-16 xl:pr-12">
           <div className="mx-auto w-full max-w-[560px] pb-3 pt-2 sm:pb-4 sm:pt-3 lg:mx-0 lg:pb-5 lg:pt-4">
             <p className="reveal text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Lady Justice — l’équité</p>
@@ -334,7 +334,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="relative order-2 flex min-h-[min(72svh,580px)] flex-1 items-stretch justify-end bg-[#f4f5f7] lg:order-2 lg:min-h-[min(88svh,920px)] lg:max-w-[min(52%,720px)] lg:shrink-0">
+        <div className="relative order-2 flex min-h-[min(72svh,580px)] flex-1 items-stretch justify-end bg-[#f4f5f7] lg:order-2 lg:max-w-[min(52%,720px)] lg:min-h-0 lg:shrink-0">
           <div className="relative h-full min-h-[min(72svh,580px)] w-full max-w-full lg:ml-auto lg:min-h-0 lg:w-full">
             <HalftoneImage
               src="/lady-justice.png"
@@ -358,7 +358,7 @@ export default function AboutPage() {
       {/* ── 6. Philosophie — texte centré, halftone en filigrane à gauche (comme avant à droite) */}
       <section
         id="philosophie"
-        className="relative isolate flex max-lg:min-h-[min(92svh,900px)] scroll-mt-24 flex-col items-center justify-center overflow-hidden border-t border-border bg-white px-6 py-40 text-center sm:py-44 md:scroll-mt-28 md:py-48 lg:min-h-0 lg:py-40 xl:py-44"
+        className="relative isolate flex min-h-svh scroll-mt-24 flex-col items-center justify-center overflow-hidden border-t border-border bg-white px-6 py-48 text-center sm:py-52 md:scroll-mt-28 md:py-56 lg:py-48 xl:py-52"
       >
         {/* Mobile — halftone en fond + fondu blanc (comme le hero) */}
         <div className="pointer-events-none absolute inset-0 z-0 lg:hidden">
