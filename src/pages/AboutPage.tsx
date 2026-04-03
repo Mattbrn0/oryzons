@@ -408,8 +408,11 @@ export default function AboutPage() {
           <div className="relative h-full min-h-[min(72svh,580px)] w-full max-w-full lg:ml-auto lg:min-h-0 lg:w-full">
             <HalftoneImage
               src="/lady-justice.png"
-              grid={isLgUp ? 9 : 4}
-              minVisibleRadius={isLgUp ? 0.3 : 0.12}
+              grid={isLgUp ? 5 : 3}
+              minVisibleRadius={isLgUp ? 0.2 : 0.075}
+              thresholdNoise={0.035}
+              toneGamma={1.1}
+              dprCap={2}
               reveal="rightToLeft"
               fit={isLgUp ? 'containY' : 'contain'}
               hAlign="right"

@@ -10,6 +10,12 @@ interface HalftoneImageProps {
   hAlign?: 'left' | 'center' | 'right'
   /** Rayon minimal pour afficher un point (plus bas = plus de détail dans les gris clairs). Défaut 0.3 */
   minVisibleRadius?: number
+  /** Amplitude du jitter sur l’ordre d’apparition (0 = ordre strict, plus propre). Défaut 0.12 */
+  thresholdNoise?: number
+  /** Plafond DPR manuel (sinon 2 si largeur ≤ 640, sinon 1.5) */
+  dprCap?: number
+  /** Courbe sur la luminance avant le rayon : >1 assombrit les mi‑tons (plus de points). Défaut 1 */
+  toneGamma?: number
 }
 
 export default function HalftoneImage({
@@ -20,6 +26,9 @@ export default function HalftoneImage({
   fit = 'stretch',
   hAlign = 'center',
   minVisibleRadius = 0.3,
+  thresholdNoise = 0.12,
+  dprCap: dprCapProp,
+  toneGamma = 1,
 }: HalftoneImageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -60,8 +69,7 @@ export default function HalftoneImage({
 
       const W = Math.round(canvas.clientWidth)
       const H = Math.round(canvas.clientHeight)
-      // Panneaux étroits (mobile) : DPR un peu plus haut pour un halftone plus lisible
-      const dprCap = W <= 640 ? 2 : 1.5
+      const dprCap = dprCapProp ?? (W <= 640 ? 2 : 1.5)
       const dpr = Math.min(window.devicePixelRatio || 1, reduceMotion ? 1 : dprCap)
       if (!W || !H) return
 
@@ -106,33 +114,53 @@ export default function HalftoneImage({
       const MAX_R = grid * 0.62
       ctx.fillStyle = '#0A0A0A'
 
+      const cellLum = (x0: number, y0: number, x1: number, y1: number) => {
+        let sum = 0
+        let n = 0
+        for (let y = y0; y < y1; y++) {
+          const row = y * W * 4
+          for (let x = x0; x < x1; x++) {
+            const i = row + x * 4
+            sum += data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114
+            n++
+          }
+        }
+        return n > 0 ? sum / (n * 255) : 1
+      }
+
       const nextDots: Dot[] = []
+      const jitter = thresholdNoise > 0 ? thresholdNoise : 0
       for (let gx = 0; gx * grid < W; gx++) {
         for (let gy = 0; gy * grid < H; gy++) {
-          const cx = gx * grid + grid / 2
-          const cy = gy * grid + grid / 2
-          const px = Math.min(Math.floor(cx), W - 1)
-          const py = Math.min(Math.floor(cy), H - 1)
-          const i  = (py * W + px) * 4
-          const lum = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114) / 255
+          const x0 = gx * grid
+          const y0 = gy * grid
+          const x1 = Math.min(x0 + grid, W)
+          const y1 = Math.min(y0 + grid, H)
+          const cx = (x0 + x1) / 2
+          const cy = (y0 + y1) / 2
+          let lum = cellLum(x0, y0, x1, y1)
+          if (toneGamma !== 1 && toneGamma > 0) {
+            lum = Math.min(1, Math.max(0, Math.pow(lum, toneGamma)))
+          }
           const r = MAX_R * (1 - lum)
-          if (r < 0.3) continue
+          if (r < minVisibleRadius) continue
           const base =
             reveal === 'leftToRight'
-              ? (cx / W)
+              ? cx / W
               : reveal === 'rightToLeft'
-                ? (1 - cx / W)
+                ? 1 - cx / W
                 : reveal === 'bottomToTop'
-                  ? (1 - cy / H)
-                  : (Math.min(cx, W - cx) / (W * 0.5))
+                  ? 1 - cy / H
+                  : Math.min(cx, W - cx) / (W * 0.5)
 
-          // un peu moins de "bruit" => rendu plus fluide
-          const threshold = Math.max(0, Math.min(1, base + (Math.random() - 0.5) * 0.16))
+          const threshold = jitter
+            ? Math.max(0, Math.min(1, base + (Math.random() - 0.5) * jitter))
+            : base
           nextDots.push({ cx, cy, r, alpha: 0.78 + (1 - lum) * 0.22, threshold })
         }
       }
 
-      nextDots.sort((a, b) => a.threshold - b.threshold)
+      nextDots.sort((a, b) => (a.threshold === b.threshold ? a.cy - b.cy || a.cx - b.cx : a.threshold - b.threshold))
       dots = nextDots
       ready = true
       if (isVisible) startAnimation()
@@ -223,7 +251,7 @@ export default function HalftoneImage({
       ro.disconnect()
       visibilityObserver.disconnect()
     }
-  }, [src, grid, reveal, fit, hAlign, minVisibleRadius])
+  }, [src, grid, reveal, fit, hAlign, minVisibleRadius, thresholdNoise, dprCapProp, toneGamma])
 
   return (
     <canvas

@@ -184,7 +184,17 @@ export default function Pricing() {
       {/* Lady Justice — entre md et 2xl : gauche + miroir (regard vers la droite, piliers Process à droite) */}
       <div className="pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-[44vw] max-w-[560px] md:block 2xl:hidden">
         <div className="absolute inset-0 -scale-x-100">
-          <HalftoneImage src="/lady-justice.png" grid={6} reveal="leftToRight" fit="containY" className="block h-full w-full" />
+          <HalftoneImage
+            src="/lady-justice.png"
+            grid={5}
+            minVisibleRadius={0.2}
+            thresholdNoise={0.035}
+            toneGamma={1.1}
+            dprCap={2}
+            reveal="leftToRight"
+            fit="containY"
+            className="block h-full w-full"
+          />
         </div>
         <div
           className="absolute inset-0"
@@ -198,7 +208,17 @@ export default function Pricing() {
       {/* Lady Justice — ≥2xl : droite (Process place les piliers à gauche → composition équilibrée, sans miroir) */}
       <div className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[44vw] max-w-[560px] 2xl:block">
         <div className="absolute inset-0">
-          <HalftoneImage src="/lady-justice.png" grid={6} reveal="rightToLeft" fit="containY" className="block h-full w-full" />
+          <HalftoneImage
+            src="/lady-justice.png"
+            grid={5}
+            minVisibleRadius={0.2}
+            thresholdNoise={0.035}
+            toneGamma={1.1}
+            dprCap={2}
+            reveal="rightToLeft"
+            fit="containY"
+            className="block h-full w-full"
+          />
         </div>
         <div
           className="absolute inset-0"
