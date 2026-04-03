@@ -8,9 +8,19 @@ interface HalftoneImageProps {
   fit?: 'stretch' | 'cover' | 'contain' | 'containY'
   /** Position horizontale du calque image avant halftone (contain / containY). */
   hAlign?: 'left' | 'center' | 'right'
+  /** Rayon minimal pour afficher un point (plus bas = plus de détail dans les gris clairs). Défaut 0.3 */
+  minVisibleRadius?: number
 }
 
-export default function HalftoneImage({ src, grid = 6, className = '', reveal = 'edges', fit = 'stretch', hAlign = 'center' }: HalftoneImageProps) {
+export default function HalftoneImage({
+  src,
+  grid = 6,
+  className = '',
+  reveal = 'edges',
+  fit = 'stretch',
+  hAlign = 'center',
+  minVisibleRadius = 0.3,
+}: HalftoneImageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -48,10 +58,11 @@ export default function HalftoneImage({ src, grid = 6, className = '', reveal = 
       try { await img.decode() } catch { /* noop */ }
       if (cancelled) return
 
-      // Cap DPR à 1.5 : au-delà le gain visuel est nul, la mémoire double
-      const dpr = Math.min(window.devicePixelRatio || 1, reduceMotion ? 1 : 1.5)
       const W = Math.round(canvas.clientWidth)
       const H = Math.round(canvas.clientHeight)
+      // Panneaux étroits (mobile) : DPR un peu plus haut pour un halftone plus lisible
+      const dprCap = W <= 640 ? 2 : 1.5
+      const dpr = Math.min(window.devicePixelRatio || 1, reduceMotion ? 1 : dprCap)
       if (!W || !H) return
 
       canvas.width  = Math.max(1, Math.floor(W * dpr))
@@ -212,7 +223,7 @@ export default function HalftoneImage({ src, grid = 6, className = '', reveal = 
       ro.disconnect()
       visibilityObserver.disconnect()
     }
-  }, [src, grid, reveal, fit, hAlign])
+  }, [src, grid, reveal, fit, hAlign, minVisibleRadius])
 
   return (
     <canvas

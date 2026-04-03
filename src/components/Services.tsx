@@ -101,7 +101,7 @@ export default function Services() {
                   style={{ minHeight: '220px', transition: 'transform 0.55s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.45s ease' } as React.CSSProperties}
                 >
                   <div className="h-full w-full overflow-hidden rounded-[16px]">
-                    <HalftoneImage src="/david.png" grid={5} className="block h-full w-full" />
+                    <HalftoneImage src="/david.png" grid={5} reveal="leftToRight" className="block h-full w-full" />
                   </div>
                 </BorderGlow>
               )

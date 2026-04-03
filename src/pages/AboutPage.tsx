@@ -1,8 +1,71 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { motion, useReducedMotion } from 'motion/react'
 import HalftoneImage from '../components/HalftoneImage'
 
 const serif = { fontFamily: "'Instrument Serif', serif" } as const
+
+const justiceConvictions: readonly [string, string, string] = [
+  'Dans mon travail, cette symbolique se traduit par une conviction simple\u00a0: un projet doit être clair, compréhensible et juste pour toutes les parties.',
+  'Mes tarifs ne sont pas fixés au hasard. Ils sont construits avec logique, transparence et respect du travail fourni.',
+  'Je crois qu’une relation professionnelle solide repose sur la confiance. Et la confiance commence par l’équité.',
+]
+
+const justiceConvictionsEase = [0.22, 1, 0.36, 1] as const
+
+function JusticeConvictionsMobile() {
+  const [open, setOpen] = useState(false)
+  const reduceMotion = useReducedMotion()
+  const contentId = useId()
+  const instant = Boolean(reduceMotion)
+  const dur = instant ? 0 : 0.4
+
+  return (
+    <div className="reveal mt-2 rounded-2xl ring-1 ring-black/10 lg:hidden" style={{ transitionDelay: '90ms' }}>
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={contentId}
+        onClick={() => setOpen(o => !o)}
+        className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left text-[0.82rem] font-medium text-ink transition-colors hover:bg-black/[0.04]"
+      >
+        <span>Lire les convictions</span>
+        <svg
+          className={`size-4 shrink-0 text-ink/45 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? 'rotate-180' : ''}`}
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden
+        >
+          <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      <motion.div
+        id={contentId}
+        role="region"
+        aria-label="Convictions"
+        initial={false}
+        animate={{
+          height: open ? 'auto' : 0,
+          opacity: open ? 1 : 0,
+        }}
+        transition={{
+          height: { duration: dur, ease: justiceConvictionsEase },
+          opacity: { duration: instant ? 0 : dur * 0.55, ease: justiceConvictionsEase },
+        }}
+        style={{ overflow: 'hidden' }}
+      >
+        <div className="space-y-5 border-t border-black/10 px-4 pb-4 pt-4 text-[0.93rem] font-light leading-[1.9] text-muted">
+          {justiceConvictions.map((text, i) => (
+            <div key={i} className="flex gap-3">
+              <span className="mt-[0.65rem] h-px w-8 shrink-0 bg-ink/20" aria-hidden />
+              <p>{text}</p>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </div>
+  )
+}
 
 /** lg breakpoint — aligné sur Tailwind `lg` (1024px) pour fit canvas cover / contain. */
 function useIsLgUp() {
@@ -204,14 +267,15 @@ export default function AboutPage() {
               className="reveal relative z-[1] w-full max-lg:max-w-none max-lg:px-0 lg:mx-0 lg:h-full lg:min-h-0 lg:px-0"
               style={{ transitionDelay: '80ms' }}
             >
-              <div className="relative aspect-[4/5] w-full min-h-[min(58svh,420px)] overflow-hidden max-lg:aspect-auto max-lg:min-h-[min(62svh,520px)] lg:aspect-auto lg:h-full lg:min-h-full lg:w-full">
+              <div className="relative aspect-[4/5] w-full min-h-[min(58svh,420px)] overflow-hidden max-lg:aspect-auto max-lg:min-h-[min(72svh,580px)] lg:aspect-auto lg:h-full lg:min-h-full lg:w-full">
                 <HalftoneImage
                   src="/hands.png"
-                  grid={9}
+                  grid={isLgUp ? 9 : 4}
+                  minVisibleRadius={isLgUp ? 0.3 : 0.12}
                   reveal="bottomToTop"
-                  fit={isLgUp ? 'containY' : 'cover'}
-                  hAlign={isLgUp ? 'right' : 'center'}
-                  className="block h-full min-h-[min(58svh,420px)] w-full max-lg:min-h-[min(62svh,520px)] lg:min-h-full"
+                  fit="contain"
+                  hAlign="center"
+                  className="block h-full min-h-[min(58svh,420px)] w-full max-lg:min-h-[min(72svh,580px)] lg:min-h-full"
                 />
                 <div
                   className="pointer-events-none absolute inset-0"
@@ -231,21 +295,34 @@ export default function AboutPage() {
         id="david"
         className="relative flex min-h-svh scroll-mt-24 flex-col border-t border-border bg-white lg:scroll-mt-28 lg:min-h-svh lg:flex-row"
       >
-        <div className="relative order-2 flex min-h-[min(48svh,420px)] flex-1 items-stretch bg-surface lg:order-1 lg:min-h-0">
+        <div className="relative order-2 flex min-h-[min(48svh,420px)] flex-1 items-stretch overflow-hidden bg-surface lg:order-1 lg:min-h-0">
           <div className="relative h-full min-h-[min(48svh,420px)] w-full lg:min-h-0">
             <HalftoneImage
               src="/david.png"
               grid={5}
-              reveal="edges"
+              reveal="leftToRight"
               fit="contain"
               hAlign="left"
               className="block h-full min-h-[min(48svh,420px)] w-full lg:min-h-full"
             />
             <div
-              className="pointer-events-none absolute inset-0"
+              className="pointer-events-none absolute inset-0 z-[1]"
               style={{
                 background:
-                  'linear-gradient(180deg, rgba(249,250,251,0.65) 0%, rgba(249,250,251,0) 22%), linear-gradient(90deg, rgba(249,250,251,0) 0%, rgba(249,250,251,0.22) 58%, rgba(255,255,255,0.9) 100%)',
+                  'linear-gradient(180deg, rgba(249,250,251,0.65) 0%, rgba(249,250,251,0) 22%), linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, #ffffff 100%)',
+              }}
+            />
+            {/* Coins adoucis par dégradés (plus d’angle « carré » net) */}
+            <div
+              className="pointer-events-none absolute inset-0 z-[2]"
+              aria-hidden
+              style={{
+                background: [
+                  'radial-gradient(ellipse 85% 60% at 0% 0%, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.28) 38%, transparent 72%)',
+                  'radial-gradient(ellipse 75% 55% at 0% 100%, rgba(255,255,255,0.68) 0%, rgba(255,255,255,0.22) 40%, transparent 70%)',
+                  'radial-gradient(ellipse 72% 58% at 100% 100%, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.3) 42%, transparent 72%)',
+                  'radial-gradient(ellipse 55% 50% at 100% 0%, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.1) 45%, transparent 68%)',
+                ].join(', '),
               }}
             />
           </div>
@@ -301,23 +378,16 @@ export default function AboutPage() {
                 className="my-8 h-px w-full bg-gradient-to-r from-black/[0.12] via-black/[0.06] to-transparent"
                 aria-hidden
               />
-              <ul className="list-none space-y-5 text-[0.93rem] font-light leading-[1.9] text-muted md:text-[0.95rem]">
-                <li className="reveal flex gap-4" style={{ transitionDelay: '90ms' }}>
-                  <span className="mt-[0.65rem] h-px w-10 shrink-0 bg-ink/20" aria-hidden />
-                  <span>
-                    Dans mon travail, cette symbolique se traduit par une conviction simple&nbsp;: un projet doit être clair, compréhensible et juste pour toutes les parties.
-                  </span>
-                </li>
-                <li className="reveal flex gap-4" style={{ transitionDelay: '145ms' }}>
-                  <span className="mt-[0.65rem] h-px w-10 shrink-0 bg-ink/20" aria-hidden />
-                  <span>Mes tarifs ne sont pas fixés au hasard. Ils sont construits avec logique, transparence et respect du travail fourni.</span>
-                </li>
-                <li className="reveal flex gap-4" style={{ transitionDelay: '200ms' }}>
-                  <span className="mt-[0.65rem] h-px w-10 shrink-0 bg-ink/20" aria-hidden />
-                  <span>
-                    Je crois qu’une relation professionnelle solide repose sur la confiance. Et la confiance commence par l’équité.
-                  </span>
-                </li>
+
+              <JusticeConvictionsMobile />
+
+              <ul className="hidden list-none space-y-5 text-[0.93rem] font-light leading-[1.9] text-muted md:text-[0.95rem] lg:block">
+                {justiceConvictions.map((text, i) => (
+                  <li key={i} className="reveal flex gap-4" style={{ transitionDelay: `${90 + i * 55}ms` }}>
+                    <span className="mt-[0.65rem] h-px w-10 shrink-0 bg-ink/20" aria-hidden />
+                    <span>{text}</span>
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -338,7 +408,8 @@ export default function AboutPage() {
           <div className="relative h-full min-h-[min(72svh,580px)] w-full max-w-full lg:ml-auto lg:min-h-0 lg:w-full">
             <HalftoneImage
               src="/lady-justice.png"
-              grid={6}
+              grid={isLgUp ? 9 : 4}
+              minVisibleRadius={isLgUp ? 0.3 : 0.12}
               reveal="rightToLeft"
               fit={isLgUp ? 'containY' : 'contain'}
               hAlign="right"
@@ -355,66 +426,12 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── 6. Philosophie — texte centré, halftone en filigrane à gauche (comme avant à droite) */}
+      {/* ── 6. Philosophie — texte centré, fond uni */}
       <section
         id="philosophie"
-        className="relative isolate flex min-h-svh scroll-mt-24 flex-col items-center justify-center overflow-hidden border-t border-border bg-white px-6 py-48 text-center sm:py-52 md:scroll-mt-28 md:py-56 lg:py-48 xl:py-52"
+        className="relative isolate flex min-h-svh scroll-mt-24 flex-col items-center justify-center border-t border-border bg-white px-6 py-48 text-center sm:py-52 md:scroll-mt-28 md:py-56 lg:py-48 xl:py-52"
       >
-        {/* Mobile — halftone en fond + fondu blanc (comme le hero) */}
-        <div className="pointer-events-none absolute inset-0 z-0 lg:hidden">
-          <div className="absolute inset-0 bg-white" />
-          <div className="absolute left-1/2 top-[44%] h-[min(80svh,760px)] w-[min(92vw,720px)] -translate-x-1/2 -translate-y-1/2">
-            <HalftoneImage
-              src="/about-hero-statue.png"
-              grid={7}
-              reveal="bottomToTop"
-              fit="contain"
-              className="block h-full w-full opacity-[0.48]"
-            />
-          </div>
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(ellipse 56% 52% at 50% 44%, rgba(255,255,255,0) 0%, rgba(255,255,255,0.42) 50%, rgba(255,255,255,0.94) 78%, #ffffff 100%)',
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(ellipse 48% 46% at 50% 40%, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.5) 38%, rgba(255,255,255,0.12) 64%, rgba(255,255,255,0) 82%)',
-            }}
-          />
-        </div>
-
-        <div className="pointer-events-none absolute inset-y-0 z-0 hidden w-[min(52vw,640px)] lg:left-8 lg:block xl:left-12">
-          <div className="absolute inset-0 opacity-[0.16]">
-            <HalftoneImage
-              src="/about-hero-statue.png"
-              grid={7}
-              reveal="leftToRight"
-              fit="containY"
-              hAlign="left"
-              className="h-full w-full"
-            />
-          </div>
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.65) 55%, #ffffff 92%)',
-            }}
-          />
-        </div>
-        <div
-          className="pointer-events-none absolute inset-0 z-0 max-lg:hidden"
-          style={{
-            background:
-              'radial-gradient(900px 480px at 50% 35%, rgba(10,12,14,0.045), transparent 68%), radial-gradient(520px 280px at 50% 100%, rgba(10,12,14,0.04), transparent 55%)',
-          }}
-        />
-        <div className="reveal relative z-[1] mx-auto max-w-[640px] text-center">
+        <div className="reveal relative mx-auto max-w-[640px] text-center">
           <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Philosophie</p>
           <h2 style={serif} className="mt-5 text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.08] text-ink">
             Chaque détail porte une intention.

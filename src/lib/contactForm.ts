@@ -13,6 +13,7 @@
 
 export const PROJECT_TYPE_VALUES = [
   'vitrine',
+  'catalogue',
   'refonte',
   'hebergement',
   'sur_mesure',
@@ -24,6 +25,7 @@ export type RequestKind = 'devis' | 'informations'
 
 export const PROJECT_OPTIONS: { value: ProjectTypeValue; label: string }[] = [
   { value: 'vitrine', label: 'Création de site vitrine' },
+  { value: 'catalogue', label: 'Création de site catalogue' },
   { value: 'refonte', label: 'Refonte de site existant' },
   { value: 'hebergement', label: 'Hébergement & maintenance' },
   { value: 'sur_mesure', label: 'Site personnalisé (sur mesure)' },

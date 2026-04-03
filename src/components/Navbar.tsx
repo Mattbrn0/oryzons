@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-type NavbarMode = 'home' | 'about'
+type NavbarMode = 'home' | 'about' | 'page'
 
 const homeLinks = [
   { label: 'Accueil',     href: '/#',          section: ''          },
@@ -39,6 +39,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const navRef = useRef<HTMLElement>(null)
   const links = mode === 'about' ? aboutLinks : homeLinks
+  const contactHref = mode === 'about' ? '/' : mode === 'page' ? '/#contact' : '#contact'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -166,6 +167,16 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
             <path d="M11.5 7H2.5M2.5 7L6 3.5M2.5 7L6 10.5" />
           </svg>
         </Link>
+      ) : mode === 'page' ? (
+        <Link
+          to={{ pathname: '/', hash: 'contact' }}
+          className={`anim-pop-2 hidden items-center gap-2 px-4 py-2.5 text-[0.82rem] font-medium !text-muted transition-colors duration-200 hover:!text-ink lg:flex ${navBubbleClass}`}
+        >
+          Démarrer votre projet
+          <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" />
+          </svg>
+        </Link>
       ) : (
         <a
           href="#contact"
@@ -199,7 +210,7 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
                 </a>
               ))}
               <a
-                href={mode === 'about' ? '/' : '#contact'}
+                href={contactHref}
                 className="mt-1 inline-flex items-center justify-between rounded-xl bg-black/[0.08] px-4 py-3 text-[0.95rem] font-medium text-ink no-underline"
                 onClick={() => setMobileOpen(false)}
               >

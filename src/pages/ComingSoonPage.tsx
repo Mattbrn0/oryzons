@@ -2,7 +2,6 @@ import { Link, useLocation } from 'react-router-dom'
 
 const TITLES: Record<string, string> = {
   '/services': 'Prestations',
-  '/FAQ': 'FAQ',
   '/support': 'Support',
   '/cgu': "Conditions générales d'utilisation",
   '/cgv': 'Conditions générales de vente',

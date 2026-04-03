@@ -12,6 +12,7 @@ import Footer    from './components/Footer'
 
 // Chargement différé de la page À propos (elle n'est pas visible au premier rendu)
 const AboutPage = lazy(() => import('./pages/AboutPage'))
+const FAQPage = lazy(() => import('./pages/FAQPage'))
 const ComingSoonPage = lazy(() => import('./pages/ComingSoonPage'))
 
 function useReveal() {
@@ -73,11 +74,12 @@ function HomePage() {
 
 function AnimatedRoutes() {
   const location = useLocation()
-  const isAbout = location.pathname === '/a-propos'
+  const path = location.pathname
+  const navMode = path === '/a-propos' ? 'about' : path === '/' ? 'home' : 'page'
 
   return (
     <div className="min-h-svh bg-white">
-      <Navbar mode={isAbout ? 'about' : 'home'} />
+      <Navbar mode={navMode} />
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -106,7 +108,7 @@ function AnimatedRoutes() {
               path="/FAQ"
               element={
                 <Suspense fallback={<div className="min-h-svh" />}>
-                  <ComingSoonPage />
+                  <FAQPage />
                 </Suspense>
               }
             />
