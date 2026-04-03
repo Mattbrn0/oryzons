@@ -53,10 +53,23 @@ export default function Contact() {
   const [thanksFlash, setThanksFlash] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
-  /** Liens depuis À propos (ou ailleurs) : ouvrir directement devis ou infos. */
+  /** Liens depuis À propos (ou ailleurs) : ouvrir directement devis ou infos (uniquement pour #contact). */
   useEffect(() => {
     const raw = location.state as { contactKind?: RequestKind } | null
     const kind = raw?.contactKind
+    const hash = location.hash
+
+    // Autre ancre (#pricing, etc.) : ne pas ouvrir le formulaire ; nettoyer un state résiduel (ex. après navigation).
+    if (hash && hash !== '#contact') {
+      if (kind === 'devis' || kind === 'informations') {
+        navigate(
+          { pathname: location.pathname, hash: location.hash, search: location.search },
+          { replace: true, state: {} },
+        )
+      }
+      return
+    }
+
     if (kind !== 'devis' && kind !== 'informations') return
 
     const t = window.setTimeout(() => {
@@ -253,6 +266,27 @@ export default function Contact() {
                         />
                         {errors.name ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.name}</p> : null}
                       </div>
+
+                      {step === 'informations' ? (
+                        <div className="sm:col-span-2">
+                          <label htmlFor="contact-email-infos" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
+                            Email
+                          </label>
+                          <input
+                            id="contact-email-infos"
+                            name="email"
+                            type="email"
+                            required
+                            maxLength={254}
+                            autoComplete="email"
+                            placeholder="jean@exemple.fr"
+                            value={form.email}
+                            onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                            {...fieldProps('email')}
+                          />
+                          {errors.email ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.email}</p> : null}
+                        </div>
+                      ) : null}
 
                       {step === 'devis' ? (
                         <>

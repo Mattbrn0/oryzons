@@ -110,6 +110,8 @@ export function validateContactFields(raw: ContactPayload): { ok: true; data: Co
   if (name.length < 2) errors.name = 'Indiquez au moins 2 caractères pour le nom.'
 
   if (raw.requestKind === 'informations') {
+    const email = sanitizeText(raw.email, LIMITS.email).toLowerCase()
+    if (!isValidEmail(email)) errors.email = 'Adresse e-mail invalide.'
     if (message.length < 10) errors.message = 'Posez votre question en au moins 10 caractères.'
     if (Object.keys(errors).length > 0) return { ok: false, errors }
     return {
@@ -117,7 +119,7 @@ export function validateContactFields(raw: ContactPayload): { ok: true; data: Co
       data: {
         requestKind: 'informations',
         name,
-        email: '',
+        email,
         phone: '',
         company: '',
         projectType: '',
@@ -188,7 +190,7 @@ export function recordSubmitAttempt(): void {
 
 function mailtoLines(data: ContactPayload): string {
   if (data.requestKind === 'informations') {
-    return [`Type : Demande d'informations`, `Nom : ${data.name}`, '', 'Question :', data.message].join('\n')
+    return [`Type : Demande d'informations`, `Nom : ${data.name}`, `Email : ${data.email}`, '', 'Question :', data.message].join('\n')
   }
   const pt = PROJECT_OPTIONS.find(o => o.value === data.projectType)?.label ?? ''
   const lines = [
@@ -261,7 +263,7 @@ async function postWeb3Forms(data: ContactPayload, accessKey: string): Promise<{
     name: data.name,
     message: msg,
   }
-  if (data.requestKind === 'devis') {
+  if (data.email) {
     body.email = data.email
   }
 
@@ -331,6 +333,8 @@ export async function deliverContact(data: ContactPayload): Promise<{ ok: true }
         payload.phone = data.phone
         payload.company = data.company
         payload.project_type = data.projectType
+      } else {
+        payload.email = data.email
       }
       if (accessKey) payload.access_key = accessKey
 

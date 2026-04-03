@@ -35,9 +35,16 @@ function ScrollToTopOnRouteChange() {
 
     if (location.hash) {
       const id = decodeURIComponent(location.hash.slice(1))
+      let attempts = 0
+      const maxAttempts = 40
       const scrollToTarget = () => {
         const el = document.getElementById(id)
-        if (el) el.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth' })
+        if (el) {
+          el.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth' })
+          return
+        }
+        attempts += 1
+        if (attempts < maxAttempts) requestAnimationFrame(scrollToTarget)
       }
       requestAnimationFrame(() => requestAnimationFrame(scrollToTarget))
       return

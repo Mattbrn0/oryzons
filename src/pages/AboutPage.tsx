@@ -435,6 +435,7 @@ export default function AboutPage() {
             </Link>
             <Link
               to={{ pathname: '/', hash: 'pricing' }}
+              state={{}}
               className="btn-hover inline-flex h-12 items-center gap-2 rounded-full border border-border bg-white px-8 text-[0.88rem] font-medium text-ink shadow-[0_8px_22px_rgba(0,0,0,0.06)] ring-1 ring-black/5 transition-colors hover:bg-[#f6f7fb]"
             >
               Voir les tarifs
