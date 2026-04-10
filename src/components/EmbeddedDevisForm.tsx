@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState, type FormEvent } from 'react'
 import { flushSync } from 'react-dom'
 import { Link } from 'react-router-dom'
 import {
@@ -62,7 +62,7 @@ export default function EmbeddedDevisForm({
 }: Props) {
   const uid = useId()
   const hpRef = useRef<HTMLInputElement>(null)
-  const submitTimingAnchorRef = useRef(Date.now())
+  const submitTimingAnchorRef = useRef(0)
   const [form, setForm] = useState<ContactPayload>(() => emptyPayload(variant))
   const [formInstanceKey, setFormInstanceKey] = useState(0)
   const [errors, setErrors] = useState<FieldErrors>({})
@@ -73,7 +73,7 @@ export default function EmbeddedDevisForm({
   const description = descriptionProp ?? defaultCopy[variant].description
   const sectionId = variant === 'informations' ? 'infos-embed' : 'devis-embed'
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     submitTimingAnchorRef.current = Date.now()
   }, [variant])
 

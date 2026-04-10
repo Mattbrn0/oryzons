@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react'
 import { flushSync } from 'react-dom'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
@@ -50,12 +50,12 @@ export default function Contact() {
   const [formInstanceKey, setFormInstanceKey] = useState(0)
   /** Non contrôlé : évite qu’un navigateur / extension remplisse le leurre et bloque l’envoi. */
   const hpRef = useRef<HTMLInputElement>(null)
-  const submitTimingAnchorRef = useRef(Date.now())
+  const submitTimingAnchorRef = useRef(0)
   const [errors, setErrors] = useState<FieldErrors>({})
   const [thanksFlash, setThanksFlash] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (step === 'devis' || step === 'informations') {
       submitTimingAnchorRef.current = Date.now()
     }
