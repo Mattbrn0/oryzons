@@ -269,75 +269,34 @@ function drawSeo(ctx: CanvasRenderingContext2D, w: number, h: number, t: number)
   }
 }
 
-/** SAV : casque d’assistance + micro + ondes « disponible » (métaphore support hotline) */
+/** SAV : enveloppe / lettre uniquement */
 function drawSav(ctx: CanvasRenderingContext2D, w: number, h: number, t: number) {
-  const cy = h * 0.44
-  const rx = Math.max(8, w * 0.062)
-  const ry = Math.max(18, h * 0.15)
-  const cxL = w * 0.32
-  const cxR = w * 0.68
+  const cx = w * 0.5
+  const cy = h * 0.52
+  const ew = w * 0.38
+  const eh = h * 0.38
+  const peakX = cx
+  const peakY = cy - eh * 0.42
+  const flapY = cy - eh * 0.06
+  const botY = cy + eh * 0.38
+  const leftX = cx - ew * 0.42
+  const rightX = cx + ew * 0.42
 
-  function earCup(cx: number, phase: number) {
-    const n = 38
-    for (let i = 0; i < n; i++) {
-      const u = (i / n) * Math.PI * 2
-      const x = cx + rx * Math.cos(u)
-      const y = cy + ry * Math.sin(u)
-      const a = 0.26 + 0.22 * Math.sin(t * 1.05 + i * 0.11 + phase)
-      dot(ctx, x, y, 1.35, Math.min(0.88, a))
-    }
-    const n2 = 22
-    const irx = rx * 0.55
-    const iry = ry * 0.62
-    for (let i = 0; i < n2; i++) {
-      const u = (i / n2) * Math.PI * 2
-      dot(ctx, cx + irx * Math.cos(u), cy + iry * Math.sin(u), 1.05, 0.1 + 0.08 * Math.sin(t * 0.8 + i + phase))
-    }
+  dotsOnSegment(ctx, peakX, peakY, leftX, flapY, 5, 1.25, 0.3, 0.06, t, 0)
+  dotsOnSegment(ctx, peakX, peakY, rightX, flapY, 5, 1.25, 0.3, 0.06, t, 1)
+  dotsOnSegment(ctx, leftX, flapY, leftX, botY, 5, 1.2, 0.28, 0.06, t, 2)
+  dotsOnSegment(ctx, rightX, flapY, rightX, botY, 5, 1.2, 0.28, 0.06, t, 3)
+  dotsOnSegment(ctx, leftX, botY, rightX, botY, 5, 1.25, 0.3, 0.06, t, 4)
+  dotsOnSegment(ctx, leftX, flapY, cx, flapY + eh * 0.2, 6, 1.05, 0.18, 0.05, t, 5)
+  dotsOnSegment(ctx, rightX, flapY, cx, flapY + eh * 0.2, 6, 1.05, 0.18, 0.05, t, 6)
+
+  const lineL = leftX + ew * 0.12
+  for (let row = 0; row < 5; row++) {
+    const yy = flapY + eh * 0.28 + row * 8.5
+    if (yy > botY - 10) break
+    const len = 0.72 + (row % 3) * 0.06
+    dotsOnSegment(ctx, lineL, yy, lineL + ew * len, yy, 5, 1.05, 0.16, 0.05, t, row + 0.3)
   }
-
-  earCup(cxL, 0)
-  earCup(cxR, 1.7)
-
-  const bandCx = w * 0.5
-  const bandCy = cy - ry * 0.38
-  const bandR = w * 0.21
-  const steps = 22
-  for (let i = 0; i <= steps; i++) {
-    const u = i / steps
-    const ang = Math.PI * 0.75 + Math.PI * 0.5 * u
-    const x = bandCx + Math.cos(ang) * bandR
-    const y = bandCy + Math.sin(ang) * bandR * 0.48
-    dot(ctx, x, y, 1.3, 0.3 + 0.1 * Math.sin(t * 1.2 + i * 0.2))
-  }
-
-  const boomSteps = 11
-  const sx = cxR - rx * 0.35
-  const sy = cy + ry * 0.25
-  const ex = cxR - rx * 1.75
-  const ey = cy + ry * 1.05
-  for (let i = 0; i <= boomSteps; i++) {
-    const u = i / boomSteps
-    const x = sx + (ex - sx) * u
-    const y = sy + (ey - sy) * u + Math.sin(u * Math.PI) * 4
-    const a = 0.28 + 0.14 * Math.sin(t * 1.8 + i * 0.35)
-    dot(ctx, x, y, 1.25 + u * 0.35, a)
-  }
-  dot(ctx, ex, ey, 2.4, 0.42 + 0.2 * Math.sin(t * 2.5))
-
-  const ox = w * 0.5
-  const oy = h * 0.78
-  for (let ring = 0; ring < 3; ring++) {
-    const baseR = 14 + ring * 11
-    const pulse = Math.sin(t * 2.2 - ring * 0.5) * 4
-    const rad = baseR + pulse
-    const count = 14
-    for (let k = 0; k < count; k++) {
-      const ang = (k / count) * Math.PI * 2 + t * 0.35 * (ring % 2 === 0 ? 1 : -0.7)
-      const a = 0.08 + 0.12 * (1 - ring * 0.25) + 0.1 * (0.5 + 0.5 * Math.sin(t * 2 + k + ring))
-      dot(ctx, ox + Math.cos(ang) * rad, oy + Math.sin(ang) * rad * 0.38, 1.05, Math.min(0.55, a))
-    }
-  }
-  dot(ctx, ox, oy, 2.2, 0.35 + 0.25 * Math.sin(t * 2.8))
 }
 
 function drawVariant(

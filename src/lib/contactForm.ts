@@ -190,6 +190,71 @@ export function validateContactFields(raw: ContactPayload): { ok: true; data: Co
   }
 }
 
+/** Étapes du formulaire devis sur petit écran (< breakpoint `sm`). */
+export const DEVIS_MOBILE_STEPS = 4
+export const INFOS_MOBILE_STEPS = 2
+
+export const DEVIS_MOBILE_STEP_LABELS = ['Identité', 'Téléphone', 'Type de site', 'Votre projet'] as const
+export const INFOS_MOBILE_STEP_LABELS = ['Identité', 'Votre question'] as const
+
+/** Erreurs pour une étape mobile (devis) — règles alignées sur validateContactFields. */
+export function errorsForDevisMobileStep(raw: ContactPayload, stepIndex: number): FieldErrors {
+  const errors: FieldErrors = {}
+  if (stepIndex === 0) {
+    const name = sanitizeText(raw.name, LIMITS.name)
+    if (name.length < 2) errors.name = 'Indiquez au moins 2 caractères pour le nom.'
+    if (urlOccurrencesInMessage(name) > 0) errors.name = 'Le nom ne doit pas contenir de lien web.'
+    const email = sanitizeText(raw.email, LIMITS.email).toLowerCase()
+    if (!isValidEmail(email)) errors.email = 'Adresse e-mail invalide.'
+    return errors
+  }
+  if (stepIndex === 1) {
+    const phone = sanitizeText(raw.phone.replace(/[^\d\s+()./-]/g, ''), LIMITS.phone)
+    if (!isValidPhone(phone)) errors.phone = 'Indiquez un numéro de téléphone valide.'
+    return errors
+  }
+  if (stepIndex === 2) {
+    if (raw.projectType === '' || !isAllowedProjectType(raw.projectType)) {
+      errors.projectType = 'Choisissez un type de projet.'
+    }
+    return errors
+  }
+  if (stepIndex === 3) {
+    const message = sanitizeMultiline(raw.message, LIMITS.message)
+    if (urlOccurrencesInMessage(message) > MAX_URLS_IN_MESSAGE) {
+      errors.message = 'Le message contient trop de liens. Réduisez ou contactez-nous par e-mail.'
+    }
+    if (!errors.message && message.length < 10) {
+      errors.message = 'Décrivez votre projet en au moins 10 caractères.'
+    }
+    return errors
+  }
+  return errors
+}
+
+export function errorsForInformationsMobileStep(raw: ContactPayload, stepIndex: number): FieldErrors {
+  const errors: FieldErrors = {}
+  if (stepIndex === 0) {
+    const name = sanitizeText(raw.name, LIMITS.name)
+    if (name.length < 2) errors.name = 'Indiquez au moins 2 caractères pour le nom.'
+    if (urlOccurrencesInMessage(name) > 0) errors.name = 'Le nom ne doit pas contenir de lien web.'
+    const email = sanitizeText(raw.email, LIMITS.email).toLowerCase()
+    if (!isValidEmail(email)) errors.email = 'Adresse e-mail invalide.'
+    return errors
+  }
+  if (stepIndex === 1) {
+    const message = sanitizeMultiline(raw.message, LIMITS.message)
+    if (urlOccurrencesInMessage(message) > MAX_URLS_IN_MESSAGE) {
+      errors.message = 'Le message contient trop de liens. Réduisez ou contactez-nous par e-mail.'
+    }
+    if (!errors.message && message.length < 10) {
+      errors.message = 'Posez votre question en au moins 10 caractères.'
+    }
+    return errors
+  }
+  return errors
+}
+
 const SS_LAST = 'oryzons_contact_last'
 const SS_COUNT = 'oryzons_contact_count'
 const COOLDOWN_MS = 10_000

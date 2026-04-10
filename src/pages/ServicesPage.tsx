@@ -137,7 +137,7 @@ export default function ServicesPage() {
 
   return (
     <div className="min-h-svh min-w-0 bg-white">
-      <header className="border-b border-border bg-surface/50 px-4 pb-14 pt-10 sm:px-8 sm:pb-20 sm:pt-12 md:px-16 md:pt-16">
+      <header className="border-b border-border bg-surface/50 px-4 pb-14 pt-[max(6rem,env(safe-area-inset-top,0px)+4.5rem)] sm:px-8 sm:pb-20 sm:pt-28 md:px-16 md:pt-24 lg:pt-[5.5rem]">
         <div className="mx-auto max-w-[1100px]">
           <span className="reveal inline-flex items-center rounded-full border border-border bg-white px-3 py-1 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-subtle">
             Prestations

@@ -3,11 +3,18 @@ import { flushSync } from 'react-dom'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import HalftoneImage from './HalftoneImage'
+import { useIsMobileFormSteps } from '../hooks/useIsMobileFormSteps'
 import {
+  DEVIS_MOBILE_STEP_LABELS,
+  DEVIS_MOBILE_STEPS,
+  INFOS_MOBILE_STEP_LABELS,
+  INFOS_MOBILE_STEPS,
   PROJECT_OPTIONS,
   assertSubmitTiming,
   canSubmitNow,
   deliverContact,
+  errorsForDevisMobileStep,
+  errorsForInformationsMobileStep,
   recordSubmitAttempt,
   validateContactFields,
   type ContactPayload,
@@ -54,6 +61,8 @@ export default function Contact() {
   const [errors, setErrors] = useState<FieldErrors>({})
   const [thanksFlash, setThanksFlash] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const narrow = useIsMobileFormSteps()
+  const [wizardStep, setWizardStep] = useState(0)
 
   useLayoutEffect(() => {
     if (step === 'devis' || step === 'informations') {
@@ -83,6 +92,7 @@ export default function Contact() {
     const t = window.setTimeout(() => {
       setThanksFlash(false)
       setErrors({})
+      setWizardStep(0)
       setForm(emptyPayload(kind))
       setStep(kind)
       navigate(
@@ -110,6 +120,7 @@ export default function Contact() {
 
   function goChoose() {
     setStep('choose')
+    setWizardStep(0)
     setErrors({})
     setThanksFlash(false)
   }
@@ -118,6 +129,7 @@ export default function Contact() {
     setForm(emptyPayload(kind))
     setErrors({})
     setThanksFlash(false)
+    setWizardStep(0)
     setStep(kind)
   }
 
@@ -125,9 +137,23 @@ export default function Contact() {
     e.preventDefault()
     if (submitting || step === 'choose') return
 
+    const totalSteps = step === 'devis' ? DEVIS_MOBILE_STEPS : INFOS_MOBILE_STEPS
+    if (narrow && wizardStep < totalSteps - 1) {
+      const stepErrs =
+        step === 'devis' ? errorsForDevisMobileStep(form, wizardStep) : errorsForInformationsMobileStep(form, wizardStep)
+      if (Object.keys(stepErrs).length > 0) {
+        setErrors(stepErrs)
+        return
+      }
+      setErrors({})
+      setWizardStep(s => s + 1)
+      return
+    }
+
     if ((hpRef.current?.value ?? '').trim() !== '') {
       await new Promise(r => setTimeout(r, 400 + Math.random() * 400))
       if (hpRef.current) hpRef.current.value = ''
+      setWizardStep(0)
       setThanksFlash(true)
       return
     }
@@ -167,6 +193,7 @@ export default function Contact() {
       if (hpRef.current) hpRef.current.value = ''
       setForm(emptyPayload(step))
       setFormInstanceKey(k => k + 1)
+      setWizardStep(0)
       submitTimingAnchorRef.current = Date.now()
     })
     setThanksFlash(true)
@@ -179,6 +206,11 @@ export default function Contact() {
       className: `${baseInput} ${hasErr ? errorRing : ''}`,
     }
   }
+
+  const wizardTotalSteps =
+    step === 'devis' ? DEVIS_MOBILE_STEPS : step === 'informations' ? INFOS_MOBILE_STEPS : 1
+  const wizardLabels =
+    step === 'devis' ? DEVIS_MOBILE_STEP_LABELS : INFOS_MOBILE_STEP_LABELS
 
   return (
     <section
@@ -274,103 +306,116 @@ export default function Contact() {
                       </p>
                     ) : null}
 
-                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                      <div className={step === 'informations' ? 'sm:col-span-2' : ''}>
-                        <label htmlFor="contact-name" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
-                          Prénom & nom
-                        </label>
-                        <input
-                          id="contact-name"
-                          name="name"
-                          type="text"
-                          required
-                          maxLength={120}
-                          autoComplete="name"
-                          placeholder="Jean Dupont"
-                          value={form.name}
-                          onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                          {...fieldProps('name')}
-                        />
-                        {errors.name ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.name}</p> : null}
-                      </div>
-
-                      {step === 'informations' ? (
-                        <div className="sm:col-span-2">
-                          <label htmlFor="contact-email-infos" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
-                            Email
-                          </label>
-                          <input
-                            id="contact-email-infos"
-                            name="email"
-                            type="email"
-                            required
-                            maxLength={254}
-                            autoComplete="email"
-                            placeholder="jean@exemple.fr"
-                            value={form.email}
-                            onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                            {...fieldProps('email')}
-                          />
-                          {errors.email ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.email}</p> : null}
+                    {narrow ? (
+                      <div className="mb-5" aria-live="polite">
+                        <p className="text-center text-[0.72rem] font-medium uppercase tracking-[0.12em] text-subtle">
+                          Étape {wizardStep + 1} / {wizardTotalSteps} — {wizardLabels[wizardStep] ?? wizardLabels[0]}
+                        </p>
+                        <div
+                          className="mt-2.5 flex gap-1.5"
+                          role="progressbar"
+                          aria-valuenow={wizardStep + 1}
+                          aria-valuemin={1}
+                          aria-valuemax={wizardTotalSteps}
+                        >
+                          {Array.from({ length: wizardTotalSteps }, (_, i) => (
+                            <div
+                              key={i}
+                              className={`h-1 min-w-0 flex-1 rounded-full transition-colors ${i <= wizardStep ? 'bg-ink/75' : 'bg-border'}`}
+                            />
+                          ))}
                         </div>
-                      ) : null}
+                      </div>
+                    ) : null}
 
-                      {step === 'devis' ? (
-                        <>
+                    {narrow ? (
+                      <div className="grid grid-cols-1 gap-5">
+                        {wizardStep === 0 ? (
+                          <>
+                            <div>
+                              <label htmlFor="contact-name" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
+                                Prénom & nom
+                              </label>
+                              <input
+                                id="contact-name"
+                                name="name"
+                                type="text"
+                                required
+                                maxLength={120}
+                                autoComplete="name"
+                                placeholder="Jean Dupont"
+                                value={form.name}
+                                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                                {...fieldProps('name')}
+                              />
+                              {errors.name ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.name}</p> : null}
+                            </div>
+                            <div>
+                              <label
+                                htmlFor={step === 'informations' ? 'contact-email-infos' : 'contact-email'}
+                                className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle"
+                              >
+                                Email
+                              </label>
+                              <input
+                                id={step === 'informations' ? 'contact-email-infos' : 'contact-email'}
+                                name="email"
+                                type="email"
+                                required
+                                maxLength={254}
+                                autoComplete="email"
+                                placeholder={step === 'informations' ? 'jean@exemple.fr' : 'jean@entreprise.fr'}
+                                value={form.email}
+                                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                                {...fieldProps('email')}
+                              />
+                              {errors.email ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.email}</p> : null}
+                            </div>
+                          </>
+                        ) : null}
+
+                        {step === 'devis' && wizardStep === 1 ? (
+                          <>
+                            <div>
+                              <label htmlFor="contact-phone" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
+                                Téléphone
+                              </label>
+                              <input
+                                id="contact-phone"
+                                name="tel"
+                                type="tel"
+                                required
+                                maxLength={40}
+                                inputMode="tel"
+                                autoComplete="tel"
+                                placeholder="06 12 34 56 78"
+                                value={form.phone}
+                                onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                                {...fieldProps('phone')}
+                              />
+                              {errors.phone ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.phone}</p> : null}
+                            </div>
+                            <div>
+                              <label htmlFor="contact-company" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
+                                Entreprise
+                              </label>
+                              <input
+                                id="contact-company"
+                                name="organization"
+                                type="text"
+                                maxLength={120}
+                                autoComplete="organization"
+                                placeholder="Votre société (optionnel)"
+                                value={form.company}
+                                onChange={e => setForm(f => ({ ...f, company: e.target.value }))}
+                                {...fieldProps('company')}
+                              />
+                            </div>
+                          </>
+                        ) : null}
+
+                        {step === 'devis' && wizardStep === 2 ? (
                           <div>
-                            <label htmlFor="contact-email" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
-                              Email
-                            </label>
-                            <input
-                              id="contact-email"
-                              name="email"
-                              type="email"
-                              required
-                              maxLength={254}
-                              autoComplete="email"
-                              placeholder="jean@entreprise.fr"
-                              value={form.email}
-                              onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                              {...fieldProps('email')}
-                            />
-                            {errors.email ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.email}</p> : null}
-                          </div>
-                          <div>
-                            <label htmlFor="contact-phone" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
-                              Téléphone
-                            </label>
-                            <input
-                              id="contact-phone"
-                              name="tel"
-                              type="tel"
-                              required
-                              maxLength={40}
-                              inputMode="tel"
-                              autoComplete="tel"
-                              placeholder="06 12 34 56 78"
-                              value={form.phone}
-                              onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                              {...fieldProps('phone')}
-                            />
-                            {errors.phone ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.phone}</p> : null}
-                          </div>
-                          <div>
-                            <label htmlFor="contact-company" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
-                              Entreprise
-                            </label>
-                            <input
-                              id="contact-company"
-                              name="organization"
-                              type="text"
-                              maxLength={120}
-                              autoComplete="organization"
-                              placeholder="Votre société (optionnel)"
-                              value={form.company}
-                              onChange={e => setForm(f => ({ ...f, company: e.target.value }))}
-                              {...fieldProps('company')}
-                            />
-                          </div>
-                          <div className="sm:col-span-2">
                             <label htmlFor="contact-project-type" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
                               Type de projet
                             </label>
@@ -380,7 +425,9 @@ export default function Contact() {
                               required
                               style={{ fontFamily: 'inherit' }}
                               value={form.projectType}
-                              onChange={e => setForm(f => ({ ...f, projectType: e.target.value as ContactPayload['projectType'] }))}
+                              onChange={e =>
+                                setForm(f => ({ ...f, projectType: e.target.value as ContactPayload['projectType'] }))
+                              }
                               className={`${baseInput} ${errors.projectType ? errorRing : ''}`}
                               aria-invalid={Boolean(errors.projectType)}
                             >
@@ -393,47 +440,221 @@ export default function Contact() {
                             </select>
                             {errors.projectType ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.projectType}</p> : null}
                           </div>
-                        </>
-                      ) : null}
+                        ) : null}
 
-                      <div className="sm:col-span-2">
-                        <label htmlFor="contact-message" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
-                          {step === 'devis' ? 'Votre projet' : 'Votre question'}
-                        </label>
-                        <textarea
-                          id="contact-message"
-                          name="message"
-                          required
-                          maxLength={5000}
-                          rows={step === 'devis' ? 5 : 4}
-                          autoComplete="off"
-                          placeholder={
-                            step === 'devis'
-                              ? 'Décrivez votre entreprise, vos objectifs, ce que vous imaginez…'
-                              : 'Posez-nous votre question : nous vous répondrons par e-mail.'
-                          }
-                          value={form.message}
-                          onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                          style={{ resize: 'vertical', minHeight: step === 'devis' ? '120px' : '100px', fontFamily: 'inherit' }}
-                          {...fieldProps('message')}
-                        />
-                        <p className="mt-1 text-[0.7rem] text-subtle">{form.message.length} / 5000</p>
-                        {errors.message ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.message}</p> : null}
+                        {((step === 'devis' && wizardStep === 3) || (step === 'informations' && wizardStep === 1)) ? (
+                          <div>
+                            <label htmlFor="contact-message" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
+                              {step === 'devis' ? 'Votre projet' : 'Votre question'}
+                            </label>
+                            <textarea
+                              id="contact-message"
+                              name="message"
+                              required
+                              maxLength={5000}
+                              rows={4}
+                              autoComplete="off"
+                              placeholder={
+                                step === 'devis'
+                                  ? 'Décrivez votre entreprise, vos objectifs, ce que vous imaginez…'
+                                  : 'Posez-nous votre question : nous vous répondrons par e-mail.'
+                              }
+                              value={form.message}
+                              onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                              style={{
+                                resize: 'vertical',
+                                minHeight: step === 'devis' ? '100px' : '88px',
+                                fontFamily: 'inherit',
+                              }}
+                              {...fieldProps('message')}
+                            />
+                            <p className="mt-1 text-[0.7rem] text-subtle">{form.message.length} / 5000</p>
+                            {errors.message ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.message}</p> : null}
+                          </div>
+                        ) : null}
                       </div>
-                    </div>
+                    ) : (
+                      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                        <div className={step === 'informations' ? 'sm:col-span-2' : ''}>
+                          <label htmlFor="contact-name" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
+                            Prénom & nom
+                          </label>
+                          <input
+                            id="contact-name"
+                            name="name"
+                            type="text"
+                            required
+                            maxLength={120}
+                            autoComplete="name"
+                            placeholder="Jean Dupont"
+                            value={form.name}
+                            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                            {...fieldProps('name')}
+                          />
+                          {errors.name ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.name}</p> : null}
+                        </div>
 
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="btn-glass-dark btn-hover mt-6 w-full rounded-full py-3.5 text-[0.9rem] font-medium disabled:opacity-50"
-                      style={{ fontFamily: 'inherit' }}
+                        {step === 'informations' ? (
+                          <div className="sm:col-span-2">
+                            <label htmlFor="contact-email-infos" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
+                              Email
+                            </label>
+                            <input
+                              id="contact-email-infos"
+                              name="email"
+                              type="email"
+                              required
+                              maxLength={254}
+                              autoComplete="email"
+                              placeholder="jean@exemple.fr"
+                              value={form.email}
+                              onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                              {...fieldProps('email')}
+                            />
+                            {errors.email ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.email}</p> : null}
+                          </div>
+                        ) : null}
+
+                        {step === 'devis' ? (
+                          <>
+                            <div>
+                              <label htmlFor="contact-email" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
+                                Email
+                              </label>
+                              <input
+                                id="contact-email"
+                                name="email"
+                                type="email"
+                                required
+                                maxLength={254}
+                                autoComplete="email"
+                                placeholder="jean@entreprise.fr"
+                                value={form.email}
+                                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                                {...fieldProps('email')}
+                              />
+                              {errors.email ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.email}</p> : null}
+                            </div>
+                            <div>
+                              <label htmlFor="contact-phone" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
+                                Téléphone
+                              </label>
+                              <input
+                                id="contact-phone"
+                                name="tel"
+                                type="tel"
+                                required
+                                maxLength={40}
+                                inputMode="tel"
+                                autoComplete="tel"
+                                placeholder="06 12 34 56 78"
+                                value={form.phone}
+                                onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                                {...fieldProps('phone')}
+                              />
+                              {errors.phone ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.phone}</p> : null}
+                            </div>
+                            <div>
+                              <label htmlFor="contact-company" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
+                                Entreprise
+                              </label>
+                              <input
+                                id="contact-company"
+                                name="organization"
+                                type="text"
+                                maxLength={120}
+                                autoComplete="organization"
+                                placeholder="Votre société (optionnel)"
+                                value={form.company}
+                                onChange={e => setForm(f => ({ ...f, company: e.target.value }))}
+                                {...fieldProps('company')}
+                              />
+                            </div>
+                            <div className="sm:col-span-2">
+                              <label htmlFor="contact-project-type" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
+                                Type de projet
+                              </label>
+                              <select
+                                id="contact-project-type"
+                                name="project_type"
+                                required
+                                style={{ fontFamily: 'inherit' }}
+                                value={form.projectType}
+                                onChange={e =>
+                                  setForm(f => ({ ...f, projectType: e.target.value as ContactPayload['projectType'] }))
+                                }
+                                className={`${baseInput} ${errors.projectType ? errorRing : ''}`}
+                                aria-invalid={Boolean(errors.projectType)}
+                              >
+                                <option value="">Sélectionner…</option>
+                                {PROJECT_OPTIONS.map(o => (
+                                  <option key={o.value} value={o.value}>
+                                    {o.label}
+                                  </option>
+                                ))}
+                              </select>
+                              {errors.projectType ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.projectType}</p> : null}
+                            </div>
+                          </>
+                        ) : null}
+
+                        <div className="sm:col-span-2">
+                          <label htmlFor="contact-message" className="mb-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.1em] text-subtle">
+                            {step === 'devis' ? 'Votre projet' : 'Votre question'}
+                          </label>
+                          <textarea
+                            id="contact-message"
+                            name="message"
+                            required
+                            maxLength={5000}
+                            rows={step === 'devis' ? 5 : 4}
+                            autoComplete="off"
+                            placeholder={
+                              step === 'devis'
+                                ? 'Décrivez votre entreprise, vos objectifs, ce que vous imaginez…'
+                                : 'Posez-nous votre question : nous vous répondrons par e-mail.'
+                            }
+                            value={form.message}
+                            onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                            style={{ resize: 'vertical', minHeight: step === 'devis' ? '120px' : '100px', fontFamily: 'inherit' }}
+                            {...fieldProps('message')}
+                          />
+                          <p className="mt-1 text-[0.7rem] text-subtle">{form.message.length} / 5000</p>
+                          {errors.message ? <p className="mt-1 text-[0.75rem] text-red-700">{errors.message}</p> : null}
+                        </div>
+                      </div>
+                    )}
+
+                    <div
+                      className={`mt-6 flex flex-col gap-3 ${narrow && wizardStep > 0 ? 'sm:flex-col' : ''} sm:flex-row sm:justify-end sm:gap-3`}
                     >
-                      {thanksFlash
-                        ? '✓ Message envoyé — Merci !'
-                        : submitting
-                          ? 'Envoi en cours…'
-                          : 'Envoyer ma demande →'}
-                    </button>
+                      {narrow && wizardStep > 0 ? (
+                        <button
+                          type="button"
+                          className="order-2 w-full rounded-full border border-border bg-white py-3.5 text-[0.9rem] font-medium text-ink shadow-sm ring-1 ring-black/[0.04] transition-colors hover:bg-black/[0.03] sm:order-1 sm:w-auto sm:min-w-[7.5rem]"
+                          onClick={() => {
+                            setErrors({})
+                            setWizardStep(s => Math.max(0, s - 1))
+                          }}
+                        >
+                          ← Retour
+                        </button>
+                      ) : null}
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className="btn-glass-dark btn-hover order-1 w-full rounded-full py-3.5 text-[0.9rem] font-medium disabled:opacity-50 sm:order-2 sm:min-w-[12rem] sm:flex-1"
+                        style={{ fontFamily: 'inherit' }}
+                      >
+                        {thanksFlash
+                          ? '✓ Message envoyé — Merci !'
+                          : submitting
+                            ? 'Envoi en cours…'
+                            : narrow && wizardStep < wizardTotalSteps - 1
+                              ? 'Suivant →'
+                              : 'Envoyer ma demande →'}
+                      </button>
+                    </div>
                   </form>
                 </motion.div>
               )}
