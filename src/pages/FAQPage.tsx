@@ -1,6 +1,6 @@
 import { useEffect, useId, useMemo, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import EmbeddedDevisForm from '../components/EmbeddedDevisForm'
 
 const serif = { fontFamily: "'Instrument Serif', serif" } as const
@@ -528,24 +528,22 @@ function FaqPaginatedList({
 export default function FAQPage() {
   useFaqHeroReveal()
   const location = useLocation()
+  const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
   const [query, setQuery] = useState('')
+  const [category, setCategory] = useState<CategoryId>('tout')
 
-  const categoryFromHash = (hash: string): CategoryId => {
-    const raw = hash.replace(/^#/, '')
+  /** /FAQ#conseils-digitaux impose la catégorie sans setState dans un effect (règle eslint). */
+  const activeCategory = useMemo((): CategoryId => {
+    const raw = location.hash.replace(/^#/, '')
     if (raw === 'conseils-digitaux' || raw === 'conseils') return 'conseils'
-    return 'tout'
-  }
+    return category
+  }, [location.hash, category])
 
-  const [category, setCategory] = useState<CategoryId>(() =>
-    typeof window !== 'undefined' ? categoryFromHash(window.location.hash) : 'tout',
-  )
-
-  /** Lien pied de page /FAQ#conseils-digitaux : filtre « Conseils digitaux » et ancre sur la liste. */
+  /** Lien pied de page : ancre sur la liste des questions. */
   useEffect(() => {
-    const next = categoryFromHash(location.hash)
-    if (next !== 'conseils') return
-    setCategory('conseils')
+    const raw = location.hash.replace(/^#/, '')
+    if (raw !== 'conseils-digitaux' && raw !== 'conseils') return
     const el = document.getElementById('conseils-digitaux')
     if (!el) return
     requestAnimationFrame(() => {
@@ -555,12 +553,21 @@ export default function FAQPage() {
 
   const filtered = useMemo(() => {
     return FAQ_DATA.filter(e => {
-      if (category !== 'tout' && e.category !== category) return false
+      if (activeCategory !== 'tout' && e.category !== activeCategory) return false
       return matchesQuery(e, query)
     })
-  }, [query, category])
+  }, [query, activeCategory])
 
-  const listResetKey = `${category}:${query}`
+  const listResetKey = `${activeCategory}:${query}`
+
+  function selectCategory(id: CategoryId) {
+    setCategory(id)
+    if (id === 'conseils') {
+      navigate({ pathname: '/FAQ', hash: 'conseils-digitaux' }, { replace: true })
+    } else {
+      navigate({ pathname: '/FAQ', hash: '' }, { replace: true })
+    }
+  }
 
   return (
     <div className="relative min-w-0 overflow-x-hidden bg-white text-ink">
@@ -625,14 +632,14 @@ export default function FAQPage() {
             aria-label="Filtrer par thème"
           >
             {CATEGORIES.map(cat => {
-              const active = category === cat.id
+              const active = activeCategory === cat.id
               return (
                 <button
                   key={cat.id}
                   type="button"
                   role="tab"
                   aria-selected={active}
-                  onClick={() => setCategory(cat.id)}
+                  onClick={() => selectCategory(cat.id)}
                   className={`shrink-0 rounded-full px-3.5 py-2 text-[0.76rem] font-medium transition-all sm:px-4 sm:text-[0.78rem] ${
                     active
                       ? 'bg-[#111827] text-white shadow-[0_6px_20px_rgba(17,24,39,0.25)]'
@@ -672,7 +679,7 @@ export default function FAQPage() {
                     type="button"
                     onClick={() => {
                       setQuery('')
-                      setCategory('tout')
+                      selectCategory('tout')
                     }}
                     className="w-full rounded-full border border-border bg-white px-5 py-2.5 text-center text-[0.82rem] font-medium text-ink shadow-sm ring-1 ring-black/[0.04] transition-colors hover:bg-[#f6f7fb] sm:w-auto sm:flex-initial"
                   >
