@@ -1,10 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 
 const TITLES: Record<string, string> = {
-  '/services': 'Prestations',
   '/support': 'Support',
-  '/cgu': "Conditions générales d'utilisation",
-  '/cgv': 'Conditions générales de vente',
 }
 
 export default function ComingSoonPage() {

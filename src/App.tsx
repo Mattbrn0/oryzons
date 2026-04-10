@@ -16,6 +16,9 @@ const AboutPage = lazy(() => import('./pages/AboutPage'))
 const FAQPage = lazy(() => import('./pages/FAQPage'))
 const ComingSoonPage = lazy(() => import('./pages/ComingSoonPage'))
 const ServicesPage = lazy(() => import('./pages/ServicesPage'))
+const CGUPage = lazy(() => import('./pages/CGUPage'))
+const CGVPage = lazy(() => import('./pages/CGVPage'))
+const SitemapPage = lazy(() => import('./pages/SitemapPage'))
 
 function useReveal() {
   useEffect(() => {
@@ -126,7 +129,7 @@ function AnimatedRoutes() {
               path="/cgu"
               element={
                 <Suspense fallback={<div className="min-h-svh" />}>
-                  <ComingSoonPage />
+                  <CGUPage />
                 </Suspense>
               }
             />
@@ -134,7 +137,15 @@ function AnimatedRoutes() {
               path="/cgv"
               element={
                 <Suspense fallback={<div className="min-h-svh" />}>
-                  <ComingSoonPage />
+                  <CGVPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/plan-du-site"
+              element={
+                <Suspense fallback={<div className="min-h-svh" />}>
+                  <SitemapPage />
                 </Suspense>
               }
             />

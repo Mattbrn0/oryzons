@@ -38,6 +38,11 @@ export const ROUTE_SEO: Record<string, RouteSeoConfig> = {
     description:
       'Questions fréquentes sur les délais, la technique, les tarifs et le suivi de projet avec Oryzons.',
   },
+  '/plan-du-site': {
+    title: 'Plan du site | Oryzons',
+    description:
+      'Plan du site Oryzons : accueil, services, tarifs, contact, FAQ et informations légales.',
+  },
   '/support': {
     title: 'Support | Oryzons',
     description: 'Support client Oryzons.',
@@ -45,13 +50,13 @@ export const ROUTE_SEO: Record<string, RouteSeoConfig> = {
   },
   '/cgu': {
     title: 'CGU | Oryzons',
-    description: "Conditions générales d'utilisation — Oryzons.",
-    noindex: true,
+    description:
+      "Conditions générales d'utilisation du site oryzons.com : accès, propriété intellectuelle, données personnelles et responsabilité.",
   },
   '/cgv': {
     title: 'CGV | Oryzons',
-    description: 'Conditions générales de vente — Oryzons.',
-    noindex: true,
+    description:
+      'Conditions générales de vente : création et refonte de sites, hébergement, maintenance, SEO et abonnements Oryzons.',
   },
 }
 
