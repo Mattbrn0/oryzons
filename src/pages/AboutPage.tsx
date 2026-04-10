@@ -432,7 +432,7 @@ export default function AboutPage() {
       {/* ── 6. Philosophie — texte centré, fond uni */}
       <section
         id="philosophie"
-        className="relative isolate flex min-h-svh scroll-mt-24 flex-col items-center justify-center border-t border-border bg-white px-4 py-32 text-center sm:px-6 sm:py-52 md:scroll-mt-28 md:py-56 lg:py-48 xl:py-52"
+        className="relative isolate flex min-h-svh scroll-mt-24 flex-col items-center justify-center border-t border-border bg-white px-4 pb-44 pt-32 text-center sm:px-6 sm:pb-64 sm:pt-52 md:scroll-mt-28 md:pb-72 md:pt-56 lg:py-48 xl:py-52"
       >
         <div className="reveal relative mx-auto min-w-0 max-w-[min(640px,100%)] text-center">
           <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Philosophie</p>
@@ -442,7 +442,7 @@ export default function AboutPage() {
           <p className="mt-5 text-[0.95rem] font-light leading-[1.9] text-muted">
             Derrière chaque section, chaque interaction, il y a une décision — pas du remplissage. C’est cette exigence qui définit Oryzons.
           </p>
-          <div className="mt-10 w-full">
+          <div className="mx-auto mt-12 w-full max-w-[min(520px,100%)] border-t border-border pt-10 sm:mt-14 sm:pt-12">
             <EmbeddedDevisForm
               heading="Démarrer un projet"
               description="Parlez-nous de votre activité et de vos objectifs : nous vous répondons avec une proposition claire."

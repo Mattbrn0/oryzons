@@ -28,7 +28,13 @@ export default function Footer() {
                   <path d="M17.5 6.5h.01" />
                 </svg>
               </a>
-              <a href="/" aria-label="LinkedIn" className="transition-colors hover:text-ink">
+              <a
+                href="https://www.linkedin.com/company/112798427"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Oryzons sur LinkedIn"
+                className="transition-colors hover:text-ink"
+              >
                 <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4V9h4v2" />
                   <path d="M2 9h4v12H2z" />
@@ -116,7 +122,11 @@ export default function Footer() {
                 <p className="text-[0.78rem] font-medium text-ink">Ressources</p>
                 <ul className="mt-4 space-y-2">
                   <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/FAQ">FAQ</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/FAQ">Conseils digitaux</a></li>
+                  <li>
+                    <a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/FAQ#conseils-digitaux">
+                      Conseils digitaux
+                    </a>
+                  </li>
                   <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/support">Support</a></li>
                 </ul>
               </div>

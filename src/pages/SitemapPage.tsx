@@ -18,7 +18,10 @@ const accueilSections: NavItem[] = [
   { to: '/', hash: 'contact', label: 'Contact / devis' },
 ]
 
-const ressources: NavItem[] = [{ to: '/support', label: 'Support' }]
+const ressources: NavItem[] = [
+  { to: '/FAQ', hash: 'conseils-digitaux', label: 'Conseils digitaux' },
+  { to: '/support', label: 'Support' },
+]
 
 const legal: NavItem[] = [
   { to: '/mentions-legales', label: 'Mentions légales' },

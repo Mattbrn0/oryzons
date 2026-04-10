@@ -1,13 +1,13 @@
 import { useEffect, useId, useMemo, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import EmbeddedDevisForm from '../components/EmbeddedDevisForm'
 
 const serif = { fontFamily: "'Instrument Serif', serif" } as const
 const faqEase = [0.22, 1, 0.36, 1] as const
 const FAQ_PAGE_SIZE = 10
 
-type CategoryId = 'tout' | 'agence' | 'projet' | 'technique' | 'tarifs' | 'accompagnement'
+type CategoryId = 'tout' | 'agence' | 'projet' | 'technique' | 'tarifs' | 'accompagnement' | 'conseils'
 
 type FaqEntry = {
   id: string
@@ -23,6 +23,7 @@ const CATEGORIES: { id: CategoryId; label: string }[] = [
   { id: 'technique', label: 'Technique' },
   { id: 'tarifs', label: 'Tarifs' },
   { id: 'accompagnement', label: 'Après livraison' },
+  { id: 'conseils', label: 'Conseils digitaux' },
 ]
 
 const FAQ_DATA: FaqEntry[] = [
@@ -294,6 +295,68 @@ const FAQ_DATA: FaqEntry[] = [
     q: 'Est-ce que vous gérez les e-mails professionnels ?',
     a: "La configuration des boîtes (MX, SPF, etc.) peut être assurée ou coordonnée avec votre hébergeur / outil mail selon le devis. La facturation des boîtes mail chez un tiers (Google Workspace, etc.) reste en général à votre charge.",
   },
+
+  /* ── Conseils digitaux (usage du web au quotidien — pas réservé aux pros de la technique) ── */
+  {
+    id: 'conseil-mots-passe',
+    category: 'conseils',
+    q: 'Comment bien gérer mes mots de passe au quotidien ?',
+    a: "Utilisez un mot de passe différent pour chaque service important (banque, mail, réseaux sociaux). Préférez une phrase courte mémorable ou un coffre-fort de mots de passe plutôt que de tout noter sur un post-it. Activez la double validation quand le site le propose : c’est fastidieux une fois, puis ça vous protège longtemps.",
+  },
+  {
+    id: 'conseil-arnaques-liens',
+    category: 'conseils',
+    q: 'Comment éviter les arnaques par e-mail ou SMS ?',
+    a: "Méfiez-vous des messages urgents (« votre compte sera fermé », « colis bloqué ») qui vous demandent de cliquer tout de suite. Vérifiez l’expéditeur, ouvrez le site en tapant vous-même l’adresse dans le navigateur plutôt qu’en suivant le lien. En cas de doute : ne rien payer et contacter le service par un canal officiel.",
+  },
+  {
+    id: 'conseil-infos-perso',
+    category: 'conseils',
+    q: 'Quelles infos je ne devrais pas publier n’importe où en ligne ?',
+    a: "Évitez d’afficher ou d’envoyer par messagerie votre numéro d’identité, RIB complet, scan d’identité ou mots de passe. Sur les réseaux, limitez les détails sur vos absences ou votre adresse exacte. Tout ce qui est public peut être copié : pensez « est-ce que je dirais ça à un inconnu ? ».",
+  },
+  {
+    id: 'conseil-wifi-public',
+    category: 'conseils',
+    q: 'Le Wi-Fi gratuit au café ou à l’aéroport : quelles précautions ?',
+    a: "Sur un réseau ouvert, tout le monde peut théoriquement observer le trafic non protégé. Évitez d’y saisir des mots de passe sensibles ou de faire des paiements si vous pouvez attendre un réseau fiable ou utiliser la 4G/5G. Pour le travail sensible, un réseau connu ou un partage de connexion est souvent plus sûr.",
+  },
+  {
+    id: 'conseil-acheter-ligne',
+    category: 'conseils',
+    q: 'Avant de payer sur un site que je ne connais pas, je vérifie quoi ?',
+    a: "Adresse du site lisible (lien sécurisé https et nom de domaine cohérent), mentions légales ou contact joignable, conditions de retour et de livraison, avis sur plusieurs sources si possible. Si le prix est trop beau, que seuls les virement immédiat ou des devises crypto sont proposés, ou qu’on vous presse : stoppez et creusez.",
+  },
+  {
+    id: 'conseil-contacter-pro',
+    category: 'conseils',
+    q: 'Comment écrire un message efficace à un prestataire (agence, artisan, support) ?',
+    a: "Indiquez en quelques lignes : votre besoin, votre délai souhaité, comment vous préférez être recontacté. Évitez les pâteux « bonjour je voudrais un site » sans contexte : un message clair obtient une réponse plus utile et plus vite. Joignez un seul fichier utile plutôt que dix photos au hasard.",
+  },
+  {
+    id: 'conseil-lecture-page',
+    category: 'conseils',
+    q: 'Comment lire une page web sans me faire avoir par la mise en forme ?',
+    a: "Les gros boutons colorés et les cases pré-cochées attirent l’œil vers ce que le site veut que vous fassiez. Prenez le temps de lire le petit texte, les options d’abonnement et les cases « j’accepte ». En cas de doute, fermez l’onglet et revenez plus tard : une offre sérieuse ne disparaît pas en cinq minutes.",
+  },
+  {
+    id: 'conseil-sauvegardes-documents',
+    category: 'conseils',
+    q: 'Quels documents je devrais garder une copie « hors ligne » ?',
+    a: "Contrats signés, factures importantes, projets en cours (devis, planning) : une copie sur votre appareil ou un cloud avec double authentification vous évite de tout perdre si un mail est piraté ou un service indisponible. Ce n’est pas du luxe : c’est du bon sens quand votre activité dépend du numérique.",
+  },
+  {
+    id: 'conseil-partage-reseaux',
+    category: 'conseils',
+    q: 'Avant de partager une info sur les réseaux, je fais quoi ?',
+    a: "Vérifiez la source (site officiel, journal connu) plutôt que de relayer une capture floue. Les fausses alertes et les arnaques solidaires circulent vite. En cas de doute : ne pas partager vaut mieux que de propager une erreur. Pour votre vie perso, rappelez-vous qu’un employeur ou un client peut tomber sur votre profil public.",
+  },
+  {
+    id: 'conseil-temps-ecran',
+    category: 'conseils',
+    q: 'Comment garder un usage du web plus serein au quotidien ?',
+    a: "Fixez des moments sans notification pour vous concentrer ou vous détacher. Diminuez les alertes non essentielles : chaque interruption coûte du temps mental. Si un site ou une app vous stresse ou vous fait cliquer en boucle, désinstallez ou bloquez les rappels : le bon usage numérique, c’est aussi savoir s’arrêter.",
+  },
 ]
 
 /** Révélations au scroll — uniquement pour le haut de page (le reste se met à jour au filtre sans IO). */
@@ -464,9 +527,31 @@ function FaqPaginatedList({
 
 export default function FAQPage() {
   useFaqHeroReveal()
+  const location = useLocation()
   const reduceMotion = useReducedMotion()
   const [query, setQuery] = useState('')
-  const [category, setCategory] = useState<CategoryId>('tout')
+
+  const categoryFromHash = (hash: string): CategoryId => {
+    const raw = hash.replace(/^#/, '')
+    if (raw === 'conseils-digitaux' || raw === 'conseils') return 'conseils'
+    return 'tout'
+  }
+
+  const [category, setCategory] = useState<CategoryId>(() =>
+    typeof window !== 'undefined' ? categoryFromHash(window.location.hash) : 'tout',
+  )
+
+  /** Lien pied de page /FAQ#conseils-digitaux : filtre « Conseils digitaux » et ancre sur la liste. */
+  useEffect(() => {
+    const next = categoryFromHash(location.hash)
+    if (next !== 'conseils') return
+    setCategory('conseils')
+    const el = document.getElementById('conseils-digitaux')
+    if (!el) return
+    requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: reduceMotion ? 'instant' : 'smooth', block: 'start' })
+    })
+  }, [location.hash, reduceMotion])
 
   const filtered = useMemo(() => {
     return FAQ_DATA.filter(e => {
@@ -564,6 +649,7 @@ export default function FAQPage() {
 
       <section className="px-4 py-12 sm:px-8 sm:py-14 md:px-12 md:py-20 lg:px-16">
         <div className="mx-auto min-w-0 max-w-[min(720px,100%)]">
+          <div id="conseils-digitaux" className="scroll-mt-24">
           <AnimatePresence mode="wait">
             {filtered.length === 0 ? (
               <motion.div
@@ -604,8 +690,9 @@ export default function FAQPage() {
               <FaqPaginatedList key={listResetKey} filtered={filtered} reduceMotion={reduceMotion} />
             )}
           </AnimatePresence>
+          </div>
 
-          <div className="mx-auto mt-12 min-w-0 max-w-[min(640px,100%)] sm:mt-16">
+          <div id="infos-embed" className="mx-auto mt-14 min-w-0 max-w-[min(640px,100%)] scroll-mt-24 border-t border-border pt-14 sm:mt-20 sm:pt-16">
             <EmbeddedDevisForm
               variant="informations"
               heading="Une question plus précise ?"

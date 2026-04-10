@@ -164,8 +164,12 @@ function AnimatedCount({
   return <span className={className}>{display}</span>
 }
 
+const mobileAccordionEase = [0.22, 1, 0.36, 1] as const
+
 export default function Pricing() {
   const [billing, setBilling] = useState<Billing>('monthly')
+  /** Accordéon « Voir ce qui est inclus » (mobile uniquement) */
+  const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState<Plan['id'] | null>(null)
 
   const plans = useMemo(
     () =>
@@ -341,22 +345,48 @@ export default function Pricing() {
                   {p.desc}
                 </p>
 
-                <details className="group mt-5 rounded-2xl ring-1 ring-black/10 lg:hidden">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-3 text-[0.8rem] font-medium text-ink transition-colors hover:bg-black/[0.04] [&::-webkit-details-marker]:hidden">
+                <div className="mt-5 overflow-hidden rounded-2xl ring-1 ring-black/10 lg:hidden">
+                  <button
+                    type="button"
+                    aria-expanded={mobileFeaturesOpen === p.id}
+                    onClick={() => setMobileFeaturesOpen(mobileFeaturesOpen === p.id ? null : p.id)}
+                    className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left text-[0.8rem] font-medium text-ink transition-colors hover:bg-black/[0.04]"
+                  >
                     <span>Voir ce qui est inclus</span>
-                    <svg
-                      className="size-4 shrink-0 text-ink/45 transition-transform duration-200 group-open:rotate-180"
+                    <motion.svg
+                      className="size-4 shrink-0 text-ink/45"
                       viewBox="0 0 16 16"
                       fill="none"
                       aria-hidden
+                      animate={{ rotate: mobileFeaturesOpen === p.id ? 180 : 0 }}
+                      transition={{ duration: 0.28, ease: mobileAccordionEase }}
                     >
                       <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </summary>
-                  <div className="border-t border-black/10 px-4 pb-4 pt-3">
-                    <PlanFeatureList features={p.features} />
-                  </div>
-                </details>
+                    </motion.svg>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {mobileFeaturesOpen === p.id ? (
+                      <motion.div
+                        key={p.id}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.32, ease: mobileAccordionEase }}
+                        className="border-t border-black/10"
+                      >
+                        <motion.div
+                          initial={{ y: -6 }}
+                          animate={{ y: 0 }}
+                          exit={{ y: -4 }}
+                          transition={{ duration: 0.26, ease: mobileAccordionEase }}
+                          className="px-4 pb-4 pt-3"
+                        >
+                          <PlanFeatureList features={p.features} />
+                        </motion.div>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
+                </div>
 
                 <div className="mt-5 hidden lg:block">
                   <PlanFeatureList features={p.features} />

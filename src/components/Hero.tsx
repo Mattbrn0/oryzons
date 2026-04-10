@@ -6,9 +6,16 @@ export default function Hero() {
     <section className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 pt-16 text-center">
       <DotScatter />
 
-      {/* Radial veil — white in center for readability, fades to transparent */}
+      {/* Radial veil — sur mobile : fondu blanc plus large (pas de « carton »), pour lisibilité sans masquer le canvas */}
       <div
-        className="pointer-events-none absolute inset-0 z-[1]"
+        className="pointer-events-none absolute inset-0 z-[1] md:hidden"
+        style={{
+          background:
+            'radial-gradient(ellipse 96% 64% at 50% 46%, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.92) 30%, rgba(255,255,255,0.72) 52%, rgba(255,255,255,0.38) 70%, rgba(255,255,255,0.14) 84%, rgba(255,255,255,0) 100%)',
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0 z-[1] hidden md:block"
         style={{
           background: 'radial-gradient(ellipse 52% 42% at 50% 50%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.82) 38%, rgba(255,255,255,0.30) 65%, rgba(255,255,255,0) 82%)',
         }}
@@ -29,7 +36,10 @@ export default function Hero() {
         </h1>
 
         {/* Subtitle */}
-        <p className="anim-subtitle mt-7 max-w-[480px] text-[1rem] font-light leading-[1.75] text-muted">
+        <p
+          className="anim-subtitle mt-7 max-w-[480px] text-[1rem] font-light leading-[1.75] text-muted"
+          style={{ textShadow: '0 1px 16px rgba(255,255,255,0.85)' }}
+        >
         Chez Oryzons, nous concevons des sites internet sur mesure qui valorisent votre image et transforment vos visiteurs en clients.
         </p>
 
