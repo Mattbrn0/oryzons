@@ -21,6 +21,7 @@ const accueilSections: NavItem[] = [
 const ressources: NavItem[] = [{ to: '/support', label: 'Support' }]
 
 const legal: NavItem[] = [
+  { to: '/mentions-legales', label: 'Mentions légales' },
   { to: '/cgu', label: 'Conditions générales d’utilisation' },
   { to: '/cgv', label: 'Conditions générales de vente' },
   { to: '/plan-du-site', label: 'Plan du site (cette page)' },

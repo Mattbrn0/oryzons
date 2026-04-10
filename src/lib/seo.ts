@@ -43,6 +43,11 @@ export const ROUTE_SEO: Record<string, RouteSeoConfig> = {
     description:
       'Plan du site Oryzons : accueil, services, tarifs, contact, FAQ et informations légales.',
   },
+  '/mentions-legales': {
+    title: 'Mentions légales | Oryzons',
+    description:
+      'Mentions légales Oryzons : éditeur du site, SIRET, hébergement OVH, données personnelles et propriété intellectuelle.',
+  },
   '/support': {
     title: 'Support | Oryzons',
     description: 'Support client Oryzons.',

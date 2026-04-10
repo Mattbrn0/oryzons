@@ -152,6 +152,11 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>
+                  <a className="text-[0.82rem] font-light text-muted no-underline hover:text-ink" href="/mentions-legales">
+                    Mentions légales
+                  </a>
+                </li>
+                <li>
                   <a className="text-[0.82rem] font-light text-muted no-underline hover:text-ink" href="/plan-du-site">
                     Plan du site
                   </a>
@@ -175,6 +180,12 @@ export default function Footer() {
           <meta itemProp="email" content="contact@oryzons.com" />
           <meta itemProp="image" content={`${siteUrl}/oryzons-logo-black-on-white.png`} />
           <meta itemProp="priceRange" content="€€" />
+          <span itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
+            <meta itemProp="streetAddress" content="4 place Pierre Semard" />
+            <meta itemProp="postalCode" content="38300" />
+            <meta itemProp="addressLocality" content="Bourgoin-Jallieu" />
+            <meta itemProp="addressCountry" content="FR" />
+          </span>
           <span itemProp="areaServed" itemScope itemType="https://schema.org/City">
             <meta itemProp="name" content="Lyon" />
             <span itemProp="containedInPlace" itemScope itemType="https://schema.org/Country">

@@ -19,6 +19,7 @@ const ServicesPage = lazy(() => import('./pages/ServicesPage'))
 const CGUPage = lazy(() => import('./pages/CGUPage'))
 const CGVPage = lazy(() => import('./pages/CGVPage'))
 const SitemapPage = lazy(() => import('./pages/SitemapPage'))
+const MentionsLegalesPage = lazy(() => import('./pages/MentionsLegalesPage'))
 
 function useReveal() {
   useEffect(() => {
@@ -146,6 +147,14 @@ function AnimatedRoutes() {
               element={
                 <Suspense fallback={<div className="min-h-svh" />}>
                   <SitemapPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/mentions-legales"
+              element={
+                <Suspense fallback={<div className="min-h-svh" />}>
+                  <MentionsLegalesPage />
                 </Suspense>
               }
             />

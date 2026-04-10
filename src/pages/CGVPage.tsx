@@ -1,20 +1,21 @@
 import LegalDocumentLayout, { LegalSection } from '../components/LegalDocumentLayout'
-import { LEGAL_ENTITY } from '../lib/legalEntity'
+import { LEGAL_ENTITY, formatLegalAddress } from '../lib/legalEntity'
 
 export default function CGVPage() {
-  const { name, city, country, email, phoneDisplay, addressLine } = LEGAL_ENTITY
+  const e = LEGAL_ENTITY
 
   return (
     <LegalDocumentLayout eyebrow="Oryzons" title="Conditions générales de vente">
       <LegalSection title="1. Objet et champ d’application">
         <p>
-          Les présentes conditions générales de vente («&nbsp;CGV&nbsp;») régissent les relations contractuelles entre <strong>{name}</strong>
-          , agence web basée à <strong>{city}</strong> ({country}), et ses clients, pour les prestations suivantes ou assimilées&nbsp;: création ou
-          refonte de sites internet (vitrine, landing page, e-commerce lorsque proposé), hébergement et mise en ligne, maintenance et évolutions,
-          accompagnement et support, optimisations SEO et visibilité en ligne, dans les conditions définies au devis ou au bon de commande accepté.
+          Les présentes conditions générales de vente («&nbsp;CGV&nbsp;») régissent les relations contractuelles entre <strong>{e.name}</strong>,
+          micro-entreprise dont le siège social est situé {formatLegalAddress()}, et ses clients, pour les prestations suivantes ou assimilées&nbsp;:
+          création ou refonte de sites internet (vitrine, landing page, e-commerce lorsque proposé), hébergement et mise en ligne, maintenance et
+          évolutions, accompagnement et support, optimisations SEO et visibilité en ligne, dans les conditions définies au devis ou au bon de commande
+          accepté.
         </p>
         <p>
-          Elles s’appliquent à toute commande passée auprès de {name}, sous réserve de clauses particulières figurant au devis ou au contrat signé
+          Elles s’appliquent à toute commande passée auprès de {e.name}, sous réserve de clauses particulières figurant au devis ou au contrat signé
           entre les parties, qui prévalent en cas de contradiction avec les présentes CGV.
         </p>
         <p>
@@ -25,36 +26,46 @@ export default function CGVPage() {
 
       <LegalSection title="2. Identification">
         <p>
-          <strong>{name}</strong>
+          <strong>{e.name}</strong>
           <br />
-          Adresse de correspondance&nbsp;: {addressLine}
+          {e.legalForm}
+          <br />
+          Siège social&nbsp;: {formatLegalAddress()}
+          <br />
+          Représentant légal&nbsp;: {e.legalRepresentative}
+          <br />
+          SIREN&nbsp;: {e.sirenDisplay} — SIRET&nbsp;: {e.siretDisplay}
+          <br />
+          {e.rcsGreffe}
+          <br />
+          <span className="block pt-1">{e.vatFranchiseMention}</span>
           <br />
           E-mail&nbsp;:{' '}
-          <a className="text-ink underline underline-offset-2" href={`mailto:${email}`}>
-            {email}
+          <a className="text-ink underline underline-offset-2" href={`mailto:${e.email}`}>
+            {e.email}
           </a>
           <br />
           Téléphone&nbsp;:{' '}
           <a className="text-ink underline underline-offset-2" href="tel:+33643121415">
-            {phoneDisplay}
+            {e.phoneDisplay}
           </a>
         </p>
       </LegalSection>
 
       <LegalSection title="3. Commande et formation du contrat">
         <p>
-          Toute commande fait suite à un échange sur le besoin du client et, le cas échéant, à l’émission d’un devis détaillé par {name}. Le contrat
+          Toute commande fait suite à un échange sur le besoin du client et, le cas échéant, à l’émission d’un devis détaillé par {e.name}. Le contrat
           est formé lorsque le client accepte le devis par écrit (y compris par e-mail) ou signe le document prévu à cet effet, et après versement
           de l’acompte prévu, le cas échéant.
         </p>
         <p>
-          {name} se réserve le droit de refuser toute commande en cas de motif légitime (insolvabilité suspectée, contenu illicite demandé,
-          incompatibilité avec l’activité de {name}, etc.).
+          {e.name} se réserve le droit de refuser toute commande en cas de motif légitime (insolvabilité suspectée, contenu illicite demandé,
+          incompatibilité avec l’activité de {e.name}, etc.).
         </p>
       </LegalSection>
 
       <LegalSection title="4. Description des prestations">
-        <p>Les prestations livrées par {name} peuvent notamment inclure&nbsp;:</p>
+        <p>Les prestations livrées par {e.name} peuvent notamment inclure&nbsp;:</p>
         <ul className="list-disc space-y-2 pl-5">
           <li>
             <strong>Création ou refonte de site</strong> (structure, design, intégration, mise en forme responsive, formulaires, contenus fournis par
@@ -83,8 +94,9 @@ export default function CGVPage() {
 
       <LegalSection title="5. Prix et modalités de paiement">
         <p>
-          Les prix sont indiqués en euros, hors taxes (HT) ou toutes taxes comprises (TTC) selon la mention figurant au devis, compte tenu du régime
-          fiscal applicable à {name}.
+          {e.name} étant situé sous le seuil de franchise en base de TVA, les prix figurant sur le Site et sur les devis / factures sont exprimés en
+          euros <strong>toutes taxes comprises (TTC)</strong>, la TVA étant non applicable conformément à l’article 293 B du Code général des impôts.
+          La mention «&nbsp;TVA non applicable, art. 293 B du CGI&nbsp;» apparaît sur les documents comptables lorsque la réglementation l’exige.
         </p>
         <p>
           Sauf disposition contraire, un acompte peut être exigé à la commande (en pourcentage du montant total ou montant fixe) ; le solde est dû
@@ -92,7 +104,7 @@ export default function CGVPage() {
         </p>
         <p>
           En cas de retard de paiement, des pénalités de retard au taux légal en vigueur, ainsi que une indemnité forfaitaire pour frais de recouvrement
-          (montant fixé par la réglementation en vigueur), pourront être appliqués après mise en demeure restée infructueuse. {name} pourra suspendre
+          (montant fixé par la réglementation en vigueur), pourront être appliqués après mise en demeure restée infructueuse. {e.name} pourra suspendre
           les prestations en cours en cas de non-paiement grave ou répété.
         </p>
       </LegalSection>
@@ -102,11 +114,11 @@ export default function CGVPage() {
         <ul className="list-disc space-y-2 pl-5">
           <li>fournir en temps utile les éléments nécessaires (textes, images, accès techniques, logos, chartes) et leur conformité légale ;</li>
           <li>valider les étapes (maquettes, prototypes, mises en préproduction) dans les délais indiqués ;</li>
-          <li>informer {name} de toute contrainte (légales, techniques, délais de lancement) ;</li>
+          <li>informer {e.name} de toute contrainte (légales, techniques, délais de lancement) ;</li>
           <li>assurer de son côté la licéité des contenus publiés et le respect des droits des tiers (droits d’auteur, image, marques).</li>
         </ul>
         <p>
-          Tout retard ou manquement du client impactant le calendrier pourra entraîner un report des délais sans responsabilité de {name}, et, le cas
+          Tout retard ou manquement du client impactant le calendrier pourra entraîner un report des délais sans responsabilité de {e.name}, et, le cas
           échéant, une facturation des surcoûts liés.
         </p>
       </LegalSection>
@@ -119,7 +131,7 @@ export default function CGVPage() {
         </p>
         <p>
           Sauf réserve formulée dans un délai de <strong>cinq jours ouvrés</strong> après notification de livraison, la réception sera réputée acquise.
-          Les réserves doivent être motivées et adressées à {name} à l’adresse {email}.
+          Les réserves doivent être motivées et adressées à {e.name} à l’adresse {e.email}.
         </p>
       </LegalSection>
 
@@ -130,34 +142,34 @@ export default function CGVPage() {
         </p>
         <p>
           Sauf clause contraire, tout abonnement est conclu pour une durée minimale indiquée au contrat ; la résiliation par le client prend effet à
-          la fin de la période de facturation en cours sous réserve du respect d’un préavis éventuellement prévu. La résiliation par {name} en cas de
+          la fin de la période de facturation en cours sous réserve du respect d’un préavis éventuellement prévu. La résiliation par {e.name} en cas de
           non-paiement ou manquement grave reste réservée aux cas prévus aux présentes CGV ou au contrat.
         </p>
         <p>
-          Les prestations d’hébergement peuvent faire intervenir des sous-traitants techniques (hébergeur cloud ou mutualisé). {name} reste
+          Les prestations d’hébergement peuvent faire intervenir des sous-traitants techniques (hébergeur cloud ou mutualisé). {e.name} reste
           l’interlocuteur principal du client dans le cadre du contrat, sauf passation d’un contrat direct avec un tiers expressément convenu.
         </p>
       </LegalSection>
 
       <LegalSection title="9. Propriété intellectuelle et réserve de propriété">
         <p>
-          Tant que l’intégralité des sommes dues n’a pas été réglée, {name} peut conserver une réserve de propriété sur les livrables au sens des
+          Tant que l’intégralité des sommes dues n’a pas été réglée, {e.name} peut conserver une réserve de propriété sur les livrables au sens des
           usages du secteur (fichiers sources, maquettes, code), sans préjudice de la propriété des contenus fournis par le client.
         </p>
         <p>
-          Après paiement intégral des prestations prévues au périmètre du projet, {name} concède au client les droits nécessaires à l’exploitation du
+          Après paiement intégral des prestations prévues au périmètre du projet, {e.name} concède au client les droits nécessaires à l’exploitation du
           site dans son contexte d’usage prévu (site public, exploitation commerciale du client), sous réserve des composants tiers soumis à leurs
           propres licences (polices, CMS, bibliothèques open source, etc.).
         </p>
         <p>
-          {name} conserve le droit de mentionner sa réalisation à titre de référence commerciale, sauf clause de confidentialité ou de non-divulgation
+          {e.name} conserve le droit de mentionner sa réalisation à titre de référence commerciale, sauf clause de confidentialité ou de non-divulgation
           acceptée par écrit.
         </p>
       </LegalSection>
 
       <LegalSection title="10. Garanties et responsabilité">
         <p>
-          {name} est tenue d’une obligation de moyens. Elle garantit contre les défauts de conformité des prestations au regard du devis accepté, sous
+          {e.name} est tenue d’une obligation de moyens. Elle garantit contre les défauts de conformité des prestations au regard du devis accepté, sous
           réserve des limites techniques et des environnements tiers (hébergeur, navigateurs, services externes intégrés).
         </p>
         <p>
@@ -165,8 +177,8 @@ export default function CGVPage() {
           n’est garanti</strong>.
         </p>
         <p>
-          Sauf faute lourde ou dol, la responsabilité de {name} est limitée au montant HT payé par le client pour la prestation directement concernée au
-          cours des douze (12) derniers mois. {name} ne pourra être tenue des dommages indirects ou pertes d’exploitation.
+          Sauf faute lourde ou dol, la responsabilité de {e.name} est limitée au montant TTC payé par le client pour la prestation directement concernée
+          au cours des douze (12) derniers mois. {e.name} ne pourra être tenue des dommages indirects ou pertes d’exploitation.
         </p>
       </LegalSection>
 
@@ -196,7 +208,7 @@ export default function CGVPage() {
 
       <LegalSection title="14. Réclamations — médiation — litiges">
         <p>
-          Toute réclamation doit être adressée à {name} à l’adresse {email}, avec le détail du grief et les pièces utiles. Les parties chercheront une
+          Toute réclamation doit être adressée à {e.name} à l’adresse {e.email}, avec le détail du grief et les pièces utiles. Les parties chercheront une
           solution amiable avant toute action judiciaire.
         </p>
         <p>
@@ -206,7 +218,7 @@ export default function CGVPage() {
         </p>
         <p>
           À défaut de résolution amiable, tout litige relève de la compétence des tribunaux français. Pour les professionnels, compétence attribuée aux
-          tribunaux du ressort du siège de {name}, sauf disposition impérative contraire.
+          tribunaux du ressort du siège de {e.name}, sauf disposition impérative contraire.
         </p>
       </LegalSection>
 

@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
         const outDir = path.resolve(process.cwd(), 'dist')
         if (!fs.existsSync(outDir)) return
 
-        const publicPaths = ['/', '/a-propos', '/services', '/FAQ', '/plan-du-site', '/cgu', '/cgv'] as const
+        const publicPaths = ['/', '/a-propos', '/services', '/FAQ', '/plan-du-site', '/cgu', '/cgv', '/mentions-legales'] as const
         const urlEntries = publicPaths
           .map(p => {
             const loc = p === '/' ? `${siteUrl}/` : `${siteUrl}${p}`

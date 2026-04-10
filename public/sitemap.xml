@@ -7,4 +7,5 @@
   <url><loc>https://oryzons.com/plan-du-site</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://oryzons.com/cgu</loc><changefreq>yearly</changefreq><priority>0.35</priority></url>
   <url><loc>https://oryzons.com/cgv</loc><changefreq>yearly</changefreq><priority>0.35</priority></url>
+  <url><loc>https://oryzons.com/mentions-legales</loc><changefreq>yearly</changefreq><priority>0.35</priority></url>
 </urlset>
