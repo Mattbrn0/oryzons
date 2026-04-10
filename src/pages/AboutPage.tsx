@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'motion/react'
+import EmbeddedDevisForm from '../components/EmbeddedDevisForm'
 import HalftoneImage from '../components/HalftoneImage'
 
 const serif = { fontFamily: "'Instrument Serif', serif" } as const
@@ -105,9 +105,9 @@ export default function AboutPage() {
   const isLgUp = useIsLgUp()
 
   return (
-    <div className="relative overflow-x-hidden bg-white text-ink">
+    <div className="relative min-w-0 overflow-x-hidden bg-white text-ink">
       {/* Hero — buste fragmenté (fond blanc, image centrée) */}
-      <section className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 pt-16 text-center">
+      <section className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-4 pt-14 text-center sm:px-6 sm:pt-16">
         <div className="pointer-events-none absolute inset-0 bg-white">
           <div className="absolute left-1/2 top-1/2 h-[min(96svh,980px)] w-[min(92vw,780px)] -translate-x-1/2 -translate-y-1/2">
             <HalftoneImage
@@ -168,7 +168,7 @@ export default function AboutPage() {
       {/* ── 2. Origine — grille editorial + carte verre (pas de canvas) */}
       <section
         id="origine"
-        className="relative isolate flex min-h-svh scroll-mt-24 items-center border-t border-border bg-surface px-6 py-20 sm:px-8 sm:py-24 md:scroll-mt-28 md:px-12 md:py-28 lg:px-16 lg:py-32"
+        className="relative isolate flex min-h-svh scroll-mt-24 items-center border-t border-border bg-surface px-4 py-16 sm:px-8 sm:py-24 md:scroll-mt-28 md:px-12 md:py-28 lg:px-16 lg:py-32"
       >
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.35]"
@@ -226,7 +226,7 @@ export default function AboutPage() {
       {/* ── 3. Adam — grille 50/50 écran : ligne exactement au milieu | canvas à droite */}
       <section id="adam" className="flex min-h-svh scroll-mt-24 flex-col border-t border-border bg-[#eceef1] md:scroll-mt-28">
         <div className="grid min-h-svh flex-1 grid-cols-1 divide-y divide-border lg:grid-cols-2 lg:divide-x lg:divide-y-0">
-          <div className="order-1 flex min-w-0 flex-col justify-center px-6 py-12 sm:px-10 lg:order-none lg:py-16 lg:pl-12 lg:pr-10 xl:pl-16 xl:pr-12">
+          <div className="order-1 flex min-w-0 flex-col justify-center px-4 py-12 sm:px-10 lg:order-none lg:py-16 lg:pl-12 lg:pr-10 xl:pl-16 xl:pr-12">
             <div className="max-w-[540px]">
               <p className="reveal text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">La Création d’Adam — l’étincelle</p>
               <h2
@@ -328,7 +328,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="order-1 flex flex-1 items-center px-6 py-12 sm:px-10 lg:order-2 lg:py-10 lg:pl-12 lg:pr-16">
+        <div className="order-1 flex flex-1 items-center px-4 py-12 sm:px-10 lg:order-2 lg:py-10 lg:pl-12 lg:pr-16">
           <div className="reveal mx-auto w-full max-w-[520px]">
             <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Le David — la maîtrise</p>
             <h2 style={serif} className="mt-5 text-[clamp(1.85rem,3.4vw,2.85rem)] leading-[1.08] text-ink">
@@ -359,7 +359,7 @@ export default function AboutPage() {
 
       {/* ── 5. Lady Justice — texte à gauche, visuel collé à droite */}
       <section id="justice" className="relative flex min-h-svh scroll-mt-24 flex-col border-t border-border bg-[#f4f5f7] lg:scroll-mt-28 lg:flex-row lg:min-h-svh">
-        <div className="order-1 flex flex-1 items-center px-6 py-12 sm:px-10 lg:order-1 lg:py-14 lg:pl-12 lg:pr-10 xl:py-16 xl:pl-16 xl:pr-12">
+        <div className="order-1 flex flex-1 items-center px-4 py-12 sm:px-10 lg:order-1 lg:py-14 lg:pl-12 lg:pr-10 xl:py-16 xl:pl-16 xl:pr-12">
           <div className="mx-auto w-full max-w-[560px] pb-3 pt-2 sm:pb-4 sm:pt-3 lg:mx-0 lg:pb-5 lg:pt-4">
             <p className="reveal text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Lady Justice — l’équité</p>
             <h2 style={serif} className="reveal mt-5 text-[clamp(1.9rem,3.5vw,3rem)] leading-[1.06] tracking-[-0.02em] text-ink">
@@ -432,9 +432,9 @@ export default function AboutPage() {
       {/* ── 6. Philosophie — texte centré, fond uni */}
       <section
         id="philosophie"
-        className="relative isolate flex min-h-svh scroll-mt-24 flex-col items-center justify-center border-t border-border bg-white px-6 py-48 text-center sm:py-52 md:scroll-mt-28 md:py-56 lg:py-48 xl:py-52"
+        className="relative isolate flex min-h-svh scroll-mt-24 flex-col items-center justify-center border-t border-border bg-white px-4 py-32 text-center sm:px-6 sm:py-52 md:scroll-mt-28 md:py-56 lg:py-48 xl:py-52"
       >
-        <div className="reveal relative mx-auto max-w-[640px] text-center">
+        <div className="reveal relative mx-auto min-w-0 max-w-[min(640px,100%)] text-center">
           <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">Philosophie</p>
           <h2 style={serif} className="mt-5 text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.08] text-ink">
             Chaque détail porte une intention.
@@ -442,24 +442,13 @@ export default function AboutPage() {
           <p className="mt-5 text-[0.95rem] font-light leading-[1.9] text-muted">
             Derrière chaque section, chaque interaction, il y a une décision — pas du remplissage. C’est cette exigence qui définit Oryzons.
           </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              to={{ pathname: '/', hash: 'contact' }}
-              state={{ contactKind: 'devis' }}
-              className="btn-hover inline-flex h-12 items-center gap-2 rounded-full bg-[#111827] px-8 text-[0.88rem] font-medium text-white shadow-[0_14px_34px_rgba(17,24,39,0.28)]"
-            >
-              Démarrer un projet
-              <svg className="size-3.5 text-white/80" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" />
-              </svg>
-            </Link>
-            <Link
-              to={{ pathname: '/', hash: 'pricing' }}
-              state={{}}
-              className="btn-hover inline-flex h-12 items-center gap-2 rounded-full border border-border bg-white px-8 text-[0.88rem] font-medium text-ink shadow-[0_8px_22px_rgba(0,0,0,0.06)] ring-1 ring-black/5 transition-colors hover:bg-[#f6f7fb]"
-            >
-              Voir les tarifs
-            </Link>
+          <div className="mt-10 w-full">
+            <EmbeddedDevisForm
+              heading="Démarrer un projet"
+              description="Parlez-nous de votre activité et de vos objectifs : nous vous répondons avec une proposition claire."
+              showPricingLink
+              className="bg-white"
+            />
           </div>
         </div>
       </section>

@@ -39,7 +39,8 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const navRef = useRef<HTMLElement>(null)
   const links = mode === 'about' ? aboutLinks : homeLinks
-  const contactHref = mode === 'about' ? '/' : mode === 'page' ? '/#contact' : '#contact'
+  /** Ouvre la section contact sur le formulaire devis (voir Contact.tsx + location.state). */
+  const devisContact = { to: { pathname: '/' as const, hash: 'contact' as const }, state: { contactKind: 'devis' as const } }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -167,9 +168,9 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
             <path d="M11.5 7H2.5M2.5 7L6 3.5M2.5 7L6 10.5" />
           </svg>
         </Link>
-      ) : mode === 'page' ? (
+      ) : (
         <Link
-          to={{ pathname: '/', hash: 'contact' }}
+          {...devisContact}
           className={`anim-pop-2 hidden items-center gap-2 px-4 py-2.5 text-[0.82rem] font-medium !text-muted transition-colors duration-200 hover:!text-ink lg:flex ${navBubbleClass}`}
         >
           Démarrer votre projet
@@ -177,16 +178,6 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
             <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" />
           </svg>
         </Link>
-      ) : (
-        <a
-          href="#contact"
-          className={`anim-pop-2 hidden items-center gap-2 px-4 py-2.5 text-[0.82rem] font-medium !text-muted transition-colors duration-200 hover:!text-ink lg:flex ${navBubbleClass}`}
-        >
-          Démarrer votre projet
-          <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" />
-          </svg>
-        </a>
       )}
 
       {/* ── Mobile dropdown ─────────────────────────── */}
@@ -209,16 +200,29 @@ export default function Navbar({ mode = 'home' }: { mode?: NavbarMode }) {
                   {l.label}
                 </a>
               ))}
-              <a
-                href={contactHref}
-                className="mt-1 inline-flex items-center justify-between rounded-xl bg-black/[0.08] px-4 py-3 text-[0.95rem] font-medium text-ink no-underline"
-                onClick={() => setMobileOpen(false)}
-              >
-                {mode === 'about' ? "Retour à l'accueil" : 'Démarrer votre projet'}
-                <svg className="size-4 text-ink/70" viewBox="0 0 16 16" fill="none" aria-hidden>
-                  <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </a>
+              {mode === 'about' ? (
+                <Link
+                  to="/"
+                  className="mt-1 inline-flex items-center justify-between rounded-xl bg-black/[0.08] px-4 py-3 text-[0.95rem] font-medium text-ink no-underline"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Retour à l'accueil
+                  <svg className="size-4 text-ink/70" viewBox="0 0 16 16" fill="none" aria-hidden>
+                    <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
+              ) : (
+                <Link
+                  {...devisContact}
+                  className="mt-1 inline-flex items-center justify-between rounded-xl bg-black/[0.08] px-4 py-3 text-[0.95rem] font-medium text-ink no-underline"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Démarrer votre projet
+                  <svg className="size-4 text-ink/70" viewBox="0 0 16 16" fill="none" aria-hidden>
+                    <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
+              )}
             </nav>
           </div>
         </div>

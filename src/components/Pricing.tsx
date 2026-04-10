@@ -21,7 +21,7 @@ const basePlans: Plan[] = [
     id: 'starter',
     name: 'Site vitrine',
     desc: 'Un site clair et efficace pour présenter votre activité et capter des demandes.',
-    setupFee: 700,
+    setupFee: 800,
     monthly: 20,
     annually: 17,
     features: [
@@ -40,7 +40,7 @@ const basePlans: Plan[] = [
     id: 'professional',
     name: 'Refonte',
     desc: 'Modernisation d’un site existant : design actualisé, contenus clés et optimisation des performances.',
-    setupFee: 800,
+    setupFee: 700,
     monthly: 25,
     annually: 22,
     features: [

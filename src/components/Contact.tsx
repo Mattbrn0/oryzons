@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import HalftoneImage from './HalftoneImage'
 import {
   PROJECT_OPTIONS,
+  assertSubmitTiming,
   canSubmitNow,
   deliverContact,
   recordSubmitAttempt,
@@ -49,9 +50,16 @@ export default function Contact() {
   const [formInstanceKey, setFormInstanceKey] = useState(0)
   /** Non contrôlé : évite qu’un navigateur / extension remplisse le leurre et bloque l’envoi. */
   const hpRef = useRef<HTMLInputElement>(null)
+  const submitTimingAnchorRef = useRef(Date.now())
   const [errors, setErrors] = useState<FieldErrors>({})
   const [thanksFlash, setThanksFlash] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (step === 'devis' || step === 'informations') {
+      submitTimingAnchorRef.current = Date.now()
+    }
+  }, [step])
 
   /** Liens depuis À propos (ou ailleurs) : ouvrir directement devis ou infos (uniquement pour #contact). */
   useEffect(() => {
@@ -81,6 +89,15 @@ export default function Contact() {
         { pathname: location.pathname, hash: location.hash, search: location.search },
         { replace: true, state: {} },
       )
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          document.getElementById('contact')?.scrollIntoView({
+            behavior: reduced ? 'instant' : 'smooth',
+            block: 'start',
+          })
+        })
+      })
     }, 0)
     return () => window.clearTimeout(t)
   }, [location.state, location.pathname, location.hash, location.search, navigate])
@@ -115,6 +132,12 @@ export default function Contact() {
       return
     }
 
+    const timing = assertSubmitTiming(submitTimingAnchorRef.current)
+    if (!timing.ok) {
+      setErrors({ form: timing.error })
+      return
+    }
+
     const gate = canSubmitNow()
     if (!gate.ok) {
       setErrors({ form: gate.error })
@@ -144,6 +167,7 @@ export default function Contact() {
       if (hpRef.current) hpRef.current.value = ''
       setForm(emptyPayload(step))
       setFormInstanceKey(k => k + 1)
+      submitTimingAnchorRef.current = Date.now()
     })
     setThanksFlash(true)
   }
@@ -157,7 +181,10 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="relative isolate scroll-mt-20 min-h-svh overflow-hidden border-t border-border bg-surface px-6 py-24 sm:px-8 sm:py-28 md:px-16">
+    <section
+      id="contact"
+      className="relative isolate scroll-mt-20 min-h-svh overflow-hidden border-t border-border bg-surface px-4 pt-20 pb-[calc(6.5rem+env(safe-area-inset-bottom,0px))] sm:px-8 sm:pb-28 sm:pt-24 md:px-16 md:py-28"
+    >
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-1/2 hidden h-[92svh] w-[92svh] -translate-x-1/2 -translate-y-1/2 opacity-[0.10] sm:block">
           <HalftoneImage
@@ -191,7 +218,7 @@ export default function Contact() {
             </p>
           </div>
 
-          <div className="reveal relative overflow-hidden rounded-2xl border border-border bg-white p-6 sm:p-10">
+          <div className="reveal relative min-w-0 overflow-hidden rounded-2xl border border-border bg-white p-4 sm:p-10">
             <AnimatePresence mode="wait">
               {step === 'choose' ? (
                 <motion.div key="choose" {...formMotion} className="space-y-6">
@@ -219,7 +246,7 @@ export default function Contact() {
                 </motion.div>
               ) : (
                 <motion.div key={step === 'devis' ? 'form-devis' : 'form-infos'} {...formMotion}>
-                  <form key={`${step}-${formInstanceKey}`} onSubmit={handleSubmit} noValidate autoComplete="on">
+                  <form key={`${step}-${formInstanceKey}`} className="relative" onSubmit={handleSubmit} noValidate autoComplete="on">
                     <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
                       <label htmlFor="field-hp-q8k">Ne pas remplir</label>
                       <input

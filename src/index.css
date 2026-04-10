@@ -41,7 +41,10 @@ canvas {
     opacity: 1;
     transform: none;
   }
-  canvas { display: none; }
+  /* Canvas lourd (halftone, WebGL…) désactivé ; les champs de points « Services » restent visibles (animation figée). */
+  canvas:not(.services-points-canvas) {
+    display: none;
+  }
 }
 
 body {

@@ -74,7 +74,10 @@ export default function Services() {
                 Tout ce qu'il faut pour lancer, faire grandir et pérenniser votre présence en ligne.
               </p>
             </div>
-            <Link to="/services" className="btn-glass-dark mb-1 hidden shrink-0 items-center gap-2 rounded-full px-5 py-2.5 text-[0.82rem] font-medium md:flex">
+            <Link
+              to="/services"
+              className="btn-glass-dark mb-1 inline-flex shrink-0 items-center gap-2 rounded-full px-5 py-2.5 text-[0.82rem] font-medium"
+            >
               En savoir plus
               <svg className="size-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" />

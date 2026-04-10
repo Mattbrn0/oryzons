@@ -1,6 +1,7 @@
 import { useEffect, useId, useMemo, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Link } from 'react-router-dom'
+import EmbeddedDevisForm from '../components/EmbeddedDevisForm'
 
 const serif = { fontFamily: "'Instrument Serif', serif" } as const
 const faqEase = [0.22, 1, 0.36, 1] as const
@@ -477,8 +478,11 @@ export default function FAQPage() {
   const listResetKey = `${category}:${query}`
 
   return (
-    <div className="relative overflow-x-hidden bg-white text-ink">
-      <section id="faq-hero" className="relative border-b border-border bg-surface px-6 pb-16 pt-28 sm:px-8 md:px-12 md:pb-20 md:pt-32 lg:px-16">
+    <div className="relative min-w-0 overflow-x-hidden bg-white text-ink">
+      <section
+        id="faq-hero"
+        className="relative border-b border-border bg-surface px-4 pb-14 pt-24 sm:px-8 sm:pb-16 sm:pt-28 md:px-12 md:pb-20 md:pt-32 lg:px-16"
+      >
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.4]"
           style={{
@@ -487,7 +491,7 @@ export default function FAQPage() {
             backgroundSize: '64px 64px',
           }}
         />
-        <div className="relative z-[1] mx-auto max-w-[720px] text-center">
+        <div className="relative z-[1] mx-auto min-w-0 max-w-[720px] text-center">
           <p className="reveal text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">FAQ</p>
           <h1 style={serif} className="reveal mt-4 text-[clamp(2rem,4.5vw,3.1rem)] leading-[1.06] tracking-[-0.02em] text-ink">
             Questions fréquentes
@@ -496,7 +500,7 @@ export default function FAQPage() {
             Réponses sur les délais, la technique, les tarifs et le suivi de projet. Utilisez la recherche pour filtrer par mot-clé.
           </p>
 
-          <div className="reveal mx-auto mt-10 max-w-[560px]" style={{ transitionDelay: '60ms' }}>
+          <div className="reveal mx-auto mt-8 min-w-0 max-w-[560px] sm:mt-10" style={{ transitionDelay: '60ms' }}>
             <label htmlFor="faq-search" className="sr-only">
               Rechercher dans la FAQ
             </label>
@@ -514,7 +518,7 @@ export default function FAQPage() {
                 onChange={e => setQuery(e.target.value)}
                 placeholder="Ex. délai, SEO, maintenance, devis…"
                 autoComplete="off"
-                className="w-full rounded-full border border-black/10 bg-white py-3.5 pl-12 pr-14 text-[0.9rem] font-light text-ink shadow-[0_8px_28px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.04] transition-[box-shadow,border-color] placeholder:text-subtle focus:border-ink/20 focus:outline-none focus:ring-2 focus:ring-black/10"
+                className="w-full min-w-0 rounded-full border border-black/10 bg-white py-3.5 pl-12 pr-14 text-base font-light text-ink shadow-[0_8px_28px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.04] transition-[box-shadow,border-color] placeholder:text-subtle focus:border-ink/20 focus:outline-none focus:ring-2 focus:ring-black/10 sm:text-[0.9rem]"
               />
               {query ? (
                 <button
@@ -530,8 +534,8 @@ export default function FAQPage() {
           </div>
 
           <div
-            className="reveal mx-auto mt-6 flex max-w-[640px] flex-wrap justify-center gap-2"
-            style={{ transitionDelay: '100ms' }}
+            className="reveal mx-auto mt-6 flex max-w-[640px] flex-wrap justify-center gap-2 max-[639px]:-mx-1 max-[639px]:justify-start max-[639px]:gap-2 max-[639px]:overflow-x-auto max-[639px]:overflow-y-hidden max-[639px]:px-1 max-[639px]:pb-2 sm:flex-wrap"
+            style={{ transitionDelay: '100ms', scrollbarWidth: 'thin' }}
             role="tablist"
             aria-label="Filtrer par thème"
           >
@@ -544,7 +548,7 @@ export default function FAQPage() {
                   role="tab"
                   aria-selected={active}
                   onClick={() => setCategory(cat.id)}
-                  className={`rounded-full px-4 py-2 text-[0.78rem] font-medium transition-all ${
+                  className={`shrink-0 rounded-full px-3.5 py-2 text-[0.76rem] font-medium transition-all sm:px-4 sm:text-[0.78rem] ${
                     active
                       ? 'bg-[#111827] text-white shadow-[0_6px_20px_rgba(17,24,39,0.25)]'
                       : 'border border-border bg-white/80 text-muted ring-1 ring-black/[0.04] hover:border-ink/15 hover:text-ink'
@@ -558,14 +562,14 @@ export default function FAQPage() {
         </div>
       </section>
 
-      <section className="px-6 py-14 sm:px-8 md:px-12 md:py-20 lg:px-16">
-        <div className="mx-auto max-w-[720px]">
+      <section className="px-4 py-12 sm:px-8 sm:py-14 md:px-12 md:py-20 lg:px-16">
+        <div className="mx-auto min-w-0 max-w-[min(720px,100%)]">
           <AnimatePresence mode="wait">
             {filtered.length === 0 ? (
               <motion.div
                 key="faq-empty"
                 role="status"
-                className="rounded-2xl border border-dashed border-border bg-surface/80 px-6 py-14 text-center"
+                className="rounded-2xl border border-dashed border-border bg-surface/80 px-4 py-12 text-center sm:px-6 sm:py-14"
                 initial={reduceMotion ? false : { opacity: 0, y: 18, filter: 'blur(6px)' }}
                 animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                 exit={reduceMotion ? undefined : { opacity: 0, y: -12, filter: 'blur(4px)' }}
@@ -577,22 +581,22 @@ export default function FAQPage() {
                 <p className="mx-auto mt-3 max-w-[40ch] text-[0.9rem] font-light text-muted">
                   Essayez un autre mot-clé ou réinitialisez les filtres. Vous pouvez aussi nous écrire directement.
                 </p>
-                <div className="mt-8 flex flex-wrap justify-center gap-3">
+                <div className="mt-8 flex min-w-0 flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
                   <button
                     type="button"
                     onClick={() => {
                       setQuery('')
                       setCategory('tout')
                     }}
-                    className="rounded-full border border-border bg-white px-5 py-2.5 text-[0.82rem] font-medium text-ink shadow-sm ring-1 ring-black/[0.04] transition-colors hover:bg-[#f6f7fb]"
+                    className="w-full rounded-full border border-border bg-white px-5 py-2.5 text-center text-[0.82rem] font-medium text-ink shadow-sm ring-1 ring-black/[0.04] transition-colors hover:bg-[#f6f7fb] sm:w-auto sm:flex-initial"
                   >
                     Réinitialiser
                   </button>
                   <Link
-                    to={{ pathname: '/', hash: 'contact' }}
-                    className="inline-flex items-center gap-2 rounded-full bg-[#111827] px-5 py-2.5 text-[0.82rem] font-medium text-white no-underline shadow-[0_10px_24px_rgba(17,24,39,0.22)] transition-opacity hover:opacity-92"
+                    to={{ pathname: '/FAQ', hash: 'infos-embed' }}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#111827] px-5 py-2.5 text-center text-[0.82rem] font-medium text-white no-underline shadow-[0_10px_24px_rgba(17,24,39,0.22)] transition-opacity hover:opacity-92 sm:w-auto"
                   >
-                    Contacter Oryzons
+                    Demander des informations
                   </Link>
                 </div>
               </motion.div>
@@ -601,22 +605,13 @@ export default function FAQPage() {
             )}
           </AnimatePresence>
 
-          <div className="mx-auto mt-16 max-w-[560px] rounded-2xl border border-border bg-surface/90 p-8 text-center ring-1 ring-black/[0.04]">
-            <p style={serif} className="text-[1.35rem] leading-snug text-ink">
-              Une question plus précise ?
-            </p>
-            <p className="mx-auto mt-3 max-w-[42ch] text-[0.9rem] font-light text-muted">
-              Écrivez-nous : nous vous répondons sous 24h ouvrées en moyenne.
-            </p>
-            <Link
-              to={{ pathname: '/', hash: 'contact' }}
-              className="btn-hover mt-6 inline-flex items-center gap-2 rounded-full bg-[#111827] px-6 py-2.5 text-[0.82rem] font-medium text-white no-underline shadow-[0_12px_28px_rgba(17,24,39,0.22)]"
-            >
-              Formulaire de contact
-              <svg className="size-3.5 text-white/80" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" />
-              </svg>
-            </Link>
+          <div className="mx-auto mt-12 min-w-0 max-w-[min(640px,100%)] sm:mt-16">
+            <EmbeddedDevisForm
+              variant="informations"
+              heading="Une question plus précise ?"
+              description="Écrivez-nous votre question ou besoin : nous répondons sous 24h ouvrées en moyenne."
+              showPricingLink={false}
+            />
           </div>
         </div>
       </section>

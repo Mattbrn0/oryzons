@@ -8,7 +8,9 @@
  * - Sinon : `VITE_CONTACT_ENDPOINT` (+ optionnel `VITE_CONTACT_ACCESS_KEY`) pour un POST personnalisé.
  * - Sinon : ouverture du client mail (mailto) avec le même objet.
  *
- * La sécurité serveur (quota, filtrage) reste à charge du prestataire ou d’un backend dédié.
+ * Côté client : honeypot (composants), délai minimum avant envoi, quota session + cooldown,
+ * validation / assainissement des champs, limite de liens dans le message, fetch sans cookies.
+ * La sécurité serveur (quota, filtrage, CAPTCHA) reste à charge du prestataire ou d’un backend dédié.
  */
 
 export const PROJECT_TYPE_VALUES = [
@@ -49,6 +51,27 @@ const LIMITS = {
   company: 120,
   message: 5000,
 } as const
+
+/** Délai minimal après affichage du formulaire (réduit les envois automatiques immédiats). */
+export const MIN_SUBMIT_DELAY_MS = 2200
+
+/** Limite d’URL dans le message (spam / pièges). */
+const MAX_URLS_IN_MESSAGE = 12
+
+export function assertSubmitTiming(anchorMs: number): { ok: true } | { ok: false; error: string } {
+  if (!Number.isFinite(anchorMs) || anchorMs <= 0) return { ok: true }
+  if (Date.now() - anchorMs < MIN_SUBMIT_DELAY_MS) {
+    return {
+      ok: false,
+      error: 'Merci de prendre un instant pour vérifier le formulaire avant d’envoyer.',
+    }
+  }
+  return { ok: true }
+}
+
+function urlOccurrencesInMessage(s: string): number {
+  return (s.match(/https?:\/\//gi) ?? []).length
+}
 
 /** Motif email raisonnable sans accepter des caractères dangereux pour les entêtes. */
 const EMAIL_RE =
@@ -110,11 +133,18 @@ export function validateContactFields(raw: ContactPayload): { ok: true; data: Co
   const message = sanitizeMultiline(raw.message, LIMITS.message)
 
   if (name.length < 2) errors.name = 'Indiquez au moins 2 caractères pour le nom.'
+  if (urlOccurrencesInMessage(name) > 0) errors.name = 'Le nom ne doit pas contenir de lien web.'
+
+  if (urlOccurrencesInMessage(message) > MAX_URLS_IN_MESSAGE) {
+    errors.message = 'Le message contient trop de liens. Réduisez ou contactez-nous par e-mail.'
+  }
 
   if (raw.requestKind === 'informations') {
     const email = sanitizeText(raw.email, LIMITS.email).toLowerCase()
     if (!isValidEmail(email)) errors.email = 'Adresse e-mail invalide.'
-    if (message.length < 10) errors.message = 'Posez votre question en au moins 10 caractères.'
+    if (!errors.message && message.length < 10) {
+      errors.message = 'Posez votre question en au moins 10 caractères.'
+    }
     if (Object.keys(errors).length > 0) return { ok: false, errors }
     return {
       ok: true,
@@ -140,7 +170,9 @@ export function validateContactFields(raw: ContactPayload): { ok: true; data: Co
   if (raw.projectType === '' || !isAllowedProjectType(raw.projectType)) {
     errors.projectType = 'Choisissez un type de projet.'
   }
-  if (message.length < 10) errors.message = 'Décrivez votre projet en au moins 10 caractères.'
+  if (!errors.message && message.length < 10) {
+    errors.message = 'Décrivez votre projet en au moins 10 caractères.'
+  }
 
   if (Object.keys(errors).length > 0) return { ok: false, errors }
 
@@ -275,6 +307,9 @@ async function postWeb3Forms(data: ContactPayload, accessKey: string): Promise<{
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(body),
       mode: 'cors',
+      credentials: 'omit',
+      cache: 'no-store',
+      referrerPolicy: 'strict-origin-when-cross-origin',
     })
     let parsed: unknown = null
     try {
@@ -345,6 +380,9 @@ export async function deliverContact(data: ContactPayload): Promise<{ ok: true }
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(payload),
         mode: 'cors',
+        credentials: 'omit',
+        cache: 'no-store',
+        referrerPolicy: 'strict-origin-when-cross-origin',
       })
       if (!res.ok) {
         return { ok: false, error: "L'envoi a échoué. Écrivez-nous à contact@oryzons.com." }
@@ -357,6 +395,14 @@ export async function deliverContact(data: ContactPayload): Promise<{ ok: true }
 
   const body = encodeURIComponent(mailtoLines(data))
   const subject = encodeURIComponent(emailSubject(data))
-  window.location.href = `mailto:contact@oryzons.com?subject=${subject}&body=${body}`
+  const href = `mailto:contact@oryzons.com?subject=${subject}&body=${body}`
+  /** Limite prudente pour les clients mail (RFC 5322 / longueur d’URL). */
+  if (href.length > 7500) {
+    return {
+      ok: false,
+      error: 'Message trop long pour ouverture automatique du messager. Écrivez-nous à contact@oryzons.com.',
+    }
+  }
+  window.location.href = href
   return { ok: true }
 }

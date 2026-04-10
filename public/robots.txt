@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# En production, `npm run build` régénère robots.txt et sitemap.xml avec VITE_SITE_URL.
+Sitemap: https://oryzons.com/sitemap.xml

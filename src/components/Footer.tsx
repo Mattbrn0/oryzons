@@ -1,4 +1,9 @@
+import { Link } from 'react-router-dom'
+import { getSiteUrl } from '../lib/seo'
+
 export default function Footer() {
+  const siteUrl = getSiteUrl()
+
   return (
     <footer className="border-t border-border bg-white">
       <div className="mx-auto max-w-[1100px] px-6 py-12 md:px-10">
@@ -64,7 +69,7 @@ export default function Footer() {
                 <p className="text-[0.78rem] font-medium text-ink">Oryzons</p>
                 <ul className="mt-4 space-y-2">
                   <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#a-propos">À propos</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#Prestations">Prestations</a></li>
+                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#services">Prestations</a></li>
                   <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#pricing">Tarifs</a></li>
                   <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/#contact">Contact</a></li>
 
@@ -73,10 +78,38 @@ export default function Footer() {
               <div>
                 <p className="text-[0.78rem] font-medium text-ink">Services</p>
                 <ul className="mt-4 space-y-2">
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/services">Création de site web</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/services">Refonte de site</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/services">Maintenance</a></li>
-                  <li><a className="text-[0.85rem] font-light text-muted no-underline hover:text-ink" href="/services">Optimisation SEO</a></li>
+                  <li>
+                    <Link
+                      className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
+                      to={{ pathname: '/services', hash: 'creation-site' }}
+                    >
+                      Création de site web
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
+                      to={{ pathname: '/services', hash: 'evolution-maintenance' }}
+                    >
+                      Refonte de site
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
+                      to={{ pathname: '/services', hash: 'evolution-maintenance' }}
+                    >
+                      Maintenance
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
+                      to={{ pathname: '/services', hash: 'seo-visibilite' }}
+                    >
+                      Optimisation SEO
+                    </Link>
+                  </li>
                 </ul>
               </div>
               <div>
@@ -128,6 +161,31 @@ export default function Footer() {
           </details>
    
         </div>
+      </div>
+
+      {/* Schema.org (microdonnées) : compatible CSP sans script inline */}
+      <div className="sr-only" aria-hidden="true">
+        <span itemScope itemType="https://schema.org/ProfessionalService">
+          <meta itemProp="name" content="Oryzons" />
+          <meta
+            itemProp="description"
+            content="Agence web à Lyon : création de sites vitrines sur mesure, hébergement, SEO et accompagnement pour indépendants et PME."
+          />
+          <meta itemProp="url" content={`${siteUrl}/`} />
+          <meta itemProp="email" content="contact@oryzons.com" />
+          <meta itemProp="image" content={`${siteUrl}/oryzons-logo-black-on-white.png`} />
+          <meta itemProp="priceRange" content="€€" />
+          <span itemProp="areaServed" itemScope itemType="https://schema.org/City">
+            <meta itemProp="name" content="Lyon" />
+            <span itemProp="containedInPlace" itemScope itemType="https://schema.org/Country">
+              <meta itemProp="name" content="France" />
+            </span>
+          </span>
+        </span>
+        <span itemScope itemType="https://schema.org/WebSite">
+          <meta itemProp="name" content="Oryzons" />
+          <meta itemProp="url" content={`${siteUrl}/`} />
+        </span>
       </div>
     </footer>
   )

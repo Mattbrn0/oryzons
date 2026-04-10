@@ -2,18 +2,20 @@ import { useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import Navbar    from './components/Navbar'
+import RouteSeo  from './components/RouteSeo'
 import Hero      from './components/Hero'
 import LogoStrip from './components/LogoStrip'
 import Services  from './components/Services'
 import Process   from './components/Process'
-import Pricing   from './components/Pricing'
-import Contact   from './components/Contact'
+import Pricing  from './components/Pricing'
+import Contact    from './components/Contact'
 import Footer    from './components/Footer'
 
 // Chargement différé de la page À propos (elle n'est pas visible au premier rendu)
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const FAQPage = lazy(() => import('./pages/FAQPage'))
 const ComingSoonPage = lazy(() => import('./pages/ComingSoonPage'))
+const ServicesPage = lazy(() => import('./pages/ServicesPage'))
 
 function useReveal() {
   useEffect(() => {
@@ -41,7 +43,7 @@ function ScrollToTopOnRouteChange() {
       const scrollToTarget = () => {
         const el = document.getElementById(id)
         if (el) {
-          el.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth' })
+          el.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'start' })
           return
         }
         attempts += 1
@@ -52,7 +54,8 @@ function ScrollToTopOnRouteChange() {
     }
 
     window.scrollTo({ top: 0, left: 0, behavior: reduced ? 'instant' : 'smooth' })
-  }, [location.pathname, location.hash])
+    // `key` change à chaque navigation même si pathname/hash identiques (ex. même #contact + nouveau state).
+  }, [location.pathname, location.hash, location.key])
   return null
 }
 
@@ -60,14 +63,12 @@ function HomePage() {
   useReveal()
   return (
     <div className="min-h-svh bg-white">
-      <main>
-        <Hero />
-        <LogoStrip />
-        <Services />
-        <Process />
-        <Pricing />
-        <Contact />
-      </main>
+      <Hero />
+      <Services />
+      <Process />
+      <LogoStrip />
+      <Pricing />
+      <Contact />
     </div>
   )
 }
@@ -89,8 +90,9 @@ function AnimatedRoutes() {
           exit={{ opacity: 0, y: -10, filter: 'blur(6px)' }}
           transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Routes location={location}>
-            <Route path="/"         element={<HomePage />} />
+          <main id="contenu-principal">
+            <Routes location={location}>
+              <Route path="/"         element={<HomePage />} />
             <Route path="/a-propos" element={
               <Suspense fallback={<div className="min-h-svh" />}>
                 <AboutPage />
@@ -100,7 +102,7 @@ function AnimatedRoutes() {
               path="/services"
               element={
                 <Suspense fallback={<div className="min-h-svh" />}>
-                  <ComingSoonPage />
+                  <ServicesPage />
                 </Suspense>
               }
             />
@@ -136,7 +138,8 @@ function AnimatedRoutes() {
                 </Suspense>
               }
             />
-          </Routes>
+            </Routes>
+          </main>
         </motion.div>
       </AnimatePresence>
 
@@ -148,6 +151,7 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
+      <RouteSeo />
       <ScrollToTopOnRouteChange />
       <AnimatedRoutes />
     </BrowserRouter>
