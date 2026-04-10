@@ -17,3 +17,23 @@ const svgBlackOnWhite = `<?xml version="1.0" encoding="UTF-8"?>
 const png = await sharp(Buffer.from(svgBlackOnWhite)).png({ compressionLevel: 9 }).toBuffer()
 writeFileSync(join(outDir, 'oryzons-logo-black-on-white.png'), png)
 console.log('Wrote public/oryzons-logo-black-on-white.png (1024×1024)')
+
+/** Favicons PNG pour onglets et résultats Google (les SVG sont souvent ignorés dans les SERP). Aligné sur public/favicon.svg. */
+const svgFavicon = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="8" fill="#06141B"/>
+  <path fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"
+    d="M16 5v4M16 23v4M5 16h4M23 16h4M8.52 8.52l2.83 2.83M20.66 20.66l2.83 2.83M8.52 23.48l2.83-2.83M20.66 11.34l2.83-2.83"/>
+</svg>`
+
+async function pngFavicon(size) {
+  return sharp(Buffer.from(svgFavicon))
+    .resize(size, size)
+    .png({ compressionLevel: 9 })
+    .toBuffer()
+}
+
+writeFileSync(join(outDir, 'favicon-48.png'), await pngFavicon(48))
+writeFileSync(join(outDir, 'favicon-192.png'), await pngFavicon(192))
+writeFileSync(join(outDir, 'apple-touch-icon.png'), await pngFavicon(180))
+console.log('Wrote public/favicon-48.png, favicon-192.png, apple-touch-icon.png')

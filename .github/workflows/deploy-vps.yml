@@ -37,6 +37,7 @@ jobs:
         run: npm ci
 
       # Vite injecte les variables VITE_* au moment du build (pas au runtime sur le VPS).
+      # `prebuild` régénère logo + favicons PNG (obligatoire pour l’icône dans Google).
       - name: Build
         env:
           VITE_WEB3FORMS_ACCESS_KEY: ${{ secrets.VITE_WEB3FORMS_ACCESS_KEY }}

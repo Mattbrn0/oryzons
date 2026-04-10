@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm run assets:logo-png",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "assets:logo-png": "node scripts/export-oryzons-logo-png.mjs",
