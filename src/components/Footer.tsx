@@ -15,8 +15,11 @@ export default function Footer() {
               <span className="text-[0.95rem] font-medium text-ink">Oryzons</span>
             </a>
             <p className="mt-3 max-w-[32ch] text-[0.85rem] font-light leading-[1.7] text-muted">
-            Développement web, design et stratégie
-            pour les entreprises qui veulent se démarquer.
+              Un site internet
+              <br />
+              n&apos;est pas seulement
+              <br />
+              un outil, c&apos;est une vision
             </p>
 
             {/* Réseaux & contact */}
@@ -87,7 +90,7 @@ export default function Footer() {
                   <li>
                     <Link
                       className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
-                      to={{ pathname: '/services', hash: 'creation-site' }}
+                      to={{ pathname: '/services', hash: '#creation-site' }}
                     >
                       Création de site web
                     </Link>
@@ -95,7 +98,7 @@ export default function Footer() {
                   <li>
                     <Link
                       className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
-                      to={{ pathname: '/services', hash: 'evolution-maintenance' }}
+                      to={{ pathname: '/services', hash: '#evolution-maintenance' }}
                     >
                       Refonte de site
                     </Link>
@@ -103,7 +106,7 @@ export default function Footer() {
                   <li>
                     <Link
                       className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
-                      to={{ pathname: '/services', hash: 'evolution-maintenance' }}
+                      to={{ pathname: '/services', hash: '#evolution-maintenance' }}
                     >
                       Maintenance
                     </Link>
@@ -111,7 +114,7 @@ export default function Footer() {
                   <li>
                     <Link
                       className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
-                      to={{ pathname: '/services', hash: 'seo-visibilite' }}
+                      to={{ pathname: '/services', hash: '#seo-visibilite' }}
                     >
                       Optimisation SEO
                     </Link>

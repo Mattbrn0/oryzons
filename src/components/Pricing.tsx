@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import HalftoneImage from './HalftoneImage'
+import { Link } from 'react-router-dom'
 
 type Billing = 'monthly' | 'annually'
 
@@ -170,6 +171,7 @@ export default function Pricing() {
   const [billing, setBilling] = useState<Billing>('monthly')
   /** Accordéon « Voir ce qui est inclus » (mobile uniquement) */
   const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState<Plan['id'] | null>(null)
+  const devisContact = { to: { pathname: '/' as const, hash: '#contact' as const }, state: { contactKind: 'devis' as const } }
 
   const plans = useMemo(
     () =>
@@ -394,25 +396,25 @@ export default function Pricing() {
 
                 <div className="mt-auto pt-6">
                   {p.featured ? (
-                    <a
-                      href="#contact"
+                    <Link
+                      {...devisContact}
                       className="btn-hover inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#111827] px-5 text-[0.8rem] font-medium text-white shadow-[0_10px_24px_rgba(17,24,39,0.28)]"
                     >
                       {p.cta}
                       <svg className="size-3.5 text-white/70" viewBox="0 0 16 16" fill="none" aria-hidden>
                         <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                    </a>
+                    </Link>
                   ) : (
-                    <a
-                      href="#contact"
+                    <Link
+                      {...devisContact}
                       className="btn-hover inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-white px-5 text-[0.8rem] font-medium text-ink shadow-[0_10px_24px_rgba(0,0,0,0.10)] ring-1 ring-black/10 transition-colors hover:bg-[#f6f7fb]"
                     >
-                      Demander un devis
+                      {p.cta}
                       <svg className="size-3.5 text-ink/60" viewBox="0 0 16 16" fill="none" aria-hidden>
                         <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                    </a>
+                    </Link>
                   )}
                 </div>
               </div>

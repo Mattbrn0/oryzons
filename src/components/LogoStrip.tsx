@@ -46,7 +46,7 @@ const track = [...half, ...half]  // double → animate -50% for seamless loop
 export default function LogoStrip() {
   return (
     <div className="border-y border-border bg-white pt-8 pb-14 sm:pb-16 md:pb-20">
-      <p className="mb-6 text-center text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">
+      <p className="mb-10 text-center text-[0.72rem] font-medium uppercase tracking-[0.18em] text-subtle">
         Propulsé par les meilleures technologies
       </p>
       <div className="group relative overflow-hidden">

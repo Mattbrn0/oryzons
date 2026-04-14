@@ -76,7 +76,10 @@ function CtaDiscover({ className = '' }: { className?: string }) {
 
 export default function Process() {
   return (
-    <section id="a-propos" className="relative isolate min-h-svh overflow-hidden scroll-mt-20 border-t border-border bg-white px-6 py-24 sm:px-8 md:px-16">
+    <section
+      id="a-propos"
+      className="relative isolate overflow-hidden scroll-mt-20 border-t border-border bg-white px-6 py-16 sm:px-8 sm:py-20 md:px-16 md:py-24"
+    >
       {/* Canvas à gauche — uniquement très grand écran (évite titre sur halftone sombre sur laptop) */}
       <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-[40vw] max-w-[520px] 2xl:block 2xl:w-[44vw] 2xl:max-w-[560px]">
         <div className="absolute inset-0 -translate-x-[24%] 2xl:-translate-x-[18%]">
@@ -93,7 +96,7 @@ export default function Process() {
         <div className="absolute inset-0" style={fadeFromCanvasRight} />
       </div>
 
-      <div className="relative z-10 mx-auto min-h-[calc(100svh-176px)] max-w-[1100px] items-center 2xl:flex">
+      <div className="relative z-10 mx-auto max-w-[1100px] items-center 2xl:flex">
         {/* ── ≥2xl : mise en page d’origine (titre à gauche sur dégradé, texte à droite) */}
         <div className="reveal hidden w-full gap-12 2xl:grid 2xl:grid-cols-12">
           <div className="2xl:col-span-5 2xl:pl-10">

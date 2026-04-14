@@ -43,21 +43,28 @@ function ScrollToTopOnRouteChange() {
     if (location.hash) {
       const id = decodeURIComponent(location.hash.slice(1))
       let attempts = 0
-      const maxAttempts = 40
+      // La page cible peut être lazy-load (ex. /services) : on attend plus longtemps.
+      const maxAttempts = 240
+      const behavior: ScrollBehavior = reduced ? 'auto' : 'smooth'
       const scrollToTarget = () => {
         const el = document.getElementById(id)
         if (el) {
-          el.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'start' })
+          el.scrollIntoView({ behavior, block: 'start' })
           return
         }
         attempts += 1
         if (attempts < maxAttempts) requestAnimationFrame(scrollToTarget)
+        else {
+          // Fallback : au moins remonter en haut si l’ancre n’existe pas.
+          window.scrollTo({ top: 0, left: 0, behavior })
+        }
       }
-      requestAnimationFrame(() => requestAnimationFrame(scrollToTarget))
+      // Petit délai pour laisser React monter la nouvelle route avant de chercher l’ancre.
+      window.setTimeout(() => requestAnimationFrame(scrollToTarget), 0)
       return
     }
 
-    window.scrollTo({ top: 0, left: 0, behavior: reduced ? 'instant' : 'smooth' })
+    window.scrollTo({ top: 0, left: 0, behavior: reduced ? 'auto' : 'smooth' })
     // `key` change à chaque navigation même si pathname/hash identiques (ex. même #contact + nouveau state).
   }, [location.pathname, location.hash, location.key])
   return null

@@ -3,7 +3,7 @@ import GradientText from './GradientText'
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 pt-16 text-center">
+    <section id="hero" className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 pt-16 text-center">
       <DotScatter />
 
       {/* Radial veil — sur mobile : fondu blanc plus large (pas de « carton »), pour lisibilité sans masquer le canvas */}
