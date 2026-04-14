@@ -90,33 +90,33 @@ export default function Footer() {
                   <li>
                     <Link
                       className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
-                      to={{ pathname: '/services', hash: '#creation-site' }}
-                    >
-                      Création de site web
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
-                      to={{ pathname: '/services', hash: '#evolution-maintenance' }}
-                    >
-                      Refonte de site
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
-                      to={{ pathname: '/services', hash: '#evolution-maintenance' }}
-                    >
-                      Maintenance
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
                       to={{ pathname: '/services', hash: '#seo-visibilite' }}
                     >
-                      Optimisation SEO
+                      SEO & visibilité
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
+                      to={{ pathname: '/services', hash: '#creation-site' }}
+                    >
+                      Création de site internet
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
+                      to={{ pathname: '/services', hash: '#hebergement' }}
+                    >
+                      Hébergement & mise en ligne
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="text-[0.85rem] font-light text-muted no-underline hover:text-ink"
+                      to={{ pathname: '/services', hash: '#evolution-maintenance' }}
+                    >
+                      Évolution & maintenance
                     </Link>
                   </li>
                 </ul>
