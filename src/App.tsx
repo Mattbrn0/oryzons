@@ -91,7 +91,7 @@ function AnimatedRoutes() {
 
   return (
     <div className="min-h-svh bg-white">
-      <Navbar mode={navMode} />
+      <Navbar key={navMode} mode={navMode} />
 
       <AnimatePresence mode="wait">
         <motion.div
